@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
-import Router from "./components/navbar/Router";
-import ContextProvider from "./components/API/Context";
+import ContextProvider from "./router/Router";
+import Router from "./router/Router"
 
 function App() {
   return (
     <ContextProvider>
-      <Router />
+      <Router/>
     </ContextProvider>
   );
 }
