@@ -10,40 +10,56 @@ import AdminPanel from "../components/hr_admin_component/adminPanel/AdminPanel";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
 import Login, { Logout } from "../components/hr_admin_component/accounts/login/Login";
 import Register from "../components/hr_admin_component/accounts/register/Register";
+import HomePage from "../pages/homepage/HomePage";
 
 function Router() {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
+          <HomePage />
+        </Route>
+        <Route exact path="/login">
           <Login />
         </Route>
         <Route path="/register">
           <Register />
         </Route>
         <Route path="/admin-panel">
-          <Navbar />
-          <AdminPanel />
+          <>
+            <Navbar />
+            <AdminPanel />
+          </>
         </Route>
         <Route path="/salary">
-          <Navbar />
-          <Salary />
+          <>
+            <Navbar />
+            <Salary />
+          </>
         </Route>
         <Route path="/update-employee">
-          <Navbar />
-          <UpdateEmployee />
+          <>
+            <Navbar />
+            <UpdateEmployee />
+          </>
         </Route>
         <Route path="/view-employees">
-          <Navbar />
-          <ViewEmployees />
+          <>
+            <Navbar />
+            <ViewEmployees />
+          </>
         </Route>
         <Route path="/add-employee">
-          <Navbar />
-          <AddEmployee />
+          <>
+            <Navbar />
+            <AddEmployee />
+          </>
         </Route>
         <Route path="/home">
-          <Navbar />
-          <Home />
+          <>
+            <Navbar />
+            <Home />
+          </>
         </Route>
         <Route path="/logout">
           <Logout />

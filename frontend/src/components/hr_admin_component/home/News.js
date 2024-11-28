@@ -4,21 +4,35 @@ import "./News.css";
 function News() {
   const [news, setNews] = useState([]);
 
+  const token = localStorage.getItem("accessToken");
+
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/news/`)
-      .then((res) => res.json())
-      .then((data) => setNews(data));
+    fetch(`http://127.0.0.1:8000/api/news/`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch news");
+        }
+        return res.json();
+      })
+      .then((data) => setNews(data))
+      .catch((error) => console.error(error));
   }, []);
+  
 
   return (
     <div className="News shadow hover">
       <span className="News__title">Latest News</span>
       <div className="Wishes__horizontalLine"></div>
       <div className="News__content">
-        {news.length == 0 ? (
+        {/* {news.length == 0 ? (
           <span>Loading...</span>
         ) : (
-          news.map((d, i) => (
+          news?.map((d, i) => (
             <NewsContent
               key={i}
               link={d.link}
@@ -26,7 +40,7 @@ function News() {
               heading={d.heading}
             />
           ))
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -1,20 +1,17 @@
-import React, { useState, useContext } from "react";
-import { Redirect } from "react-router-dom";
-import "./Register.css";
-import PersonIcon from "@material-ui/icons/Person";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import EmailIcon from "@material-ui/icons/Email";
-import { Context } from "../../../API/Context";
-import { csrftoken } from "../../../API/CSRFToken";
+import React, { useState } from "react";
+import { Redirect, useHistory } from "react-router-dom";
+import { MdPerson, MdEmail, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Import React Icons for username, email, password
 
 function Register() {
+  const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const value = useContext(Context);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   async function submitHandle(e) {
     e.preventDefault();
@@ -28,7 +25,6 @@ function Register() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
       },
       body: JSON.stringify({ username, email, password }),
     });
@@ -40,68 +36,88 @@ function Register() {
     }
   }
 
-  if (value?.loggedIn) {
-    return <Redirect to="/home" />;
-  }
-
-  if (success) {
-    return <Redirect to="/login" />;
-  }
-
   return (
-    <div className="Register">
-      <form className="register-form shadow-lg" onSubmit={submitHandle}>
-        <legend>Register</legend>
-        {error && <span className="Register__error">{error}</span>}
-        <div className="input-group mb-2">
-          <span className="input-group-text">
-            <PersonIcon />
-          </span>
+    <div className="flex items-center justify-center min-h-screen bg-white text-gray-800">
+      <form
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
+        onSubmit={submitHandle}
+      >
+        <legend className="text-2xl font-semibold text-center text-gray-800 mb-6">
+          Register
+        </legend>
+        {error && <span className="block text-red-500 text-center mb-4">{error}</span>}
+
+        <div className="mb-4 relative">
+          <MdPerson className="absolute left-3 top-3 text-gray-500" />
           <input
             type="text"
-            placeholder="USERNAME"
-            className="form-control"
+            placeholder="Username"
+            className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
-        <div className="input-group mb-2">
-          <span className="input-group-text">
-            <EmailIcon />
-          </span>
+
+        <div className="mb-4 relative">
+          <MdEmail className="absolute left-3 top-3 text-gray-500" />
           <input
             type="email"
-            placeholder="EMAIL"
-            className="form-control"
+            placeholder="Email"
+            className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div className="input-group mb-2">
-          <span className="input-group-text">
-            <VpnKeyIcon />
-          </span>
+
+        <div className="mb-4 relative">
+          <MdVpnKey className="absolute left-3 top-3 text-gray-500" />
           <input
-            type="password"
-            placeholder="PASSWORD"
-            className="form-control"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <div
+            className="absolute right-3 top-3 cursor-pointer"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+          </div>
         </div>
-        <div className="input-group mb-2">
-          <span className="input-group-text">
-            <VpnKeyIcon />
-          </span>
+
+        <div className="mb-6 relative">
+          <MdVpnKey className="absolute left-3 top-3 text-gray-500" />
           <input
-            type="password"
-            placeholder="CONFIRM PASSWORD"
-            className="form-control"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          <div
+            className="absolute right-3 top-3 cursor-pointer"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? <MdVisibilityOff /> : <MdVisibility />}
+          </div>
         </div>
-        <input type="submit" value="REGISTER" className="btn btn-primary w-50" />
+
+        <div className="mb-4">
+          <button
+            type="submit"
+            className="w-full p-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Register
+          </button>
+        </div>
+        <div className="flex justify-center text-blue-700 hover:text-blue-500">
+          <button
+            type="button"
+            onClick={() => history.push("/login")}
+          >Already have an account?</button>
+        </div>
+        {success && <Redirect to="/login" />}
       </form>
     </div>
   );

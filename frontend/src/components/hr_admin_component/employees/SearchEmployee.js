@@ -1,8 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Context } from "../../API/Context";
 
 function SearchEmployee() {
-  const value = useContext(Context);
   const [input, setInput] = useState({
     firstname: "",
     lastname: "",
@@ -20,13 +18,33 @@ function SearchEmployee() {
 
   const submitHandle = (e) => {
     e.preventDefault();
-
-    fetch(
-      `http://127.0.0.1:8000/api/employee/?firstname=${input.firstname}&lastname=${input.lastname}&department=${input.department}&designation=${input.designation}&gender=${input.gender}`
-    )
+  
+    // Get the token for Authorization
+    const token = localStorage.getItem("accessToken");
+  
+    // Construct query parameters for the fetch URL
+    const queryParams = new URLSearchParams({
+      firstname: input.firstname,
+      lastname: input.lastname,
+      department: input.department,
+      designation: input.designation,
+      gender: input.gender,
+    }).toString();
+  
+    fetch(`http://127.0.0.1:8000/api/employee/?${queryParams}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,  // Add the token in the Authorization header
+      },
+    })
       .then((response) => response.json())
-      .then((data) => value.setEmployees(data));
+      .then((data) => {
+       // Update the context with the fetched employees data
+      })
+      .catch((error) => {
+        console.error("Failed to fetch employees:", error);
+      });
   };
+  
 
   return (
     <form id="employee-search-form" className="input-group">

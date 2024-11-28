@@ -1,6 +1,6 @@
 import React from "react";
 import "./AdminList.css";
-import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
+// import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
 
 function AdminList({ srno, id, username, status, setInput, deleteHandle }) {
   const active = status ? 1 : 0;
@@ -26,7 +26,7 @@ function AdminList({ srno, id, username, status, setInput, deleteHandle }) {
           className="AdminList__button"
           title="delete"
         >
-          <DeleteForeverRoundedIcon />
+          {/* <DeleteForeverRoundedIcon /> */}
         </span>
       </td>
     </tr>

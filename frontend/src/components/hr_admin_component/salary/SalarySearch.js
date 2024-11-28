@@ -10,20 +10,29 @@ function SalarySearch({ setSalaryData }) {
 
   const submitHandle = async (e) => {
     e.preventDefault();
-
+  
+    const token = localStorage.getItem("accessToken");
     const queryParams = new URLSearchParams(input).toString();
     const url = `http://127.0.0.1:8000/api/monthly-salary/${
       queryParams ? `?${queryParams}` : ""
     }`;
-
+  
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
       const data = await response.json();
       setSalaryData(data);
     } catch (error) {
       console.error("Failed to fetch salary data:", error);
     }
   };
+  
 
   return (
     <form className="salary-search-form" onSubmit={submitHandle}>

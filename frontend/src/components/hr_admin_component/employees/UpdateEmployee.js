@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext, useReducer } from "react";
-import { Context } from "../../API/Context";
+import React, { useState, useEffect, useReducer } from "react";
 import "./UpdateEmployee.css";
 import { Redirect } from "react-router-dom";
 import ProfilePic from "./profile-picture.png";
@@ -21,39 +20,43 @@ const reducer = (state, action) => {
 };
 
 function UpdateEmployee() {
-  const value = useContext(Context);
   const [employee, setEmployee] = useState({});
   const [salary, setSalary] = useState({});
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const numberFormat = (value) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(value);
+    useEffect(() => {
+      const token = localStorage.getItem("accessToken");  // Retrieve the token from localStorage
+    
+      // Fetch employee data
+      fetch(`http://127.0.0.1:8000/api/employee/${1}/`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,  // Add Bearer token for authentication
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setEmployee(data));
+    
+      // Fetch salary data
+      fetch(`http://127.0.0.1:8000/api/salary/?employee_id=${1}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,  // Add Bearer token for authentication
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setSalary(data[0]));
+    }, []);  // Ensure useEffect runs whenever empId changes
+    
 
-  useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/employee/${value.empId}/`)
-      .then((response) => response.json())
-      .then((data) => setEmployee(data));
-    fetch(`http://127.0.0.1:8000/api/salary/?employee_id=${value.empId}`)
-      .then((response) => response.json())
-      .then((data) => setSalary(data[0]));
-  }, []);
-
-  if (!value.empId) {
-    return <Redirect to="/view-employees" />;
-  }
 
   return (
     <div className="UpdateEmployee">
       <div className="UpdateEmployee__profile">
-        <img src={employee.profilePic} alt={ProfilePic} />
+        <img src={employee?.profilePic} alt={ProfilePic} />
         <span id="UpdateEmployee__profile__fullName">
-          {employee.firstname + " " + employee.lastname}
+          {employee?.firstname + " " + employee?.lastname}
         </span>
         <span className="mb-2">
-          {employee.designation}, {employee.department}
+          {employee?.designation}, {employee?.department}
         </span>
         <div className="UpdateEmployee__profile__title mb-2">
           <small>Personal Details</small>
@@ -61,17 +64,17 @@ function UpdateEmployee() {
         </div>
         <div className="UpdateEmployee__profile__personalDetails">
           <b>Email:</b>
-          <i>{employee.email}</i>
+          <i>{employee?.email}</i>
           <b>Contact:</b>
-          <i>{employee.contact}</i>
+          <i>{employee?.contact}</i>
           <b>Gender:</b>
-          <i>{employee.gender}</i>
+          <i>{employee?.gender}</i>
           <b>Date Of Birth:</b>
-          <i>{employee.dob}</i>
+          <i>{employee?.dob}</i>
           <b>Date Of Hired:</b>
-          <i>{employee.dateOfHired}</i>
+          <i>{employee?.dateOfHired}</i>
           <b>Date Of Joined:</b>
-          <i>{employee.dateOfJoined}</i>
+          <i>{employee?.dateOfJoined}</i>
         </div>
         <div className="UpdateEmployee__profile__title mb-2">
           <div></div>
@@ -81,11 +84,11 @@ function UpdateEmployee() {
         <div className="UpdateEmployee__details__count">
           <TotalEmployees
             title="Salary(PPA)"
-            count={numberFormat(salary.ppa)}
+            count={1}
           />
           <TotalEmployees
             title="Salary(Monthly)"
-            count={numberFormat(salary.monthly_salary)}
+            count={1}
           />
           <TotalEmployees title="Working Days(Monthly)" count="24" />
         </div>
@@ -96,7 +99,7 @@ function UpdateEmployee() {
           </ul>
         </div>
         <div className="UpdateEmployee__details__container shadow">
-          {state.view}
+          {state?.view}
         </div>
       </div>
     </div>

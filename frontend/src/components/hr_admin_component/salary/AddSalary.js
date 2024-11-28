@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { csrftoken } from "../../API/CSRFToken";
 import AddEmployee from "../employees/AddEmployee";
 import "./AddSalary.css";
 
@@ -65,7 +64,6 @@ function AddSalary({ empId }) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
       },
       body: JSON.stringify(input),
     })

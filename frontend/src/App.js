@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
-import ContextProvider from "./router/Router";
-import Router from "./router/Router"
+import Router from "./router/Router";
 
 function App() {
-  return (
-    <ContextProvider>
-      <Router/>
-    </ContextProvider>
-  );
+  return <Router />;
 }
 
 export default App;

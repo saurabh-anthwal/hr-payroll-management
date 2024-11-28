@@ -1,147 +1,95 @@
 import React, { useState } from "react";
-import "./EmployeeDashboard.css";
-import { FaUser, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegListAlt } from "react-icons/fa";
+import {
+  FaUser,
+  FaRegCalendarAlt,
+  FaRegMoneyBillAlt,
+  FaRegListAlt,
+} from "react-icons/fa";
 import EmployeeNavbar from "../navbar/Navbar";
-const EmployeeDashboard = ({ employee = {} }) => {
-    const [activeTab, setActiveTab] = useState("dashboard");
+import EmployeeDashboard from "./EmployeeDashboard";
+import Profile from "./Profile";
+import SalaryDetails from "./SalaryDetails";
+import UpcomingHolidays from "./UpcomingHolidays";
 
-    // Employee general details
-    const {
-        name = "John Doe",
-        attendance = "95%",
-        leaveTaken = 5,
-        totalLeave = 12,
-        joiningDate = "2020-01-15",
-        dob = "1990-05-25",
-        designation = "Software Engineer",
-        holidays = ["2024-01-01", "2024-03-10", "2024-12-25"],
-        basicSalary = 3000,
-        hra = 500,
-        da = 300,
-        pfContribution = 360,
-        esiContribution = 150,
-        joiningBonus = 1000,
-        appraisal = 500,
-        annualBonus = 2000,
-        healthInsurance = true,
-        otherBenefits = "Paid Time Off, Maternity Leave",
-    } = employee;
+const Dashboard = ({ employee = {} }) => {
+  const [activeTab, setActiveTab] = useState("employee-dashboard");
 
-    const grossSalary = basicSalary + hra + da;
-    const netSalary = grossSalary - pfContribution - esiContribution;
+  const renderContent = () => {
+    switch (activeTab) {
+      case "employee-dashboard":
+        return <EmployeeDashboard employee={employee} />;
+      case "salary":
+        return <SalaryDetails employee={employee} />;
+      case "holidays":
+        return <UpcomingHolidays holidays={employee.holidays || []} />;
+      case "profile":
+        return <Profile employee={employee} />;
+      default:
+        return null;
+    }
+  };
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case "dashboard":
-                return (
-                    <div className="employee-info">
-                        <h3>Employee Dashboard</h3>
-                        <div className="info-box">
-                            <span className="info-label">Name:</span>
-                            <span className="info-value">{name}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Designation:</span>
-                            <span className="info-value">{designation}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Date of Birth:</span>
-                            <span className="info-value">{dob}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Joining Date:</span>
-                            <span className="info-value">{joiningDate}</span>
-                        </div>
-                    </div>
-                );
-            case "salary":
-                return (
-                    <div className="salary-section">
-                        <h3>Salary Details</h3>
-                        <div className="info-box">
-                            <span className="info-label">Basic Salary:</span>
-                            <span className="info-value">${basicSalary}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">HRA:</span>
-                            <span className="info-value">${hra}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">DA:</span>
-                            <span className="info-value">${da}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Gross Salary:</span>
-                            <span className="info-value">${grossSalary}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Net Salary:</span>
-                            <span className="info-value">${netSalary}</span>
-                        </div>
-                    </div>
-                );
-            case "holidays":
-                return (
-                    <div className="holidays-section">
-                        <h3>Upcoming Holidays</h3>
-                        <ul className="holidays-list">
-                            {holidays.map((holiday, index) => (
-                                <li key={index} className="holiday-item">
-                                    {holiday}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                );
-            case "profile":
-                return (
-                    <div className="employee-profile">
-                        <h3>Profile Details</h3>
-                        <div className="info-box">
-                            <span className="info-label">Name:</span>
-                            <span className="info-value">{name}</span>
-                        </div>
-                        <div className="info-box">
-                            <span className="info-label">Designation:</span>
-                            <span className="info-value">{designation}</span>
-                        </div>
-                    </div>
-                );
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <>
-        <EmployeeNavbar/>
-        <div className="dashboard-container">
-            <h2 className="dashboard-heading">Employee Dashboard</h2>
-            <div className="card-container">
-                <div className={`card ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>
-                    <FaRegListAlt className="card-icon" />
-                    Employee Dashboard
-                </div>
-
-                <div className={`card ${activeTab === "salary" ? "active" : ""}`} onClick={() => setActiveTab("salary")}>
-                    <FaRegMoneyBillAlt className="card-icon" />
-                    Salary Details
-                </div>
-
-                <div className={`card ${activeTab === "holidays" ? "active" : ""}`} onClick={() => setActiveTab("holidays")}>
-                    <FaRegCalendarAlt className="card-icon" />
-                    Upcoming Holidays
-                </div>
-
-                <div className={`card ${activeTab === "profile" ? "active" : ""}`} onClick={() => setActiveTab("profile")}>
-                    <FaUser className="card-icon" />
-                    Profile
-                </div>
-            </div>
-            <div className="content-container">{renderContent()}</div>
+  return (
+    <>
+    <EmployeeNavbar/>
+    <div className="bg-gray-100 min-h-screen flex flex-col">
+    <main className="flex-1 flex flex-col lg:flex-row">
+      {/* Sidebar */}
+      <aside className="bg-gray-50 shadow-lg lg:w-1/4 p-4 flex flex-col gap-4">
+        <div
+          className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
+            activeTab === "employee-dashboard"
+              ? "bg-blue-500 text-white"
+              : "hover:bg-blue-100 text-blue-600"
+          }`}
+          onClick={() => setActiveTab("employee-dashboard")}
+        >
+          <FaRegListAlt className="text-2xl" />
+          <span className="font-medium">Dashboard</span>
         </div>
-        </>
-    );
+        <div
+          className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
+            activeTab === "salary"
+              ? "bg-green-500 text-white"
+              : "hover:bg-green-100 text-green-600"
+          }`}
+          onClick={() => setActiveTab("salary")}
+        >
+          <FaRegMoneyBillAlt className="text-2xl" />
+          <span className="font-medium">Salary</span>
+        </div>
+        <div
+          className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
+            activeTab === "holidays"
+              ? "bg-yellow-500 text-white"
+              : "hover:bg-yellow-100 text-yellow-600"
+          }`}
+          onClick={() => setActiveTab("holidays")}
+        >
+          <FaRegCalendarAlt className="text-2xl" />
+          <span className="font-medium">Holidays</span>
+        </div>
+        <div
+          className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
+            activeTab === "profile"
+              ? "bg-purple-500 text-white"
+              : "hover:bg-purple-100 text-purple-600"
+          }`}
+          onClick={() => setActiveTab("profile")}
+        >
+          <FaUser className="text-2xl" />
+          <span className="font-medium">Profile</span>
+        </div>
+      </aside>
+  
+      {/* Main Content */}
+      <section className="flex-1 bg-white p-6">
+        {renderContent()}
+      </section>
+    </main>
+  </div>
+  </>
+  );
 };
 
-export default EmployeeDashboard;
+export default Dashboard;

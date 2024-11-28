@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AdminPanel.css";
 import AdminList from "./AdminList";
-import PersonIcon from "@material-ui/icons/Person";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import LockRoundedIcon from "@material-ui/icons/LockRounded";
-import { csrftoken } from "../../API/CSRFToken";
 
 function AdminPanel() {
   const [input, setInput] = useState({
@@ -23,42 +19,60 @@ function AdminPanel() {
   };
 
   const get_admin = () => {
-    fetch(`http://127.0.0.1:8000/api/admin/`)
-      .then((res) => res.json())
-      .then((data) => setData(data));
+    const token = localStorage.getItem("accessToken");
+  
+    fetch(`http://127.0.0.1:8000/api/admin/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setData(data))
+      .catch((error) => console.error("Failed to fetch admin data:", error));
   };
-
+  
   const updateHandle = (id) => {
+    const token = localStorage.getItem("accessToken");  // Get the token from localStorage
+  
     fetch(`http://127.0.0.1:8000/api/admin/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
+        "Authorization": `Bearer ${token}`,  // Add the Authorization header with the token
       },
       body: JSON.stringify(input),
     })
       .then((res) =>
         res.ok ? alert("Record Updated!") : alert("Failed To Update!")
       )
-      .then(get_admin)
-      .then(resetHandle);
+      .then(get_admin)  // Fetch the updated admin data
+      .then(resetHandle);  // Reset the form or input fields
   };
+  
 
   const registerHandle = () => {
+    const token = localStorage.getItem("accessToken");  // Get the token from localStorage
+  
     fetch(`http://127.0.0.1:8000/api/admin/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
+        "Authorization": `Bearer ${token}`,  // Add the Authorization header with the token
       },
       body: JSON.stringify(input),
     })
       .then((res) =>
         res.ok ? alert("Record Registered!") : alert("Username Already Exists!")
       )
-      .then(get_admin)
-      .then(resetHandle);
+      .then(get_admin)  // Fetch the updated admin data
+      .then(resetHandle);  // Reset the form or input fields
   };
+  
 
   const submitHandle = (e) => {
     e.preventDefault();
@@ -71,18 +85,24 @@ function AdminPanel() {
   };
 
   const deleteHandle = (id) => {
+    const token = localStorage.getItem("accessToken");  // Get the token from localStorage
+    
     let check = window.confirm("Do you want to delete?");
     if (check) {
       fetch(`http://127.0.0.1:8000/api/admin/${id}/`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,  // Add the Authorization header with the token
+        },
       })
         .then((res) =>
           res.ok ? alert("Record Deleted!") : alert("Failed To Delete!")
         )
-        .then(get_admin)
-        .then(resetHandle);
+        .then(get_admin)  // Fetch the updated admin data
+        .then(resetHandle);  // Reset the form or input fields
     }
   };
+  
 
   const resetHandle = () => {
     setInput({
@@ -110,7 +130,7 @@ function AdminPanel() {
             </tr>
           </thead>
           <tbody>
-            {data.map((d, i) => (
+            {data.length>0 ? data.map((d, i) => (
               <AdminList
                 key={d.id}
                 srno={i + 1}
@@ -120,7 +140,10 @@ function AdminPanel() {
                 setInput={setInput}
                 deleteHandle={deleteHandle}
               />
-            ))}
+            ))
+            :
+            <p>No Record Found</p>
+            }
           </tbody>
         </table>
       </div>
@@ -129,7 +152,7 @@ function AdminPanel() {
           <legend>Admin Registration</legend>
           <div className="input-group mb-2">
             <label htmlFor="username" className="input-group-text">
-              <PersonIcon />
+              {/* <PersonIcon /> */}
             </label>
             <input
               type="text"
@@ -143,7 +166,7 @@ function AdminPanel() {
           </div>
           <div className="input-group mb-2">
             <label htmlFor="password" className="input-group-text">
-              <VpnKeyIcon />
+              {/* <VpnKeyIcon /> */}
             </label>
             <input
               type="password"
@@ -157,7 +180,7 @@ function AdminPanel() {
           </div>
           <div className="input-group mb-2">
             <label htmlFor="status" className="input-group-text">
-              <LockRoundedIcon />
+              {/* <LockRoundedIcon /> */}
             </label>
             <select
               className="form-select"

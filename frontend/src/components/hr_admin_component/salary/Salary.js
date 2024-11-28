@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./Salary.css";
 import SalarySearch from "./SalarySearch";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { csrftoken } from "../../API/CSRFToken";
 import moment from "moment";
 
 function Salary() {
   const [salaryData, setSalaryData] = useState([]);
 
+  const token = localStorage.getItem("accessToken");
+
   const get_salary = () => {
-    fetch(`http://127.0.0.1:8000/api/monthly-salary/`)
-      .then((res) => res.json())
-      .then((data) => setSalaryData(data));
+    fetch(`http://127.0.0.1:8000/api/monthly-salary/`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch salary data");
+        }
+        return res.json();
+      })
+      .then((data) => setSalaryData(data))
+      .catch((error) => console.error("Error:", error));
   };
+  
 
   useEffect(() => {
     get_salary();
@@ -39,7 +51,7 @@ function Salary() {
             </tr>
           </thead>
           <tbody>
-            {salaryData.map((data, i) => {
+            {salaryData.length>0 ? salaryData.map((data, i) => {
               return (
                 <SalaryList
                   key={i}
@@ -54,7 +66,10 @@ function Salary() {
                   get_salary={get_salary}
                 />
               );
-            })}
+            })
+            :
+            <p>No Record Found</p>
+            }
           </tbody>
         </table>
       </div>
@@ -81,15 +96,23 @@ function SalaryList({
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
       },
-      body: JSON.stringify({ paidStatus: paidStatus, paidDate: paidDate }),
+      body: JSON.stringify({ paidStatus, paidDate }),
     })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .then(get_salary);
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to update salary data");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Update Success:", data);
+        get_salary(); // Fetch updated salary data
+      })
+      .catch((error) => console.error("Error:", error));
   };
-
+  
   useEffect(() => {
     setPaidDate(paidStatus == 1 ? moment(new Date()).format("YYYY-MM-DD") : "");
   }, [paidStatus]);
@@ -116,7 +139,7 @@ function SalaryList({
       <td>{date}</td>
       <td>
         <span className="Salary__upload" onClick={updateHandle} title="update">
-          <CloudUploadIcon />
+          {/* <CloudUploadIcon /> */}
         </span>
       </td>
     </tr>

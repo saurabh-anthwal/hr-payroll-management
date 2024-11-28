@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./AddEmployee.css";
-import { csrftoken } from "../../API/CSRFToken";
 import AddSalary from "../salary/AddSalary";
 
 function AddEmployee() {
@@ -30,10 +29,12 @@ function AddEmployee() {
       formData.append(key, file[key]);
     });
 
+    const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
+
     fetch(`http://127.0.0.1:8000/api/employee/`, {
       method: "POST",
       headers: {
-        "X-CSRFToken": csrftoken,
+        "Authorization": `Bearer ${token}`, // Add the token here
       },
       body: formData,
     }).then((res) =>

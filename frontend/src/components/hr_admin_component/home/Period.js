@@ -1,6 +1,6 @@
 import React from "react";
 import "./Period.css";
-import GetAppIcon from "@material-ui/icons/GetApp";
+// import GetAppIcon from "@material-ui/icons/GetApp";
 import moment from "moment";
 
 function Period() {
@@ -24,7 +24,7 @@ function Period() {
       </div>
       <div className="Home__period__download">
         <span>
-          <GetAppIcon />
+          {/* <GetAppIcon /> */}
         </span>
         <span>Check Status</span>
       </div>
