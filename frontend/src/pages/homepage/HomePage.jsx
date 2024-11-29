@@ -1,22 +1,31 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import ForgotPasswordForm from "../../components/Login/Forget_password/ForgotPasswordForm";
+import OtpForm from "../../components/Login/Forget_password/OtpForm";
+import Register from "../../components/Login/HrRegister/register/Register";
+import LoginForm from "../../components/Login/LoginForm";
+import Login from "../../components/Login/HrRegister/login/Login";
 
 const HomePage = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
+  const [showOtpForm, setShowOtpForm] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [currentForm, setCurrentForm] = useState("login");
+  const [loginWithHR, setLoginWithHR] = useState(false)
+  const [registerWithHR, setRegisterWithHR] = useState(false)
+  
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/accounts/login/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -39,9 +48,63 @@ const HomePage = () => {
     }
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/accounts/reset-password/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp, new_password: newPassword }),
+      });
 
-  const handleLoginHr =()=>{
-    history.push("/login")
+      if (response.ok) {
+        alert("Password reset successful. You can now log in.");
+        setShowOtpForm(false); // Hide OTP form
+        setEmail("");
+        setPassword("");
+        setCurrentForm("login");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Password reset failed");
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      console.error(error);
+    }
+  };
+
+  const handleForgotPasswordRequest = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/accounts/forgot-password/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        alert("OTP sent to your email. Please check.");
+        setShowOtpForm(true); // Show OTP form
+        setCurrentForm("otp");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to send OTP");
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      console.error(error);
+    }
+  };
+
+  const handleLoginHr = () => {
+    setRegisterWithHR(false)
+    setLoginWithHR(true)
+  }
+
+  const handleRegisterHr = () => {
+    setLoginWithHR(false)
+    setRegisterWithHR(true)
   }
 
   return (
@@ -57,49 +120,45 @@ const HomePage = () => {
               Simplifying HR operations and empowering employees with an elegant, centralized platform.
             </p>
           </div>
-        
+
           <div className="flex flex-col lg:flex-row items-center lg:justify-around gap-12">
             {/* Left Section */}
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold text-gray-800">Your Workplace, One Click Away – Sign In.</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-600">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-2 mt-1 text-sm text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full px-4 py-2 mt-1 text-sm text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full px-4 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Login
-                </button>
-              </form>
+              <div className="max-w-md mx-auto">
+      {currentForm === "login" && (
+        <LoginForm
+          email={email}
+          password={password}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          error={error}
+          onLogin={handleLogin}
+          onForgotPassword={() => setCurrentForm("forgotPassword")}
+        />
+      )}
+      {currentForm === "forgotPassword" && (
+        <ForgotPasswordForm
+          email={email}
+          setEmail={setEmail}
+          error={error}
+          onRequestOtp={handleForgotPasswordRequest}
+          onBackToLogin={() => setCurrentForm("login")}
+        />
+      )}
+      {currentForm === "otp" && (
+        <OtpForm
+          otp={otp}
+          newPassword={newPassword}
+          setOtp={setOtp}
+          setNewPassword={setNewPassword}
+          error={error}
+          onResetPassword={handleResetPassword}
+        />
+      )}
+    </div>
             </div>
-        
+
             {/* Right Section */}
             <div className="w-full lg:max-w-lg">
               <img
@@ -111,7 +170,6 @@ const HomePage = () => {
           </div>
         </div>
       </header>
-
 
       {/* Features Section */}
       <section className="py-16 px-6 md:px-16">
@@ -183,12 +241,18 @@ const HomePage = () => {
           </p>
           <div className="flex flex-col md:flex-row justify-center gap-6">
             <button onClick={handleLoginHr} className="bg-gray-900 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-800">
-              Login as HR
+              HR Login
             </button>
-            {/* <button onClick={handleLoginEmp} className="bg-gray-900 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-800">
-              Login as Employee
-            </button> */}
+            <button onClick={handleRegisterHr} className="bg-gray-900 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-800">
+              HR Register
+            </button>
           </div>
+            {
+              loginWithHR ? <Login/> : ""
+            }
+            {
+              registerWithHR ? <Register/>:""
+            }
         </div>
       </section>
 

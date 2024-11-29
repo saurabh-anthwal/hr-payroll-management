@@ -7,7 +7,7 @@ function Navbar() {
   const location = useLocation(); // Get the current path
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userName = localStorage.getItem("userName") || "User";
-  
+
   const handleLogout = () => {
     localStorage.removeItem("loggedIn");
     localStorage.removeItem("accessToken");
@@ -19,8 +19,8 @@ function Navbar() {
   const isActive = (path) => location.pathname === path; // Check if path is active
 
   return (
-    <nav className="bg-gray-800 shadow-md">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <img
@@ -31,40 +31,46 @@ function Navbar() {
         </Link>
 
         {/* Navbar Links */}
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden md:flex items-center space-x-8">
           <Link
             to="/home"
             className={`${
-              isActive("/home") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/home") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Home
           </Link>
           <Link
             to="/salary"
             className={`${
-              isActive("/salary") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/salary") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Salary
           </Link>
+
+          {/* Dropdown for Employees */}
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-gray-300 hover:text-white focus:outline-none"
+              className={`${
+                isActive("/add-employee") || isActive("/view-employees")
+                  ? "text-indigo-600 font-semibold"
+                  : "text-gray-600"
+              } hover:text-indigo-700 transition-colors duration-300 focus:outline-none`}
             >
               Employees
             </button>
             {/* Dropdown */}
             {isDropdownOpen && (
-              <div className="absolute bg-gray-700 mt-2 rounded shadow-lg">
+              <div className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 z-20">
                 <Link
                   to="/add-employee"
                   className={`block px-4 py-2 text-sm ${
                     isActive("/add-employee")
-                      ? "text-white font-bold bg-gray-600"
-                      : "text-gray-300"
-                  } hover:text-white hover:bg-gray-600`}
+                      ? "text-indigo-600 font-semibold"
+                      : "text-gray-600"
+                  } hover:bg-indigo-50 hover:text-indigo-700`}
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   Add Employee
@@ -73,9 +79,9 @@ function Navbar() {
                   to="/view-employees"
                   className={`block px-4 py-2 text-sm ${
                     isActive("/view-employees")
-                      ? "text-white font-bold bg-gray-600"
-                      : "text-gray-300"
-                  } hover:text-white hover:bg-gray-600`}
+                      ? "text-indigo-600 font-semibold"
+                      : "text-gray-600"
+                  } hover:bg-indigo-50 hover:text-indigo-700`}
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   View Employees
@@ -86,21 +92,19 @@ function Navbar() {
           <Link
             to="/admin-panel"
             className={`${
-              isActive("/admin-panel") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/admin-panel") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Admin Panel
           </Link>
         </div>
 
         {/* User Section */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-300">Welcome, <span className="text-white font-bold">{userName}</span></span>
-          </div>
+        <div className="flex items-center space-x-6">
+          <span className="text-gray-600">Welcome, <span className="text-black font-semibold">{userName}</span></span>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded"
+            className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
           >
             <RiLogoutCircleRLine size={20} />
             <span className="hidden sm:inline">Logout</span>
@@ -109,10 +113,10 @@ function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      <div className="md:hidden bg-gray-800">
-        <div className="flex justify-end p-3">
+      <div className="md:hidden bg-white shadow-md">
+        <div className="flex justify-between p-4">
           <button
-            className="text-gray-300 hover:text-white"
+            className="text-gray-600 hover:text-indigo-600"
             onClick={() => {
               const menu = document.getElementById("mobileMenu");
               menu.classList.toggle("hidden");
@@ -121,44 +125,44 @@ function Navbar() {
             ☰
           </button>
         </div>
-        <div id="mobileMenu" className="hidden space-y-2 px-4 pb-4">
+        <div id="mobileMenu" className="hidden space-y-4 px-6 pb-4">
           <Link
             to="/home"
             className={`block ${
-              isActive("/home") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/home") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Home
           </Link>
           <Link
             to="/salary"
             className={`block ${
-              isActive("/salary") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/salary") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Salary
           </Link>
           <Link
             to="/add-employee"
             className={`block ${
-              isActive("/add-employee") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/add-employee") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Add Employee
           </Link>
           <Link
             to="/view-employees"
             className={`block ${
-              isActive("/view-employees") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/view-employees") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             View Employees
           </Link>
           <Link
             to="/admin-panel"
             className={`block ${
-              isActive("/admin-panel") ? "text-white font-bold" : "text-gray-300"
-            } hover:text-white`}
+              isActive("/admin-panel") ? "text-indigo-600 font-semibold" : "text-gray-600"
+            } hover:text-indigo-700 transition-colors duration-300`}
           >
             Admin Panel
           </Link>

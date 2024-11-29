@@ -8,8 +8,7 @@ import UpdateEmployee from "../components/hr_admin_component/employees/UpdateEmp
 import Salary from "../components/hr_admin_component/salary/Salary";
 import AdminPanel from "../components/hr_admin_component/adminPanel/AdminPanel";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
-import Login, { Logout } from "../components/hr_admin_component/accounts/login/Login";
-import Register from "../components/hr_admin_component/accounts/register/Register";
+// import  { Logout } from "../components/hr_admin_component/accounts/login/Login";
 import HomePage from "../pages/homepage/HomePage";
 
 function Router() {
@@ -19,12 +18,12 @@ function Router() {
         <Route exact path="/">
           <HomePage />
         </Route>
-        <Route exact path="/login">
+        {/* <Route exact path="/login">
           <Login />
-        </Route>
-        <Route path="/register">
+        </Route> */}
+        {/* <Route path="/register">
           <Register />
-        </Route>
+        </Route> */}
         <Route path="/admin-panel">
           <>
             <Navbar />
@@ -61,9 +60,9 @@ function Router() {
             <Home />
           </>
         </Route>
-        <Route path="/logout">
+        {/* <Route path="/logout">
           <Logout />
-        </Route>
+        </Route> */}
         <Route path="/employee-dashboard">
           <Dashboard />
         </Route>

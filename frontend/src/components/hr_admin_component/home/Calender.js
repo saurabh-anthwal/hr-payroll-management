@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./Calender.css";
 import moment from "moment";
 
 function Calender() {
@@ -52,128 +51,75 @@ function Calender() {
   }
 
   let totalSlots = [...blanks, ...daysOfMonth];
-  let cells = [];
   let rows = [];
-  let count = 6;
+  let cells = [];
 
   totalSlots.forEach((day, i) => {
-    if (cells.length <= 6) {
-      cells.push(
-        <td
-          key={i}
-          className={
-            cells.length == 6 || i == 0
-              ? "holiday "
-              : "" + currentDate == day &&
-                currentYear == input.year &&
-                currentMonth == input.month
-              ? "currentDate"
-              : ""
-          }
-        >
-          {day}
-        </td>
-      );
-    } else {
+    cells.push(
+      <td
+        key={i}
+        className={`p-2 text-center ${
+          day === currentDate &&
+          input.year === currentYear &&
+          input.month === currentMonth
+            ? "bg-blue-500 text-white font-bold"
+            : "text-gray-700"
+        }`}
+      >
+        {day}
+      </td>
+    );
+    if ((i + 1) % 7 === 0 || i === totalSlots.length - 1) {
       rows.push(<tr key={i}>{cells}</tr>);
       cells = [];
-      cells.push(
-        <td key={i} className={currentDate == day ? "currentDate" : "holiday"}>
-          {day}
-        </td>
-      );
-    }
-    if (i == totalSlots.length - 1) {
-      rows.push(<tr key={i}>{cells}</tr>);
     }
   });
 
   return (
-    <div className="Home__calender shadow hover">
-      <div className="Home__calender__monthYear">
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition duration-300">
+      <div className="flex justify-between items-center mb-4">
         <select
-          className="Home__calender__month"
+          className="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={input.month}
-          onChange={(e) => setInput({ ...input, month: e.target.value })}
+          onChange={(e) => setInput({ ...input, month: parseInt(e.target.value) })}
         >
-          {Object.keys(listOfMonths).map((key, i) => (
-            <option value={i + 1} key={i}>
-              {listOfMonths[key]}
+          {listOfMonths.map((month, i) => (
+            <option key={i} value={i + 1}>
+              {month}
             </option>
           ))}
         </select>
         <select
-          className="Home__calender__Year"
+          className="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={input.year}
-          onChange={(e) => setInput({ ...input, year: e.target.value })}
+          onChange={(e) => setInput({ ...input, year: parseInt(e.target.value) })}
         >
-          {Object.keys(listOfYears).map((key, i) => (
-            <option key={i} value={listOfYears[key]}>
-              {listOfYears[key]}
+          {listOfYears.map((year, i) => (
+            <option key={i} value={year}>
+              {year}
             </option>
           ))}
         </select>
       </div>
-      <table>
+      <table className="w-full border-collapse">
         <thead>
-          <tr className="Home__calender__days">
-            {Object.keys(listOfDays).map((key, i) => (
-              <th key={i} className={listOfDays[key] == "S" ? "holiday" : ""}>
-                {listOfDays[key]}
+          <tr>
+            {listOfDays.map((day, i) => (
+              <th
+                key={i}
+                className="p-2 text-gray-500 text-sm font-medium text-center"
+              >
+                {day}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="Home__calender__dates">{rows}</tbody>
+        <tbody>
+          {rows}
+        </tbody>
       </table>
     </div>
   );
 }
 
 export default Calender;
-
-// totalSlots.forEach((day, i) => {
-//   if (cells.length <= 6) {
-//     if (i == count) {
-//       cells.push(
-//         <td className="holiday" key={i}>
-//           {day}
-//         </td>
-//       );
-//       count = count + 7;
-//     } else {
-//       if (
-//         day == currentDate &&
-//         currentMonth == input.month &&
-//         currentYear == input.year
-//       ) {
-//         cells.push(
-//           <td className="currentDate" key={i}>
-//             {day}
-//           </td>
-//         );
-//       } else {
-//         if (i == 0) {
-//           cells.push(
-//             <td className="holiday" key={i}>
-//               {day}
-//             </td>
-//           );
-//         } else {
-//           cells.push(<td key={i}>{day}</td>);
-//         }
-//       }
-//     }
-//   } else {
-//     rows.push(<tr key={i}>{cells}</tr>);
-//     cells = [];
-//     cells.push(
-//       <td className="holiday" key={i}>
-//         {day}
-//       </td>
-//     );
-//   }
-//   if (totalSlots.length - 1 == i) {
-//     rows.push(<tr key={i}>{cells}</tr>);
-//   }
-// });

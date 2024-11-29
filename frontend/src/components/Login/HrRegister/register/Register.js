@@ -15,12 +15,10 @@ function Register() {
 
   async function submitHandle(e) {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-
     const response = await fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {
@@ -112,10 +110,9 @@ function Register() {
           </button>
         </div>
         <div className="flex justify-center text-blue-700 hover:text-blue-500">
-          <button
-            type="button"
-            onClick={() => history.push("/login")}
-          >Already have an account?</button>
+          <button type="button" onClick={() => history.push("/login")}>
+            Already have an account?
+          </button>
         </div>
         {success && <Redirect to="/login" />}
       </form>

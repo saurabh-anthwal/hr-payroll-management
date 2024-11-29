@@ -35,22 +35,24 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework.authtoken',
 
-    'accounts.apps.AccountsConfig',
+    # 'accounts.apps.AccountsConfig',
     'salary.apps.SalaryConfig',
     'home.apps.HomeConfig',
     
     'rest_framework_simplejwt',
+    'accounts'
 ]
 
 # put on your settings.py file below INSTALLED_APPS
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -164,3 +166,14 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'accounts.User'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sovianthwal@gmail.com'
+EMAIL_HOST_PASSWORD = 'ehlr xjkk movd zbpg'
+DEFAULT_FROM_EMAIL = 'sovianthwal@gmail.com'

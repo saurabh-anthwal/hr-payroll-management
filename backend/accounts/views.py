@@ -1,6 +1,10 @@
 
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework.exceptions import ValidationError
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +17,7 @@ from rest_framework.response import Response
 from .models import AdminUser, Employee, User
 from .serializers import AdminUserSerializer, EmployeeSerializer, AdminLoginSerializer, EmployeeLoginSerializer, UserSerializer
 
-from .permissions import IsAdmin
+from .permissions import IsEmployee, IsManager, IsHR, IsAdmin
 
 class AdminUserViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]  # Overrides global IsAuthenticated
@@ -80,12 +84,10 @@ class CountEmployee(viewsets.ViewSet):
             'inactive_employees': inactive,
         })
 
-
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdmin]
 
     #response password remove
     def create(self, request, *args, **kwargs):
@@ -108,20 +110,16 @@ class LoginView(APIView):
         if not email or not password:
             raise AuthenticationFailed("Email and password are required.")
 
-        # Get the user by email
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise AuthenticationFailed("Invalid email or password.")
 
-        # Check the password
         if not check_password(password, user.password):
             raise AuthenticationFailed("Invalid email or password.")
 
-        # Create a refresh token and access token for the user
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token) 
-        user_data = UserSerializer(user).data
 
         return Response({
             'access_token': access_token,
@@ -132,6 +130,67 @@ class LoginView(APIView):
         }, status=200)
 
 class Hello(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin] 
+    permission_classes = [IsAuthenticated, IsEmployee] 
     def get(self, request):
-        return Response({'text':"hello word"}, status=200)
+        return Response({'text':"hello employee"}, status=200)
+
+class HelloManager(APIView):
+    permission_classes = [IsAuthenticated, IsManager] 
+    def get(self, request):
+        return Response({'text':"hello Manager"}, status=200)
+
+class HelloHR(APIView):
+    permission_classes = [IsAuthenticated, IsHR] 
+    def get(self, request):
+        return Response({'text':"hello HR"}, status=200)
+
+
+class ForgotPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise NotFound("User with this email does not exist.")
+
+        # Generate OTP and save it
+        user.generate_otp()
+
+        # Send OTP via email
+        send_mail(
+            subject="Password Reset OTP",
+            message=f"Your OTP for password reset is {user.otp}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+
+        return Response({"message": "OTP sent to your email."}, status=200)
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        otp = request.data.get('otp')
+        new_password = request.data.get('new_password')
+
+        if not email or not otp or not new_password:
+            raise ValidationError("Email, OTP, and new password are required.")
+
+        # Validate OTP
+        try:
+            user = User.objects.get(email=email, otp=otp)
+        except User.DoesNotExist:
+            raise ValidationError("Invalid OTP or email.")
+
+        # Reset password
+        user.set_password(new_password)
+        user.otp = None  # Clear OTP after use
+        user.save()
+
+        return Response({"message": "Password has been reset successfully."}, status=200)
+

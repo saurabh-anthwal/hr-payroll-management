@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password
+import random
 from django.db import models
 
 
@@ -27,9 +28,7 @@ class User(AbstractUser):
         EMPLOYEE = "EMPLOYEE", "Employee"
         PAYROLL_ADMIN = "PAYROLL_ADMIN", "Payroll Administrator"
 
-    type = models.CharField(
-        max_length=20, choices=Types.choices, default=Types.EMPLOYEE
-    )
+    type = models.CharField(max_length=20, choices=Types.choices, default=Types.EMPLOYEE)
 
     email = models.EmailField(unique=True, max_length=50)
     username = models.CharField(unique=True, max_length=20)
@@ -50,6 +49,12 @@ class User(AbstractUser):
     @property
     def employee(self):
         return getattr(self, 'employee', None)
+    
+    otp = models.CharField(max_length=6, blank=True, null=True)
+
+    def generate_otp(self):
+        self.otp = f"{random.randint(100000, 999999)}"
+        self.save()
 
     def save(self, *args, **kwargs):
         # Hash the password if it's not already hashed
