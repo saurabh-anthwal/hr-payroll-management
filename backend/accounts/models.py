@@ -4,21 +4,38 @@ import random
 from django.db import models
 
 
+from django.core.validators import EmailValidator
+from django.contrib.auth.hashers import make_password
+from django.db import models
+
 class AdminUser(models.Model):
-    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    email = models.EmailField(
+        max_length=255,
+        unique=True,
+        validators=[EmailValidator(message="Enter a valid email address.")],
+    )
     password = models.CharField(max_length=128, null=True, blank=True)
     status = models.BooleanField(default=True)
+    otp = models.CharField(max_length=6, blank=True, null=True) 
+    otp_verified = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'admin'
 
     def __str__(self):
-        return self.username
+        return self.email
 
     def save(self, *args, **kwargs):
+        # Hash the password if it is not already hashed
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
+
+    def generate_otp(self):
+        """Generate and save a 6-digit OTP."""
+        self.otp = str(random.randint(100000, 999999))
+        self.save()
+
 
 class User(AbstractUser):
     class Types(models.TextChoices):
@@ -51,13 +68,13 @@ class User(AbstractUser):
         return getattr(self, 'employee', None)
     
     otp = models.CharField(max_length=6, blank=True, null=True)
-
+    otp_verified = models.BooleanField(default=False)
+    
     def generate_otp(self):
         self.otp = f"{random.randint(100000, 999999)}"
         self.save()
 
     def save(self, *args, **kwargs):
-        # Hash the password if it's not already hashed
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)

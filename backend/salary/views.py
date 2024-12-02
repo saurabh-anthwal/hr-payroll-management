@@ -6,8 +6,9 @@ from .models import Salary
 from .serializers import SalarySerializer
 from accounts.models import Employee
 from .models import MonthlySalary, Salary
-
+from accounts.permissions import IsHR
 class SalaryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsHR]
     queryset = Salary.objects.all()
     serializer_class = SalarySerializer
     filter_backends = [DjangoFilterBackend]
@@ -15,7 +16,7 @@ class SalaryViewSet(viewsets.ModelViewSet):
 
 
 class MonthlySalaryViewSet(viewsets.ViewSet):
-
+    permission_classes = [IsHR]
     def list(self, request):
         paid_status = request.GET.get('paidStatus', None)
         full_name = request.GET.get('fullName', None)
@@ -40,7 +41,7 @@ class MonthlySalaryViewSet(viewsets.ViewSet):
             salary = Salary.objects.filter(employee=employee).first()  # Assuming 1 salary per employee
             data.append({
                 'emp_id': employee.id,
-                'full_name': f"{employee.first_name} {employee.last_name}",
+                'full_name': f"{employee.firstname} {employee.lastname}",
                 'department': employee.department,
                 'salary': salary.monthly_salary if salary else None,
                 'from_date': monthly_salary.from_date,

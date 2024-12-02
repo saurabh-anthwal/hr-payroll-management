@@ -4,18 +4,19 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import check_password
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.response import Response
 
 from .models import AdminUser, Employee, User
-from .serializers import AdminUserSerializer, EmployeeSerializer, AdminLoginSerializer, EmployeeLoginSerializer, UserSerializer
+from .serializers import AdminUserSerializer, EmployeeSerializer, AdminLoginSerializer, AdminUserOTPSendSerializer, UserSerializer, AdminUserOTPVerifySerializer, UserOTPVerifySerializer, UserOTPVerifySerializer, UserOTPSendSerializer
 
 from .permissions import IsEmployee, IsManager, IsHR, IsAdmin
 
@@ -31,11 +32,11 @@ class AdminUserViewSet(viewsets.ViewSet):
         serializer = AdminLoginSerializer(data=request.data)
 
         if serializer.is_valid():
-            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
             password = serializer.validated_data['password']
     
             try:
-                user = AdminUser.objects.get(username=username)
+                user = AdminUser.objects.get(email=email)
                 print(user,"user")
             except:
                 return Response({"message": "User not found"}, status=404)
@@ -47,7 +48,7 @@ class AdminUserViewSet(viewsets.ViewSet):
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'username':user.username,
+                'username':user.email,
                 'message': "Login successful!"
             }, status=200)
 
@@ -55,18 +56,52 @@ class AdminUserViewSet(viewsets.ViewSet):
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsHR]
     queryset = Employee.objects.all()
-    # parser_classes = (MultiPartParser, FormParser,)
     serializer_class = EmployeeSerializer
     parser_classes = (JSONParser, MultiPartParser, FormParser) 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['firstname', 'lastname','department', 'designation', 'gender']
-    permission_classes = [IsAuthenticated]  # Restrict access
 
 
 class AdminViewSet(viewsets.ModelViewSet):
     queryset = AdminUser.objects.all()
     serializer_class = AdminUserSerializer
+
+    @action(detail=False, methods=['post'], url_path='send-otp')
+    def send_otp(self, request):
+        serializer = AdminUserOTPSendSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            admin, _ = AdminUser.objects.get_or_create(email=email)
+            admin.generate_otp() 
+            admin.save()
+
+            # Send OTP via email
+            send_mail(
+                'Your OTP for Admin Registration',
+                f'Your OTP is {admin.otp}',
+                'from@example.com',  # Replace with your email
+                [email],
+                fail_silently=False,
+            )
+            return Response({'message': 'OTP sent to email.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'], url_path='verify-otp')
+    def verify_otp(self, request):
+        serializer = AdminUserOTPVerifySerializer(data=request.data)
+        if serializer.is_valid():
+            admin_user = serializer.save()
+
+            # Now that OTP is verified, we set the password if it's provided in the request
+            password = request.data.get('password')
+            if password:
+                admin_user.password = password
+                admin_user.save()
+
+            return Response({'message': 'OTP verified and password set successfully.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CountEmployee(viewsets.ViewSet):
@@ -85,20 +120,68 @@ class CountEmployee(viewsets.ViewSet):
         })
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer 
     permission_classes = [IsAdmin]
 
-    #response password remove
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data = request.data)
-        serializer.is_valid(raise_exception = True)
-        self.perform_create(serializer)
-        
-        response_data = serializer.data
-        response_data.pop('password',None)
+    @action(detail=False, methods=['post'], url_path='send-otp')
+    def send_otp(self, request):
+        serializer = UserOTPSendSerializer(data=request.data)
+        if serializer.is_valid():
+            # Extract email, username, password, and type from the payload
+            email = serializer.validated_data['email']
+            username = serializer.validated_data['username']
+            user_type = serializer.validated_data['type']
 
-        return Response(response_data,status=201)
+            # Check if the user already exists; create if not
+            user, created = User.objects.get_or_create(email=email)
+
+            if created:
+                user.username = username
+                user.type = user_type
+                user.otp_verified = False  # OTP not verified yet
+                user.generate_otp()  # Generate OTP
+                user.save()
+
+            # Send OTP to the email
+            send_mail(
+                'Your OTP for Admin Registration',
+                f'Your OTP is {user.otp}',
+                'sovianthwal@gmail.com',  # Your email
+                [email],
+                fail_silently=False,
+            )
+
+            # Prepare the user data response (without password)
+            user_data = {
+                'email': user.email,
+                'username': user.username,
+                'type': user.type,
+                'otp_verified': user.otp_verified
+            }
+
+            return Response(
+                {
+                    'message': 'OTP sent to email.',
+                    'user': user_data
+                },
+                status=status.HTTP_200_OK
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'], url_path='verify-otp')
+    def verify_otp(self, request):
+        serializer = UserOTPVerifySerializer(data=request.data)
+        if serializer.is_valid():
+            # OTP is verified, save the password if provided
+            user = serializer.save()
+            password = serializer.validated_data.get('password')
+            if password:
+                user.set_password(password)  # Hash and save the password
+            user.save()
+
+            return Response({'message': 'OTP verified and password set successfully.'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
