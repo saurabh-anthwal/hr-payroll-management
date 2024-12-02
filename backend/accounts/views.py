@@ -145,7 +145,7 @@ class UserViewSet(viewsets.ModelViewSet):
             send_mail(
                 'Your OTP for Admin Registration',
                 f'Your OTP is {user.otp}',
-                'sovianthwal@gmail.com',  # Your email
+                email, 
                 [email],
                 fail_silently=False,
             )
