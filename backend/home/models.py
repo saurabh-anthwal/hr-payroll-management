@@ -69,6 +69,17 @@ class Reimbursement(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.amount} - {self.status}"
 
-        
+class Holiday(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    description = models.TextField(blank=True, null=True)
+    active = models.BooleanField(default=True)  # To indicate if the holiday is active or not
+
+    class Meta:
+        db_table = 'holiday'
+        ordering = ['date']  # To sort holidays by date
+
+    def __str__(self):
+        return f"{self.name} - {self.date}"        
 
 

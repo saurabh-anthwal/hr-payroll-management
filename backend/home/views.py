@@ -4,10 +4,13 @@ from rest_framework import status
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from .utils import news
-from .models import Leave, Attendance, Insurance, Bonus, Reimbursement, LeaveBalance
-from .serializers import LeaveSerializer, AttendanceSerializer, InsuranceSerializer, BonusSerializer, ReimbursementSerializer
-from accounts.permissions import IsHR
+from accounts.permissions import IsHR, IsEmployee
+from .models import Leave, Attendance, Insurance, Bonus, Reimbursement, LeaveBalance, Holiday
+from .serializers import LeaveSerializer, AttendanceSerializer, InsuranceSerializer, BonusSerializer, ReimbursementSerializer, HolidaySerializer, EmployeeSerializer
+from accounts.models import Employee
+
 class NewsViewSet(viewsets.ViewSet):
     def list(self, request):
         return Response(news, status=200)
@@ -137,3 +140,20 @@ class BonusViewSet(viewsets.ModelViewSet):
 class ReimbursementViewSet(viewsets.ModelViewSet):
     queryset = Reimbursement.objects.all()
     serializer_class = ReimbursementSerializer
+
+class HolidayViewSet(viewsets.ModelViewSet):
+    queryset = Holiday.objects.all()
+    serializer_class = HolidaySerializer
+
+class GetLoggedInEmployeeDetail(APIView):
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def get(self, request):
+        try:
+            # Fetch the Employee object associated with the logged-in user
+            employee = request.user.employee
+            # Serialize the employee details and return as a response
+            serializer = EmployeeSerializer(employee)
+            return Response(serializer.data, status=200)
+        except Employee.DoesNotExist:
+            return Response({"error": "Employee details not found"}, status=404)

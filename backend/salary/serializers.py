@@ -12,3 +12,8 @@ class MonthlySalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = MonthlySalary
         fields = '__all__'
+
+class GetEmpSalaryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salary
+        fields = '__all__'

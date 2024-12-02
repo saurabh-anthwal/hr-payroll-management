@@ -1,15 +1,15 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import AdminUserViewSet, AdminViewSet, EmployeeViewSet, CountEmployee, UserViewSet, LoginView, Hello, HelloManager, HelloHR,ForgotPasswordView, ResetPasswordView
+from .views import AdminViewSet, EmployeeViewSet, CountEmployee, UserViewSet, LoginView, ForgotPasswordView, ResetPasswordView, HRViewSet, ManagerViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register('admin', AdminViewSet, basename='admin')
-router.register('admin-login', AdminUserViewSet, basename='adminLogin')
 router.register('users', UserViewSet, basename='users')
 router.register('employee', EmployeeViewSet, basename='employee')
 router.register('employee-count', CountEmployee, basename='employeeCount')
-
+router.register('hrs', HRViewSet, basename='hr')
+router.register('managers', ManagerViewSet, basename='manager')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -18,7 +18,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
-    path('helo/', Hello.as_view(), name='hello'),
-    path('helo-manager/', HelloManager.as_view(), name='hello'),
-    path('helo-hr/', HelloHR.as_view(), name='hello'),
+    path('hr/', include(router.urls)),
+    path('manager/', include(router.urls)),
 ]

@@ -1,12 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from .models import Salary
-from .serializers import SalarySerializer
+from .serializers import SalarySerializer, GetEmpSalaryDetailSerializer
 from accounts.models import Employee
 from .models import MonthlySalary, Salary
-from accounts.permissions import IsHR
+from accounts.permissions import IsHR, IsEmployee
+
 class SalaryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsHR]
     queryset = Salary.objects.all()
@@ -122,3 +125,25 @@ class MonthlySalaryViewSet(viewsets.ViewSet):
             'paid_status': monthly_salary.paid_status,
             'paid_date': monthly_salary.paid_date,
         }, status=status.HTTP_201_CREATED)
+
+class GetEmpSalaryDetails(APIView):
+    permission_classes = [IsEmployee]
+
+    def get(self, request):
+        try:
+            # Get the employee object related to the logged-in user
+            employee = request.user.employee
+            
+            # Fetch the salary details for this employee
+            salary = Salary.objects.filter(employee=employee).first()
+            
+            if not salary:
+                raise NotFound("Salary details not found for this employee")
+            
+            # Serialize the salary data
+            serializer = GetEmpSalaryDetailSerializer(salary)
+            return Response(serializer.data, status=200)
+        except NotFound as e:
+            return Response({"error": str(e)}, status=404)
+        except Exception as e:
+            return Response({"error": "An unexpected error occurred"}, status=500)

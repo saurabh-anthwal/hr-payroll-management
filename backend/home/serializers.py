@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Leave, Attendance, Insurance, Bonus, Reimbursement
-
+from .models import Leave, Attendance, Insurance, Bonus, Reimbursement, Holiday
+from accounts.models import Employee
 class LeaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leave
@@ -25,3 +25,15 @@ class ReimbursementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reimbursement
         fields = '__all__'
+
+class HolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Holiday
+        fields = '__all__'
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ['id', 'firstname', 'lastname', 'email', 'contact', 'gender', 'dob', 'address', 
+                  'department', 'designation', 'dateOfHired', 'dateOfJoined', 'profilePic', 'active']
+
