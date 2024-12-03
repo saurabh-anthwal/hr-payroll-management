@@ -5,6 +5,8 @@ import { Redirect, useHistory } from "react-router-dom";
 // import LoginForm from "../../LoginForm";
 import HrLoginForm from "../../components/accounts/login/HrLoginForm";
 // import HrForgotPasswordForm from "../../components/accounts/forgotPassword/HrForgotPasswordForm"
+import axios_instance from "../../libs/interseptor";
+import * as URLS from "../../libs/apiUrls"
 
 const HrLoginPage = () => {
   const history = useHistory();
@@ -19,24 +21,14 @@ const HrLoginPage = () => {
 
   async function submitHandle(e) {
     e.preventDefault();
-
-    const response = await fetch(`http://127.0.0.1:8000/api/accounts/admin-login/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (response?.ok) {
-      localStorage.setItem("loggedIn", true);
-      localStorage.setItem("accessToken", data.access);
-      localStorage.setItem("refreshToken", data.refresh);
-      localStorage.setItem("userName", data.username);
-      history.push("/home");
-    } else {
-      setError("Invalid credentials.");
-    }
+    console.log("hello ");
+    const param ={test_id: 1}
+    axios_instance.get(URLS.LOGIN, param)
+      .then((res) => {
+        console.log(res);
+      }).catch((err)=> {
+        console.log(err);
+      })
   }
 
     // Reset password with OTP

@@ -1,5 +1,5 @@
-const SERVER_URL = process.env.REACT_APP_APIURL;
+const SERVER_URL = process.env.REACT_APP_API_URL;
 
 module.exports = {
-  PROFILE: `${SERVER_URL}/accounts/me/`,
+  LOGIN: `${SERVER_URL}/accounts/me/`,
 }

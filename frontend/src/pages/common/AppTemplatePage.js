@@ -4,10 +4,10 @@ import AppTemplateRouter from "../../router/AppTemplateRouter";
 
 const AppTemplatePage = () => {
   return (<>
-    <div class="relative bg-[#f7f6f9] h-full min-h-screen font-[sans-serif]">
-      <div class="flex items-start">
+    <div className="relative bg-[#f7f6f9] h-full min-h-screen font-[sans-serif]">
+      <div className="flex items-start">
         <Sidebar/>
-        <section class="main-content w-full px-2">
+        <section className="main-content w-full px-2">
           <Navbar/>
           <AppTemplateRouter/>
         </section>
