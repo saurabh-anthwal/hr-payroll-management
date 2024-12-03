@@ -6,70 +6,30 @@ import AddEmployee from "../components/hr_admin_component/employees/AddEmployee"
 import ViewEmployees from "../components/hr_admin_component/employees/ViewEmployees";
 import UpdateEmployee from "../components/hr_admin_component/employees/UpdateEmployee";
 import Salary from "../components/hr_admin_component/salary/Salary";
-import AdminPanel from "../components/hr_admin_component/adminPanel/AdminPanel";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
-// import  { Logout } from "../components/hr_admin_component/accounts/login/Login";
 import HomePage from "../pages/homepage/HomePage";
 import HrLoginPage from "../pages/accounts/HrLoginPage";
 import HrRegisterPage from "../pages/accounts/HrRegisterPage";
 import AppTemplatePage from "../pages/common/AppTemplatePage";
+import PrivateRoute from "../components/PrivateRouteComponent/PrivateRoute";
+import PublicRoute from "../components/PublicRouteComponent/PublicRoute";
 
 function Router() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/">
-          <HomePage />
-        </Route>
-        <Route path="/login" component={HrLoginPage} />
-        <Route path="/register" component={HrRegisterPage} />
-        <Route path="/1" component={AppTemplatePage} />
-        {/* <Route exact path="/login">
-          <Login />
-        </Route> */}
-        {/* <Route path="/register"> <Register /> </Route> */}
-        {/* <Route path="/admin-panel">
-          <>
-            <Navbar />
-            <AdminPanel />
-          </>
-        </Route> */}
-        <Route path="/salary">
-          <>
-            <Navbar />
-            <Salary />
-          </>
-        </Route>
-        <Route path="/update-employee">
-          <>
-            <Navbar />
-            <UpdateEmployee />
-          </>
-        </Route>
-        <Route path="/view-employees">
-          <>
-            <Navbar />
-            <ViewEmployees />
-          </>
-        </Route>
-        <Route path="/add-employee">
-          <>
-            <Navbar />
-            <AddEmployee />
-          </>
-        </Route>
-        <Route path="/home">
-          <>
-            <Navbar />
-            <Home />
-          </>
-        </Route>
-        {/* <Route path="/logout">
-          <Logout />
-        </Route> */}
-        <Route path="/employee-dashboard">
-          <Dashboard />
-        </Route>
+        <PublicRoute exact path="/" component={HomePage} restricted={true}/>
+        <PublicRoute path="/login" component={HrLoginPage} restricted={true} />
+        <PublicRoute path="/register" component={HrRegisterPage} restricted={true}/>
+
+        {/* Protected Routes */}
+        <PrivateRoute path="/1" component={AppTemplatePage} />
+        <PrivateRoute path="/salary" component={Salary}/>
+        <PrivateRoute path="/update-employee" component={UpdateEmployee}/>
+        <PrivateRoute path="/view-employees" component={ViewEmployees}/>
+        <PrivateRoute path="/add-employee" component={AddEmployee}/>
+        <PrivateRoute path="/home" component={Home}/>
+        <PrivateRoute path="/employee-dashboard" component={Dashboard}/>
         {/* 404 Catch-all Route */}
         <Route path="*">
           <div>

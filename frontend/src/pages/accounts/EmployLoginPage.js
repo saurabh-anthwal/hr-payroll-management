@@ -2,7 +2,6 @@ import React, { useState } from "react";
 // import { MdPerson, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Importing React Icons
 import { Redirect, useHistory } from "react-router-dom";
 // import OtpForm from "../../Forget_password/OtpForm";
-// import LoginForm from "../../LoginForm";
 import EmployLoginForm from "../../components/accounts/login/EmployLoginForm";
 import EmployForgotPasswordForm from "../../components/accounts/forgotPassword/EmployForgotPasswordForm"
 

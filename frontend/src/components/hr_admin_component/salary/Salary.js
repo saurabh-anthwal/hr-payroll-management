@@ -1,58 +1,49 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import "./Salary.css";
 import SalarySearch from "./SalarySearch";
-import moment from "moment";
+import axios_instance from "../../../libs/interseptor";
+import apiUrls from "../../../libs/apiUrls";
 
 function Salary() {
   const [salaryData, setSalaryData] = useState([]);
 
-  const token = localStorage.getItem("accessToken");
-
-  const get_salary = () => {
-    fetch(`http://127.0.0.1:8000/api/monthly-salary/`, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch salary data");
-        }
-        return res.json();
-      })
-      .then((data) => setSalaryData(data))
-      .catch((error) => console.error("Error:", error));
+  const getSalary = async () => {
+    try {
+      const response = await axios_instance.get(apiUrls.MONTHLY_SALARY_STATUS);
+      console.log(response.data, "Fetched Salary Data");
+      setSalaryData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch salary details:", error);
+    }
   };
-  
 
   useEffect(() => {
-    get_salary();
+    getSalary();
   }, []);
 
   return (
-    <div className="Salary">
-      <div className="Salary__employee shadow">
-        <div className="Salary__employee__search">
-          <SalarySearch setSalaryData={setSalaryData} />
-        </div>
-        <table className="table table-hover">
-          <thead>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Salary Management</h1>
+        <SalarySearch setSalaryData={setSalaryData} />
+        <table className="w-full mt-6 text-sm text-left text-gray-500 border border-gray-200">
+          <thead className="text-xs uppercase bg-gray-200 text-gray-700">
             <tr>
-              <th scope="col">SRNO</th>
-              <th scope="col">Employee ID</th>
-              <th scope="col">Employee Name</th>
-              <th scope="col">Department</th>
-              <th scope="col">From Date</th>
-              <th scope="col">To Date</th>
-              <th scope="col">Paid Status</th>
-              <th scope="col">Paid Date</th>
-              <th scope="col-sm-1"></th>
+              <th className="py-3 px-4">SR No</th>
+              <th className="py-3 px-4">Employee ID</th>
+              <th className="py-3 px-4">Employee Name</th>
+              <th className="py-3 px-4">Department</th>
+              <th className="py-3 px-4">From Date</th>
+              <th className="py-3 px-4">To Date</th>
+              <th className="py-3 px-4">Paid Status</th>
+              <th className="py-3 px-4">Paid Date</th>
+              <th className="py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {salaryData.length>0 ? salaryData.map((data, i) => {
-              return (
+            {salaryData.length > 0 ? (
+              salaryData.map((data, i) => (
                 <SalaryList
                   key={i}
                   srno={i + 1}
@@ -63,19 +54,23 @@ function Salary() {
                   toDate={data.to_date}
                   status={data.paid_status}
                   date={data.paid_date}
-                  get_salary={get_salary}
+                  getSalary={getSalary}
                 />
-              );
-            })
-            :
-            <p>No Record Found</p>
-            }
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center py-4 text-gray-500">
+                  No Records Found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
 export default Salary;
 
 function SalaryList({
@@ -91,56 +86,56 @@ function SalaryList({
 }) {
   const [paidStatus, setPaidStatus] = useState(status ? "1" : "0");
   const [paidDate, setPaidDate] = useState();
-  const updateHandle = () => {
-    fetch(`http://127.0.0.1:8000/api/monthly-salary/${empId}/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({ paidStatus, paidDate }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to update salary data");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Update Success:", data);
-        get_salary(); // Fetch updated salary data
-      })
-      .catch((error) => console.error("Error:", error));
-  };
+  const storedUserData = JSON.parse(localStorage.getItem("userData"));
+  const login_id = storedUserData?.user_id
   
+  const updateHandle = async() => {
+    try {
+      const payload = { paidStatus, paidDate }
+      const url = `${apiUrls.MONTHLY_SALARY_STATUS}${login_id}/`;
+      const response = await axios_instance.put(url, payload);
+      console.log(response,"fsa")
+      if(response.status==200){
+        console.log("Salary data updated successfully:", response.data);
+        get_salary()
+      } else {
+        console.error("Unexpected response status:", response.status);
+      }
+    } catch (error) {
+      console.error("Failed to update salary data:", error.response || error.message);
+    }
+  };
+
   useEffect(() => {
-    setPaidDate(paidStatus == 1 ? moment(new Date()).format("YYYY-MM-DD") : "");
+    setPaidDate(paidStatus === "1" ? moment(new Date()).format("YYYY-MM-DD") : "");
   }, [paidStatus]);
 
   return (
-    <tr>
-      <th scope="row">{srno}</th>
-      <td>{empId}</td>
-      <td>{empName}</td>
-      <td>{department}</td>
-      <td>{fromDate}</td>
-      <td>{toDate}</td>
-      <td>
+    <tr className="border-b border-gray-200">
+      <td className="py-3 px-4">{srno}</td>
+      <td className="py-3 px-4">{empId}</td>
+      <td className="py-3 px-4">{empName}</td>
+      <td className="py-3 px-4">{department}</td>
+      <td className="py-3 px-4">{fromDate}</td>
+      <td className="py-3 px-4">{toDate}</td>
+      <td className="py-3 px-4">
         <select
-          name="paidStatus"
-          id="paidStatus"
           value={paidStatus}
           onChange={(e) => setPaidStatus(e.target.value)}
+          className="border border-gray-300 rounded-lg p-1 focus:ring-2 focus:ring-blue-400"
         >
           <option value="1">Paid</option>
           <option value="0">Unpaid</option>
         </select>
       </td>
-      <td>{date}</td>
-      <td>
-        <span className="Salary__upload" onClick={updateHandle} title="update">
-          {/* <CloudUploadIcon /> */}
-        </span>
+      <td className="py-3 px-4">{date}</td>
+      <td className="py-3 px-4">
+        <button
+          onClick={updateHandle}
+          className="text-white bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md text-sm"
+        >
+          Update
+        </button>
       </td>
     </tr>
   );

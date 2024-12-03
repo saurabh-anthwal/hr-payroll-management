@@ -1,91 +1,140 @@
-import React, { useState } from "react";
-import { FaEdit, FaPhoneAlt, FaBirthdayCake, FaMapMarkerAlt, FaGenderless, FaBriefcase, FaBuilding } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import {
+  FaEdit,
+  FaPhoneAlt,
+  FaBirthdayCake,
+  FaMapMarkerAlt,
+  FaGenderless,
+  FaBriefcase,
+  FaEnvelope,
+} from "react-icons/fa";
+import axios_instance from "../../../libs/interseptor";
+import * as URLS from "../../../libs/apiUrls";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const employee={}
-  const { 
-    name, 
-    designation, 
-    image, 
-    address, 
-    office, 
-    role, 
-    houseAddress, 
-    emergencyContact, 
-    gender, 
-    dob 
-  } = employee;
+  const [employee, setEmployee] = useState(null);
 
   const handleEditClick = () => {
-    setIsEditing(!isEditing);  // Toggle edit mode
+    setIsEditing(!isEditing);
   };
 
+  const get_profile = async () => {
+    try {
+      const response = await axios_instance.get(URLS.HR_DETAILS);
+      setEmployee(response.data);
+    } catch (error) {
+      console.error("Failed to fetch profile details:", error);
+    }
+  };
+
+  useEffect(() => {
+    get_profile();
+  }, []);
+
+  if (!employee) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h3 className="text-3xl font-semibold">Loading...</h3>
+      </div>
+    );
+  }
+
+  const {
+    firstname,
+    lastname,
+    designation,
+    profilePic,
+    address,
+    department,
+    gender,
+    dob,
+    contact,
+    email,
+  } = employee;
+
   return (
-    <div className="max-w-4xl mx-auto bg-white p-6 mt-4">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-3xl font-semibold text-indigo-700">Profile Details</h3>
+    <div className="max-w-5xl mx-auto p-8 bg-gray-50 shadow-lg rounded-lg mt-10">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-10 border-b pb-4">
+        <h3 className="text-3xl font-bold ">Profile Details</h3>
         <button
           onClick={handleEditClick}
-          className="text-lg text-indigo-600 hover:text-indigo-800 flex items-center space-x-2"
+          className="px-4 py-2 flex items-center space-x-2"
         >
           <FaEdit />
-          <span>Edit</span>
+          <span>Edit Profile</span>
         </button>
       </div>
 
-      <div className="flex items-center space-x-6 mb-8">
-        {/* Profile Image */}
-        <div className="w-24 h-24 rounded-full border-4 border-indigo-500 overflow-hidden">
+      {/* Profile Section */}
+      <div className="flex items-center bg-white p-6 rounded-lg shadow-md">
+        <div className="w-28 h-28 overflow-hidden">
           <img
-            src={image || "https://via.placeholder.com/150"}
+            src={"https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg" || profilePic}
             alt="profile"
             className="w-full h-full object-cover"
           />
         </div>
-        <div>
-          <h4 className="text-2xl font-semibold text-gray-800">{name || "John Doe"}</h4>
-          <p className="text-lg text-gray-600">{designation || "Software Engineer"}</p>
+        <div className="ml-6">
+          <h4 className="text-2xl font-bold text-gray-800 uppercase">
+            {`${firstname} ${lastname}`}
+          </h4>
+          <p className="text-lg text-gray-600 font-semibold uppercase">{designation || "N/A"}</p>
         </div>
       </div>
 
-      {/* Employee Info */}
-      <div className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <FaBriefcase className="text-indigo-600" />
-          <span className="font-semibold text-lg">Role:</span>
-          <span className="text-gray-700">{role || "Developer"}</span>
+      {/* Information Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaBriefcase className="" />
+            <span className="font-semibold text-lg">Department:</span>
+            <span className="text-gray-700">{department || "N/A"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <FaBuilding className="text-indigo-600" />
-          <span className="font-semibold text-lg">Office:</span>
-          <span className="text-gray-700">{office || "Headquarters"}</span>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaMapMarkerAlt className="" />
+            <span className="font-semibold text-lg">Address:</span>
+            <span className="text-gray-700">{address || "N/A"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <FaMapMarkerAlt className="text-indigo-600" />
-          <span className="font-semibold text-lg">Address:</span>
-          <span className="text-gray-700">{address || "123 Main Street, City, State"}</span>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaGenderless className="" />
+            <span className="font-semibold text-lg">Gender:</span>
+            <span className="text-gray-700">{gender || "Not specified"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <FaGenderless className="text-indigo-600" />
-          <span className="font-semibold text-lg">Gender:</span>
-          <span className="text-gray-700">{gender || "Not specified"}</span>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaBirthdayCake className="" />
+            <span className="font-semibold text-lg">Date of Birth:</span>
+            <span className="text-gray-700">{dob || "N/A"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <FaBirthdayCake className="text-indigo-600" />
-          <span className="font-semibold text-lg">Date of Birth:</span>
-          <span className="text-gray-700">{dob || "Not provided"}</span>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaPhoneAlt className="" />
+            <span className="font-semibold text-lg">Contact:</span>
+            <span className="text-gray-700">{contact || "N/A"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <FaPhoneAlt className="text-indigo-600" />
-          <span className="font-semibold text-lg">Emergency Contact:</span>
-          <span className="text-gray-700">{emergencyContact || "Not provided"}</span>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <FaEnvelope className="" />
+            <span className="font-semibold text-lg">Email:</span>
+            <span className="text-gray-700">{email || "N/A"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="font-semibold text-lg text-indigo-600 cursor-pointer">
-            Change Password
-          </span>
-        </div>
+      </div>
+
+      {/* Footer Actions */}
+      <div className="mt-10 text-center">
+        <button className="px-6 py-2 bg-black text-white rounded-lg shadow-md ">
+          Change Password
+        </button>
       </div>
     </div>
   );

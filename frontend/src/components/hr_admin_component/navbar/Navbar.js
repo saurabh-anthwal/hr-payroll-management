@@ -9,184 +9,14 @@ function Navbar() {
   const userName = localStorage.getItem("userName") || "User";
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("userName");
+    localStorage.removeItem("userData");
     history.push("/");
   };
 
-  const isActive = (path) => location.pathname === path; // Check if path is active
-
   return (
-    // <nav className="bg-white shadow-md sticky top-0 z-50">
-    //   <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-    //     {/* Logo */}
-    //     <Link to="/" className="flex items-center space-x-2">
-    //       <img
-    //         src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
-    //         alt="Logo"
-    //         className="w-28"
-    //       />
-    //     </Link>
-
-    //     {/* Navbar Links */}
-    //     <div className="hidden md:flex items-center space-x-8">
-    //       <Link
-    //         to="/home"
-    //         className={`${
-    //           isActive("/home") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Home
-    //       </Link>
-    //       <Link
-    //         to="/salary"
-    //         className={`${
-    //           isActive("/salary") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Salary
-    //       </Link>
-
-    //       {/* Dropdown for Employees */}
-    //       <div className="relative">
-    //         <button
-    //           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-    //           className={`${
-    //             isActive("/add-employee") || isActive("/view-employees")
-    //               ? "text-indigo-600 font-semibold"
-    //               : "text-gray-600"
-    //           } hover:text-indigo-700 transition-colors duration-300 focus:outline-none`}
-    //         >
-    //           Employees
-    //         </button>
-    //         {/* Dropdown */}
-    //         {isDropdownOpen && (
-    //           <div className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 z-20">
-    //             <Link
-    //               to="/add-employee"
-    //               className={`block px-4 py-2 text-sm ${
-    //                 isActive("/add-employee")
-    //                   ? "text-indigo-600 font-semibold"
-    //                   : "text-gray-600"
-    //               } hover:bg-indigo-50 hover:text-indigo-700`}
-    //               onClick={() => setIsDropdownOpen(false)}
-    //             >
-    //               Add Employee
-    //             </Link>
-    //             <Link
-    //               to="/view-employees"
-    //               className={`block px-4 py-2 text-sm ${
-    //                 isActive("/view-employees")
-    //                   ? "text-indigo-600 font-semibold"
-    //                   : "text-gray-600"
-    //               } hover:bg-indigo-50 hover:text-indigo-700`}
-    //               onClick={() => setIsDropdownOpen(false)}
-    //             >
-    //               View Employees
-    //             </Link>
-    //           </div>
-    //         )}
-    //       </div>
-    //       <Link
-    //         to="/admin-panel"
-    //         className={`${
-    //           isActive("/admin-panel") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Admin Panel
-    //       </Link>
-    //     </div>
-
-    //     {/* User Section */}
-    //     <div className="flex items-center space-x-6">
-    //       <span className="text-gray-600">Welcome, <span className="text-black font-semibold">{userName}</span></span>
-    //       <button
-    //         onClick={handleLogout}
-    //         className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
-    //       >
-    //         <RiLogoutCircleRLine size={20} />
-    //         <span className="hidden sm:inline">Logout</span>
-    //       </button>
-    //     </div>
-    //   </div>
-
-    //   {/* Mobile Menu */}
-    //   <div className="md:hidden bg-white shadow-md">
-    //     <div className="flex justify-between p-4">
-    //       <button
-    //         className="text-gray-600 hover:text-indigo-600"
-    //         onClick={() => {
-    //           const menu = document.getElementById("mobileMenu");
-    //           menu.classList.toggle("hidden");
-    //         }}
-    //       >
-    //         ☰
-    //       </button>
-    //     </div>
-    //     <div id="mobileMenu" className="hidden space-y-4 px-6 pb-4">
-    //       <Link
-    //         to="/home"
-    //         className={`block ${
-    //           isActive("/home") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Home
-    //       </Link>
-    //       <Link
-    //         to="/salary"
-    //         className={`block ${
-    //           isActive("/salary") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Salary
-    //       </Link>
-    //       <Link
-    //         to="/add-employee"
-    //         className={`block ${
-    //           isActive("/add-employee") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Add Employee
-    //       </Link>
-    //       <Link
-    //         to="/view-employees"
-    //         className={`block ${
-    //           isActive("/view-employees") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         View Employees
-    //       </Link>
-    //       <Link
-    //         to="/admin-panel"
-    //         className={`block ${
-    //           isActive("/admin-panel") ? "text-indigo-600 font-semibold" : "text-gray-600"
-    //         } hover:text-indigo-700 transition-colors duration-300`}
-    //       >
-    //         Admin Panel
-    //       </Link>
-    //     </div>
-    //   </div>
-    // </nav>
-
-    
-      
-  
-        <header className='z-50 bg-white sticky top-0 pt-4'>
+      <header className='z-50 bg-white sticky top-0 pt-4'>
           <div className='flex flex-wrap items-center w-full relative tracking-wide'>
             <div className='flex items-center gap-y-6 max-sm:flex-col z-50 w-full pb-2'>
-              {/* <div
-                className='flex items-center gap-4 w-full px-6 bg-white shadow-sm min-h-[48px] sm:mr-20 rounded-md outline-none border-none'>
-                <input type='text' placeholder='Search something...'
-                  className='w-full text-sm bg-transparent rounded outline-none' />
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904"
-                  className="w-4 cursor-pointer fill-gray-400 ml-auto">
-                  <path
-                    d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
-                  </path>
-                </svg>
-              </div> */}
   
               <div className="flex items-center justify-end gap-6 ml-auto">
                 <div className='flex items-center space-x-6'>
@@ -291,7 +121,7 @@ function Navbar() {
                           </g>
                         </svg>
                         Schedules</a>
-                      <a href="javascript:void(0)"
+                      <a href="javascript:void(0)" onClick={handleLogout}
                         className="text-sm text-gray-800 cursor-pointer flex items-center p-2 rounded-md hover:bg-[#d9f3ea] dropdown-item transition duration-300 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] mr-4 fill-current"
                           viewBox="0 0 6 6">

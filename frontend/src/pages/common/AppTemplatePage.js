@@ -8,7 +8,7 @@ const AppTemplatePage = () => {
       <div className="flex items-start">
         <Sidebar/>
         <section className="main-content w-full px-2">
-          <Navbar/>
+          {/* <Navbar/> */}
           <AppTemplateRouter/>
         </section>
       </div>

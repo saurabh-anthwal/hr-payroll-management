@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-// import { MdPerson, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Importing React Icons
+import axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
-// import OtpForm from "../../Forget_password/OtpForm";
-// import LoginForm from "../../LoginForm";
+import OtpForm from "../../components/Login/Forget_password/OtpForm";
 import HrLoginForm from "../../components/accounts/login/HrLoginForm";
-// import HrForgotPasswordForm from "../../components/accounts/forgotPassword/HrForgotPasswordForm"
+import HrForgotPasswordForm from "../../components/accounts/forgotPassword/HrForgotPasswordForm";
 import axios_instance from "../../libs/interseptor";
 import * as URLS from "../../libs/apiUrls"
 
@@ -14,23 +13,42 @@ const HrLoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
-  // const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentForm, setCurrentForm] = useState("login");
 
+  const publicAxios = axios.create(); // No interceptors for this instance
+
   async function submitHandle(e) {
     e.preventDefault();
-    console.log("hello ");
-    const param ={test_id: 1}
-    axios_instance.get(URLS.LOGIN, param)
-      .then((res) => {
-        console.log(res);
-      }).catch((err)=> {
-        console.log(err);
-      })
-  }
+    setError("");
+    const params = { email, password };
+  
+    try {
+      const response = await publicAxios.post(URLS.HR_LOGIN, params);
 
+      if (response.status === 200 && response.data?.user_id) {
+        localStorage.setItem("userData", JSON.stringify(response.data));
+        history.push(`/1/dashboard`);
+      } else {
+        setError("Invalid login credentials. Please try again.");
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 500) {
+          setError("Server error. Please try again later.");
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+      } else if (err.request) {
+        setError("No response from the server. Please check your network.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  }
+  
+  
     // Reset password with OTP
     const handleResetPassword = async (e) => {
       e.preventDefault();
@@ -95,7 +113,7 @@ const HrLoginPage = () => {
             onForgotPassword={() => setCurrentForm("forgotPassword")}
           />
         )}
-        {/*currentForm === "forgotPassword" && (
+        {currentForm === "forgotPassword" && (
           <HrForgotPasswordForm
             email={email}
             setEmail={setEmail}
@@ -103,8 +121,8 @@ const HrLoginPage = () => {
             onRequestOtp={handleForgotPasswordRequest}
             onBackToLogin={() => setCurrentForm("login")}
           />
-        )*/}
-        {/*currentForm === "otp" && (
+        )}
+        {currentForm === "otp" && (
           <OtpForm
             otp={otp}
             newPassword={newPassword}
@@ -113,7 +131,7 @@ const HrLoginPage = () => {
             error={error}
             onResetPassword={handleResetPassword}
           />
-        )*/}
+        )}
         </div>
     </div>
   );

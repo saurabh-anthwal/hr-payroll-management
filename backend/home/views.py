@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from .utils import news
 from accounts.permissions import IsHR, IsEmployee
 from .models import Leave, Attendance, Insurance, Bonus, Reimbursement, LeaveBalance, Holiday
-from .serializers import LeaveSerializer, AttendanceSerializer, InsuranceSerializer, BonusSerializer, ReimbursementSerializer, HolidaySerializer, EmployeeSerializer
+from .serializers import LeaveSerializer, AttendanceSerializer, InsuranceSerializer, BonusSerializer, ReimbursementSerializer, HolidaySerializer, EmployeeSerializer, HRSerializer
 from accounts.models import Employee
 
 class NewsViewSet(viewsets.ViewSet):
@@ -154,6 +154,17 @@ class GetLoggedInEmployeeDetail(APIView):
             employee = request.user.employee
             # Serialize the employee details and return as a response
             serializer = EmployeeSerializer(employee)
+            return Response(serializer.data, status=200)
+        except Employee.DoesNotExist:
+            return Response({"error": "Employee details not found"}, status=404)
+
+class GetLoggedInHRDetail(APIView):
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def get(self, request):
+        try:
+            hr = request.user.hr
+            serializer = HRSerializer(hr)
             return Response(serializer.data, status=200)
         except Employee.DoesNotExist:
             return Response({"error": "Employee details not found"}, status=404)

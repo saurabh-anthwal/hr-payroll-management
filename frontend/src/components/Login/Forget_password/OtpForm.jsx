@@ -3,42 +3,50 @@ import React from "react";
 const OtpForm = ({ otp, newPassword, setOtp, setNewPassword, error, onResetPassword }) => {
   return (
     <form onSubmit={onResetPassword} className="space-y-6">
-      <div>
-        <label htmlFor="otp" className="block text-sm font-medium text-gray-600">
-          OTP
-        </label>
-        <input
-          id="otp"
-          type="text"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          placeholder="Enter the OTP sent to your email"
-          className="w-full px-4 py-2 mt-1 text-sm text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">
-          New Password
-        </label>
-        <input
-          id="newPassword"
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="Enter your new password"
-          className="w-full px-4 py-2 mt-1 text-sm text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      <button
-        type="submit"
-        className="w-full px-4 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
-      >
-        Reset Password
-      </button>
-    </form>
+    {/* OTP Input */}
+    <div>
+      <label htmlFor="otp" className="text-gray-800 text-sm mb-2 block">
+        OTP
+      </label>
+      <input
+        id="otp"
+        type="text"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value)}
+        placeholder="Enter the OTP sent to your email"
+        className="w-full px-4 py-3 mt-1 text-sm text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-600 focus:border-blue-600"
+        required
+      />
+    </div>
+  
+    {/* New Password Input */}
+    <div>
+      <label htmlFor="newPassword" className="text-gray-800 text-sm mb-2 block">
+        New Password
+      </label>
+      <input
+        id="newPassword"
+        type="password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        placeholder="Enter your new password"
+        className="w-full px-4 py-3 mt-1 text-sm text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-600 focus:border-blue-600"
+        required
+      />
+    </div>
+  
+    {/* Error Message */}
+    {error && <p className="text-sm text-red-500">{error}</p>}
+  
+    {/* Reset Password Button */}
+    <button
+      type="submit"
+      className="w-full py-3 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none shadow-md"
+    >
+      Reset Password
+    </button>
+  </form>
+  
   );
 };
 
