@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoginForm = ({ email, password, setEmail, setPassword, error, onLogin, onForgotPassword }) => {
+const HrLoginForm = ({ email, password, setEmail, setPassword, error, onLogin, onForgotPassword }) => {
   return (
     // <form onSubmit={onLogin} className="space-y-6">
     //   <div>
@@ -97,7 +97,7 @@ const LoginForm = ({ email, password, setEmail, setPassword, error, onLogin, onF
                 </button>
               </div>
 
-              <p class="text-sm !mt-8 text-center text-gray-800">Don't have an account <a href="javascript:void(0);" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a></p>
+              <p class="text-sm !mt-8 text-center text-gray-800">Don't have an account <a href="/register" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a></p>
             </form>
           </div>
           <div class="lg:h-[400px] md:h-[300px] max-md:mt-8">
@@ -109,4 +109,4 @@ const LoginForm = ({ email, password, setEmail, setPassword, error, onLogin, onF
   );
 };
 
-export default LoginForm;
+export default HrLoginForm;

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import {
-  FaUser,
-  FaRegCalendarAlt,
-  FaRegMoneyBillAlt,
-  FaRegListAlt,
-} from "react-icons/fa";
-import EmployeeNavbar from "../navbar/Navbar";
+// import {
+//   FaUser,
+//   FaRegCalendarAlt,
+//   FaRegMoneyBillAlt,
+//   FaRegListAlt,
+// } from "react-icons/fa";
+// import EmployeeNavbar from "../navbar/Navbar";
 import EmployeeDashboard from "./EmployeeDashboard";
 import Profile from "./Profile";
 import SalaryDetails from "./SalaryDetails";
@@ -13,6 +13,7 @@ import UpcomingHolidays from "./UpcomingHolidays";
 
 const Dashboard = ({ employee = {} }) => {
   const [activeTab, setActiveTab] = useState("employee-dashboard");
+  console.log("Dashbord");
 
   const renderContent = () => {
     switch (activeTab) {
@@ -31,11 +32,11 @@ const Dashboard = ({ employee = {} }) => {
 
   return (
     <>
-    <EmployeeNavbar/>
+    {/* <EmployeeNavbar/> */}
     <div className="bg-gray-100 min-h-screen flex flex-col">
     <main className="flex-1 flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <aside className="bg-gray-50 shadow-lg lg:w-1/4 p-4 flex flex-col gap-4">
+      {/* <aside className="bg-gray-50 shadow-lg lg:w-1/4 p-4 flex flex-col gap-4">
         <div
           className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
             activeTab === "employee-dashboard"
@@ -80,11 +81,11 @@ const Dashboard = ({ employee = {} }) => {
           <FaUser className="text-2xl" />
           <span className="font-medium">Profile</span>
         </div>
-      </aside>
+      </aside> */}
   
       {/* Main Content */}
       <section className="flex-1 bg-white p-6">
-        {renderContent()}
+        {renderContent()} 
       </section>
     </main>
   </div>

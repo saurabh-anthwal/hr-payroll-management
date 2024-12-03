@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { MdPerson, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Importing React Icons
+import React, { useState } from "react";
+// import { MdPerson, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Importing React Icons
 import { Redirect, useHistory } from "react-router-dom";
-import ForgotPasswordForm from "../../Forget_password/ForgotPasswordForm";
-import OtpForm from "../../Forget_password/OtpForm";
-import LoginForm from "../../LoginForm";
+// import OtpForm from "../../Forget_password/OtpForm";
+// import LoginForm from "../../LoginForm";
+import HrLoginForm from "../../components/accounts/login/HrLoginForm";
+// import HrForgotPasswordForm from "../../components/accounts/forgotPassword/HrForgotPasswordForm"
 
-function Login() {
+const HrLoginPage = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
-  const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
+  // const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentForm, setCurrentForm] = useState("login");
@@ -19,7 +20,7 @@ function Login() {
   async function submitHandle(e) {
     e.preventDefault();
 
-    const response = await fetch(`http://127.0.0.1:8000/api/admin-login/`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/accounts/admin-login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,10 +90,10 @@ function Login() {
     };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white text-gray-800">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+    <div className="flex items-center justify-center min-h-screen bg-white text-gray-800 mt-4">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full">
         {currentForm === "login" && (
-          <LoginForm
+          <HrLoginForm
             email={email}
             password={password}
             setEmail={setEmail}
@@ -102,16 +103,16 @@ function Login() {
             onForgotPassword={() => setCurrentForm("forgotPassword")}
           />
         )}
-        {currentForm === "forgotPassword" && (
-          <ForgotPasswordForm
+        {/*currentForm === "forgotPassword" && (
+          <HrForgotPasswordForm
             email={email}
             setEmail={setEmail}
             error={error}
             onRequestOtp={handleForgotPasswordRequest}
             onBackToLogin={() => setCurrentForm("login")}
           />
-        )}
-        {currentForm === "otp" && (
+        )*/}
+        {/*currentForm === "otp" && (
           <OtpForm
             otp={otp}
             newPassword={newPassword}
@@ -120,7 +121,7 @@ function Login() {
             error={error}
             onResetPassword={handleResetPassword}
           />
-        )}
+        )*/}
         </div>
     </div>
   );
@@ -130,4 +131,4 @@ export function Logout() {
   return <Redirect to="/" />;
 }
 
-export default Login;
+export default HrLoginPage;

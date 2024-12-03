@@ -10,6 +10,9 @@ import AdminPanel from "../components/hr_admin_component/adminPanel/AdminPanel";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
 // import  { Logout } from "../components/hr_admin_component/accounts/login/Login";
 import HomePage from "../pages/homepage/HomePage";
+import HrLoginPage from "../pages/accounts/HrLoginPage";
+import HrRegisterPage from "../pages/accounts/HrRegisterPage";
+import AppTemplatePage from "../pages/common/AppTemplatePage";
 
 function Router() {
   return (
@@ -18,18 +21,19 @@ function Router() {
         <Route exact path="/">
           <HomePage />
         </Route>
+        <Route path="/login" component={HrLoginPage} />
+        <Route path="/register" component={HrRegisterPage} />
+        <Route path="/1" component={AppTemplatePage} />
         {/* <Route exact path="/login">
           <Login />
         </Route> */}
-        {/* <Route path="/register">
-          <Register />
-        </Route> */}
-        <Route path="/admin-panel">
+        {/* <Route path="/register"> <Register /> </Route> */}
+        {/* <Route path="/admin-panel">
           <>
             <Navbar />
             <AdminPanel />
           </>
-        </Route>
+        </Route> */}
         <Route path="/salary">
           <>
             <Navbar />

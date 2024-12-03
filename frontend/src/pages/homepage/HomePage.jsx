@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ForgotPasswordForm from "../../components/Login/Forget_password/ForgotPasswordForm";
 import OtpForm from "../../components/Login/Forget_password/OtpForm";
-import Register from "../../components/Login/HrRegister/register/Register";
-import LoginForm from "../../components/Login/LoginForm";
-import Login from "../../components/Login/HrRegister/login/Login";
+import EmployLoginPage from "../accounts/EmployLoginPage";
 
 const HomePage = () => {
   const history = useHistory();
@@ -15,8 +13,6 @@ const HomePage = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentForm, setCurrentForm] = useState("login");
-  const [loginWithHR, setLoginWithHR] = useState(false)
-  const [registerWithHR, setRegisterWithHR] = useState(false)
   
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -97,18 +93,22 @@ const HomePage = () => {
     }
   };
 
+  const redirectTo = (subUrl) => {
+    setTimeout(() => {
+      history.push(subUrl);
+    }, 400)
+  }
+
   const handleLoginHr = () => {
-    setRegisterWithHR(false)
-    setLoginWithHR(true)
+    redirectTo("/login");
   }
 
   const handleRegisterHr = () => {
-    setLoginWithHR(false)
-    setRegisterWithHR(true)
+    redirectTo("/register");
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-800">
+    <div className="bg-white text-gray-800">
       {/* Header Section */}
       <header className="bg-gray-50 py-16 border-b border-gray-200">
         <div className="container mx-auto px-4">
@@ -127,36 +127,36 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-gray-800">Your Workplace, One Click Away – Sign In.</h2>
               <div className="max-w-md mx-auto">
       {currentForm === "login" && (
-        <LoginForm
-          email={email}
-          password={password}
-          setEmail={setEmail}
-          setPassword={setPassword}
-          error={error}
-          onLogin={handleLogin}
-          onForgotPassword={() => setCurrentForm("forgotPassword")}
-        />
-      )}
-      {currentForm === "forgotPassword" && (
-        <ForgotPasswordForm
-          email={email}
-          setEmail={setEmail}
-          error={error}
-          onRequestOtp={handleForgotPasswordRequest}
-          onBackToLogin={() => setCurrentForm("login")}
-        />
-      )}
-      {currentForm === "otp" && (
-        <OtpForm
-          otp={otp}
-          newPassword={newPassword}
-          setOtp={setOtp}
-          setNewPassword={setNewPassword}
-          error={error}
-          onResetPassword={handleResetPassword}
-        />
-      )}
-    </div>
+                  <EmployLoginPage
+                    email={email}
+                    password={password}
+                    setEmail={setEmail}
+                    setPassword={setPassword}
+                    error={error}
+                    onLogin={handleLogin}
+                    onForgotPassword={() => setCurrentForm("forgotPassword")}
+                  />
+                )}
+                {currentForm === "forgotPassword" && (
+                  <ForgotPasswordForm
+                    email={email}
+                    setEmail={setEmail}
+                    error={error}
+                    onRequestOtp={handleForgotPasswordRequest}
+                    onBackToLogin={() => setCurrentForm("login")}
+                  />
+                )}
+                {currentForm === "otp" && (
+                  <OtpForm
+                    otp={otp}
+                    newPassword={newPassword}
+                    setOtp={setOtp}
+                    setNewPassword={setNewPassword}
+                    error={error}
+                    onResetPassword={handleResetPassword}
+                  />
+                )}
+              </div>
             </div>
 
             {/* Right Section */}
@@ -247,12 +247,6 @@ const HomePage = () => {
               HR Register
             </button>
           </div>
-            {
-              loginWithHR ? <Login/> : ""
-            }
-            {
-              registerWithHR ? <Register/>:""
-            }
         </div>
       </section>
 

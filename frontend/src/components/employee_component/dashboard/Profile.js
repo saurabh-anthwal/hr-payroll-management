@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FaEdit, FaPhoneAlt, FaBirthdayCake, FaMapMarkerAlt, FaGenderless, FaBriefcase, FaBuilding } from "react-icons/fa";
 
-const Profile = ({ employee }) => {
+const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const employee={}
   const { 
     name, 
     designation, 
@@ -21,7 +22,7 @@ const Profile = ({ employee }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-6 ">
+    <div className="max-w-4xl mx-auto bg-white p-6 mt-4">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-3xl font-semibold text-indigo-700">Profile Details</h3>
         <button

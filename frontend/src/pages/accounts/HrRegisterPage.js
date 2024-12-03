@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
-import { MdPerson, MdEmail, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Import React Icons for username, email, password
+// import { Redirect, useHistory } from "react-router-dom";
+// import { MdPerson, MdEmail, MdVpnKey, MdVisibility, MdVisibilityOff } from "react-icons/md"; // Import React Icons for username, email, password
 
-function Register() {
-  const history = useHistory();
+function HrRegisterPage() {
+  // const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   async function submitHandle(e) {
     e.preventDefault();
@@ -160,4 +160,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default HrRegisterPage;
