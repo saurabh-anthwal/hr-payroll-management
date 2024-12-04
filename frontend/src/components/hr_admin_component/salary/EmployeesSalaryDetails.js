@@ -5,9 +5,11 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import axios_instance from "../../../libs/interseptor";
 import apiUrls from "../../../libs/apiUrls";
 import SalarySearch from "./SalarySearch";
+import AddSalary from "./AddSalary";
 
 function EmployeesSalaryDetails() {
   const [employeesData, setEmployeesData] = useState([]);
+  const [addSalary,setAddSalary] = useState(false)
 
   const fetchEmployeesSalaryDetails = async () => {
     try {
@@ -25,7 +27,15 @@ function EmployeesSalaryDetails() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Employees Salary</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Employees Salary</h1>
+          <button onClick={()=>{setAddSalary(!addSalary)}} className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+            Add Salary
+          </button>
+        </div>
+        {addSalary &&
+          <AddSalary/>
+        }
         <SalarySearch setEmployeesData={setEmployeesData} />
         {/* Responsive Table */}
         <div className="overflow-x-auto">

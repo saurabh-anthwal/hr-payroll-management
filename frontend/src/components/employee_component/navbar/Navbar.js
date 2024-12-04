@@ -3,7 +3,7 @@ import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useHistory } from "react-router-dom";
 
-const EmployeeNavbar = () => {
+const Navbar = () => {
   const history = useHistory()
   const handleLogout = ()=>{
     localStorage.removeItem("access")
@@ -43,4 +43,4 @@ const EmployeeNavbar = () => {
   );
 };
 
-export default EmployeeNavbar;
+export default Navbar;

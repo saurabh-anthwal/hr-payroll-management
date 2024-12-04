@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import "./AddEmployee.css";
-import AddSalary from "../salary/AddSalary";
+import apiUrls from "../../../libs/apiUrls";
+import axios_instance from "../../../libs/interseptor";
 
 function AddEmployee() {
   const [input, setInput] = useState({
     active: true,
+    dateOfHired: "",  // Added missing fields
+    dateOfJoined: "",
   });
   const [file, setFile] = useState({});
-  const [empId, setEmpId] = useState();
-  const [submit, setSubmit] = useState(false);
 
   const inputHandle = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -18,248 +18,247 @@ function AddEmployee() {
     setFile({ ...file, [e.target.name]: e.target.files[0] });
   };
 
-  const submitHandle = (e) => {
+  const submitHandle = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    Object.keys(input).map((key) => {
-      formData.append(key, input[key]);
-    });
-    Object.keys(file).map((key) => {
-      formData.append(key, file[key]);
-    });
-
-    const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
-
-    fetch(`http://127.0.0.1:8000/api/employee/`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`, // Add the token here
-      },
-      body: formData,
-    }).then((res) =>
-      res.ok
-        ? (res
-            .json()
-            .then((data) => setEmpId(data.emp_id))
-            .then(setSubmit(true)),
-          alert("Employee Added Successfully!"))
-        : alert("Failed To Add!")
-    );
+  
+    const payload = {
+      ...input,
+    };
+  
+    try {
+      const response = await axios_instance.post(apiUrls.EMPLOYEE_DETAILS_ADD, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      alert("Employee Added Successfully!");
+    } catch (error) {
+      console.error("Failed to add employee:", error);
+      alert("Failed to add employee. Please try again.");
+    }
   };
+  
 
   const resetHandle = () => {
-    setInput({});
+    setInput({
+      active: true,
+      dateOfHired: "",
+      dateOfJoined: "",
+    });
+    setFile({});
   };
 
-  if (submit && empId) {
-    return <AddSalary empId={empId} />;
-  }
-
   return (
-    <div className="AddEmployee shadow-lg">
-      <div className="AddEmployee__header">
-        <span>
-          -: <u>Employee Registration Form</u> :-
-        </span>
-      </div>
-      <form className="AddEmployee__form">
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Name</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
+    <div className="max-w-4xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
+        Employee Registration Form
+      </h2>
+      <form className="space-y-6">
+        <input
+          type="text"
+          name="emp_id"
+          placeholder="Employee ID"
+          onChange={inputHandle}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              First Name <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="firstname"
-              id="firstname"
-              placeholder="firstname"
+              placeholder="First Name"
               onChange={inputHandle}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Last Name <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="lastname"
-              id="lastname"
-              placeholder="lastname"
+              placeholder="Last Name"
               onChange={inputHandle}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Email</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="email"
-              onChange={inputHandle}
-            />
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Contact</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input
-              type="tel"
-              name="contact"
-              id="contact"
-              placeholder="contact"
-              onChange={inputHandle}
-            />
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Contact <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="tel"
+            name="contact"
+            placeholder="Contact"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Gender</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <div className="AddEmployee__form__radio">
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Gender <span className="text-red-500">*</span>
+          </label>
+          <div className="flex gap-4 mt-2">
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="gender"
-                id="male"
                 value="male"
                 onChange={inputHandle}
+                className="text-indigo-600 focus:ring-indigo-500"
               />
-              <label htmlFor="male">Male</label>
-            </div>
-            <div className="AddEmployee__form__radio">
+              <span className="ml-2 text-sm">Male</span>
+            </label>
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="gender"
-                id="female"
                 value="female"
                 onChange={inputHandle}
+                className="text-indigo-600 focus:ring-indigo-500"
               />
-              <label htmlFor="female">Female</label>
-            </div>
-            <div className="AddEmployee__form__radio">
+              <span className="ml-2 text-sm">Female</span>
+            </label>
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="gender"
-                id="transgender"
                 value="transgender"
                 onChange={inputHandle}
+                className="text-indigo-600 focus:ring-indigo-500"
               />
-              <label htmlFor="transgender">Transgender</label>
-            </div>
+              <span className="ml-2 text-sm">Transgender</span>
+            </label>
           </div>
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Date Of Birth</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input type="date" name="dob" id="dob" onChange={inputHandle} />
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Date of Birth <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            name="dob"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Address</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <textarea
-              name="address"
-              id="address"
-              rows="3"
-              placeholder="address"
-              onChange={inputHandle}
-            ></textarea>
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Address <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            name="address"
+            rows="3"
+            placeholder="Address"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          ></textarea>
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Profile</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Department <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="department"
-              id="department"
-              placeholder="department"
+              placeholder="Department"
               onChange={inputHandle}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Designation <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="designation"
-              id="designation"
-              placeholder="designation"
+              placeholder="Designation"
               onChange={inputHandle}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Date Of Hired</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input
-              type="date"
-              name="dateOfHired"
-              id="dateOfHired"
-              onChange={inputHandle}
-            />
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Profile Photo
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            name="profilePic"
+            onChange={fileHandle}
+            className="mt-1 block w-full"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Date Of Joined</span>
-            <span className="AddEmployee__form__required">*</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input
-              type="date"
-              name="dateOfJoined"
-              id="dateOfJoined"
-              onChange={inputHandle}
-            />
-          </div>
+
+        {/* Date of Hired */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Date of Hired <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            name="dateOfHired"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header">
-            <span>Profile Photo</span>
-          </div>
-          <div className="AddEmployee__form__body">
-            <input
-              type="file"
-              accept="image/*"
-              name="profilePic"
-              id="profilePic"
-              onChange={fileHandle}
-            />
-          </div>
+
+        {/* Date of Joined */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Date of Joined <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            name="dateOfJoined"
+            onChange={inputHandle}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
-        <div className="AddEmployee__form__row">
-          <div className="AddEmployee__form__header"></div>
-          <div className="AddEmployee__form__body">
-            <div className="AddEmployee__form__button">
-              <input
-                type="reset"
-                value="Reset"
-                className="btn btn-warning"
-                onClick={resetHandle}
-              />
-              <input
-                type="submit"
-                value="Submit"
-                className="btn btn-success"
-                onClick={submitHandle}
-              />
-            </div>
-          </div>
+
+        <div className="flex justify-end space-x-4 mt-6">
+          <button
+            type="button"
+            onClick={resetHandle}
+            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            onClick={submitHandle}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Add Employee
+          </button>
         </div>
       </form>
     </div>

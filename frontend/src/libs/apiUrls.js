@@ -13,7 +13,6 @@ module.exports = {
   EMPLOYEE_DETAILS_ADD: `${SERVER_URL}api/accounts/employee/`,//post
   EMPLOYEE_COUNT: `${SERVER_URL}api/accounts/employee-count/`,
   MONTHLY_SALARY_STATUS: `${SERVER_URL}api/salary/monthly-salary/`,
-  ALL_EMPLOYEE_SALARY_DETAILS: `${SERVER_URL}api/salary/salary/`,
+  ALL_EMPLOYEE_SALARY_DETAILS: `${SERVER_URL}api/salary/salary/`, //get/post
   HOLIDAY_LIST: `${SERVER_URL}api/home/holidays/`
-
 }

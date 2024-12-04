@@ -56,7 +56,7 @@ class CountEmployee(viewsets.ViewSet):
         })
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdmin]
+    permission_classes = [IsHR]
 
     @action(detail=False, methods=['post'], url_path='send-otp')
     def send_otp(self, request):
