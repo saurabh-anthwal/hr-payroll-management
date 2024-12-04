@@ -1,11 +1,11 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const Sidebar = () => {
   const [selectedTab, setSelectedTab] = useState('dashboard');
 
   useEffect(() => {
-    if(localStorage.getItem("tab")) {
-      setSelectedTab(localStorage.getItem("tab") ); 
+    if (localStorage.getItem("tab")) {
+      setSelectedTab(localStorage.getItem("tab"));
     }
   }, []);
 
@@ -42,16 +42,16 @@ const Sidebar = () => {
           className=" bg-white shadow-lg h-screen fixed top-0 left-0 overflow-auto z-[99] lg:min-w-[250px] lg:w-max max-lg:w-0 max-lg:invisible transition-all duration-500">
           <div className="pt-8 pb-2 px-6 sticky top-0 bg-white min-h-[80px] z-[100]">
             <a href="/1/dashboard" className="outline-none"><img src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
-                alt="logo" className='w-[170px]' />
+              alt="logo" className='w-[170px]' />
             </a>
           </div>
-  
+
           <div className="py-6 px-6">
             <ul className="space-y-2">
               <li>
                 <a href="/1/dashboard"
                   className="menu-item text-green-700 text-sm flex items-center cursor-pointer  hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
-                  style={ selectedTab==='dashboard' ? { backgroundColor:  "#d9f3ea"} :{} }
+                  style={selectedTab === 'dashboard' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('dashboard')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
@@ -67,44 +67,24 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
+                <a href="/1/monthly-salary"
+                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
+                  style={selectedTab === 'monthly-salary' ? { backgroundColor: "#d9f3ea" } : {}}
+                  onClick={() => handleSelectedTab('monthly-salary')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="size-6 mr-3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                  </svg>
+
+                  <span>Monthly Salary</span>
+                </a>
+              </li>
+              <li>
                 <a href="/1/salary"
                   className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
-                  style={ selectedTab==='salary' ? { backgroundColor:  "#d9f3ea"} : {} }
+                  style={selectedTab === 'salary' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('salary')}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
-                    viewBox="0 0 60.123 60.123">
-                    <path
-                      d="M57.124 51.893H16.92a3 3 0 1 1 0-6h40.203a3 3 0 0 1 .001 6zm0-18.831H16.92a3 3 0 1 1 0-6h40.203a3 3 0 0 1 .001 6zm0-18.831H16.92a3 3 0 1 1 0-6h40.203a3 3 0 0 1 .001 6z"
-                      data-original="#000000" />
-                    <circle cx="4.029" cy="11.463" r="4.029" data-original="#000000" />
-                    <circle cx="4.029" cy="30.062" r="4.029" data-original="#000000" />
-                    <circle cx="4.029" cy="48.661" r="4.029" data-original="#000000" />
-                  </svg>
-                  <span>Salary</span>
-                </a>
-              </li>
-              <li>
-                <a href="/1/holidays"
-                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
-                  style={ selectedTab==='holidays' ? { backgroundColor:  "#d9f3ea"} : {}}
-                  onClick={() => handleSelectedTab('holidays')}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
-                    viewBox="0 0 64 64">
-                    <path
-                      d="M16.4 29.594a2.08 2.08 0 0 1 2.08-2.08h31.2a2.08 2.08 0 1 1 0 4.16h-31.2a2.08 2.08 0 0 1-2.08-2.08zm0 12.48a2.08 2.08 0 0 1 2.08-2.08h12.48a2.08 2.08 0 1 1 0 4.16H18.48a2.08 2.08 0 0 1-2.08-2.08z"
-                      data-original="#000000" />
-                    <path fill-rule="evenodd"
-                      d="M.8 18.154c0-8.041 6.519-14.56 14.56-14.56v-1.04a2.08 2.08 0 1 1 4.16 0v1.04h10.4v-1.04a2.08 2.08 0 1 1 4.16 0v1.04h10.4v-1.04a2.08 2.08 0 1 1 4.16 0v1.04c8.041 0 14.56 6.519 14.56 14.56v30.16c0 8.041-6.519 14.56-14.56 14.56H15.36C7.319 62.874.8 56.355.8 48.314zm33.28-10.4h10.4v1.04a2.08 2.08 0 1 0 4.16 0v-1.04c5.744 0 10.4 4.656 10.4 10.4v30.16c0 5.744-4.656 10.4-10.4 10.4H15.36c-5.744 0-10.4-4.656-10.4-10.4v-30.16c0-5.744 4.656-10.4 10.4-10.4v1.04a2.08 2.08 0 1 0 4.16 0v-1.04h10.4v1.04a2.08 2.08 0 1 0 4.16 0z"
-                      clip-rule="evenodd" data-original="#000000" />
-                  </svg>
-                  <span>Calendar</span>
-                </a>
-              </li>
-              <li>
-                <a href=""
-                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
                     viewBox="0 0 682.667 682.667">
                     <defs>
@@ -122,22 +102,38 @@ const Sidebar = () => {
                         data-original="#000000" />
                     </g>
                   </svg>
-                  <span>Reviews</span>
+                  <span>Salary</span>
                 </a>
               </li>
               <li>
-                <a href="javascript:void(0)"
-                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300">
+                <a href="/1/holidays"
+                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
+                  style={selectedTab === 'holidays' ? { backgroundColor: "#d9f3ea" } : {}}
+                  onClick={() => handleSelectedTab('holidays')}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
-                    viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                      d="M17.933.899C16.973.82 15.78.82 14.258.82H9.742c-1.522 0-2.716 0-3.675.078-.977.08-1.784.245-2.514.618a6.382 6.382 0 0 0-2.79 2.79C.391 5.036.226 5.843.146 6.82c-.079.96-.079 2.154-.079 3.676v4.73a5.02 5.02 0 0 0 5.02 5.02h.667a.39.39 0 0 1 .363.535c-.763 1.905 1.432 3.627 3.101 2.435l2.899-2.07.055-.039a4.717 4.717 0 0 1 2.686-.861h.84c1.719 0 2.767 0 3.648-.258a6.382 6.382 0 0 0 4.329-4.329c.257-.881.257-1.929.257-3.648v-1.515c0-1.522 0-2.717-.077-3.676-.081-.976-.246-1.783-.618-2.514a6.382 6.382 0 0 0-2.79-2.79C19.717 1.145 18.91.98 17.933.9zM4.309 3c.456-.233 1.02-.37 1.893-.44.884-.073 2.01-.074 3.578-.074h4.44c1.568 0 2.694 0 3.578.073.873.071 1.437.209 1.894.44a4.717 4.717 0 0 1 2.062 2.063c.233.456.37 1.02.44 1.894.072.883.073 2.009.073 3.577v1.315c0 1.933-.008 2.721-.19 3.343a4.717 4.717 0 0 1-3.2 3.199c-.621.182-1.41.19-3.343.19h-.687a6.382 6.382 0 0 0-3.635 1.166l-2.96 2.115c-.318.226-.734-.1-.589-.462a2.055 2.055 0 0 0-1.909-2.818h-.667a3.354 3.354 0 0 1-3.355-3.354v-4.695c0-1.568 0-2.694.074-3.577.07-.874.208-1.438.44-1.894A4.717 4.717 0 0 1 4.31 3z"
-                      clip-rule="evenodd" data-original="#000000" />
+                    viewBox="0 0 64 64">
                     <path
-                      d="M8.67 10.533a1.11 1.11 0 1 1-2.22 0 1.11 1.11 0 0 1 2.22 0zm4.44 0a1.11 1.11 0 1 1-2.22 0 1.11 1.11 0 0 1 2.22 0zm4.44 0a1.11 1.11 0 1 1-2.22 0 1.11 1.11 0 0 1 2.22 0z"
+                      d="M16.4 29.594a2.08 2.08 0 0 1 2.08-2.08h31.2a2.08 2.08 0 1 1 0 4.16h-31.2a2.08 2.08 0 0 1-2.08-2.08zm0 12.48a2.08 2.08 0 0 1 2.08-2.08h12.48a2.08 2.08 0 1 1 0 4.16H18.48a2.08 2.08 0 0 1-2.08-2.08z"
                       data-original="#000000" />
+                    <path fill-rule="evenodd"
+                      d="M.8 18.154c0-8.041 6.519-14.56 14.56-14.56v-1.04a2.08 2.08 0 1 1 4.16 0v1.04h10.4v-1.04a2.08 2.08 0 1 1 4.16 0v1.04h10.4v-1.04a2.08 2.08 0 1 1 4.16 0v1.04c8.041 0 14.56 6.519 14.56 14.56v30.16c0 8.041-6.519 14.56-14.56 14.56H15.36C7.319 62.874.8 56.355.8 48.314zm33.28-10.4h10.4v1.04a2.08 2.08 0 1 0 4.16 0v-1.04c5.744 0 10.4 4.656 10.4 10.4v30.16c0 5.744-4.656 10.4-10.4 10.4H15.36c-5.744 0-10.4-4.656-10.4-10.4v-30.16c0-5.744 4.656-10.4 10.4-10.4v1.04a2.08 2.08 0 1 0 4.16 0v-1.04h10.4v1.04a2.08 2.08 0 1 0 4.16 0z"
+                      clip-rule="evenodd" data-original="#000000" />
                   </svg>
-                  <span>Chat</span>
+                  <span>Holidays</span>
+                </a>
+              </li>
+              <li>
+                <a href="/1/view-employees"
+                  className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
+                  style={selectedTab === 'employee' ? { backgroundColor: "#d9f3ea" } : {}}
+                  onClick={() => handleSelectedTab('employee')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 mr-3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                  </svg>
+
+                  <span>Employees</span>
                 </a>
               </li>
               <li>
@@ -213,7 +209,7 @@ const Sidebar = () => {
                 </a>
               </li>
             </ul>
-  
+
             <div className="mt-8">
               <div className="bg-[#00b074] p-4 rounded-md shadow-md max-w-[196px]">
                 <p className="text-white text-sm leading-relaxed">Organize your menus using the action button below!</p>
@@ -225,7 +221,7 @@ const Sidebar = () => {
           </div>
         </div>
       </nav>
-  
+
       <button id="toggle-sidebar"
         // onClick={openSidebar}
         className='lg:hidden w-8 h-8 z-[100] fixed top-[36px] left-[10px] cursor-pointer bg-[#007bff] flex items-center justify-center rounded-full outline-none transition-all duration-500'>

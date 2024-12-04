@@ -4,9 +4,12 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 
 function Navbar() {
   const history = useHistory();
-  const location = useLocation(); // Get the current path
+  const location = useLocation(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userName = localStorage.getItem("userName") || "User";
+
+  const storedUserData = JSON.parse(localStorage.getItem("userData"));
+  const email = storedUserData?.email
 
   const handleLogout = () => {
     localStorage.removeItem("userData");
@@ -66,7 +69,7 @@ function Navbar() {
                 </div>
                 <div className="dropdown-menu relative flex shrink-0 group">
                   <div className="flex items-center gap-4 px-4">
-                    <p className="text-gray-500 text-sm">Hi, John</p>
+                    <p className="text-gray-500 text-sm">Hi, {email}</p>
                     <img src="https://readymadeui.com/team-1.webp" alt="profile-pic"
                       className="w-[38px] h-[38px] rounded-full border-2 border-gray-300 cursor-pointer" />
                   </div>

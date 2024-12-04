@@ -8,12 +8,14 @@ import Home from "../components/hr_admin_component/home/Home";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
 import Profile from "../components/employee_component/dashboard/Profile";
 import UpcomingHolidays from "../components/employee_component/dashboard/UpcomingHolidays";
+import EmployeesSalaryDetails from "../components/hr_admin_component/salary/EmployeesSalaryDetails";
 
 const AppTemplateRouter = () => {
   return (
     <Switch>
       <Route path="/1/admin-panel" component={AdminPanel} />
-      <Route path="/1/salary" component={Salary} />
+      <Route path="/1/monthly-salary" component={Salary} />
+      <Route path="/1/salary" component={EmployeesSalaryDetails} />
       <Route path="/1/update-employee" component={UpdateEmployee} />
       <Route path="/1/view-employees" component={ViewEmployees} />
       <Route path="/1/add-employee" component={AddEmployee} />

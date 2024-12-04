@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,20 +9,23 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import axios_instance from "../../../libs/interseptor";
+import apiUrls from "../../../libs/apiUrls";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const EmployeeDashboard = ({ employee }) => {
-  const { name, designation, dob, joiningDate } = employee;
+  const [employeeDetails, setEmployeeDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Example attendance data
   const attendanceData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         label: "Attendance (%)",
-        data: [95, 88, 90, 92, 85, 87], // Example attendance values
-        backgroundColor: "#4CAF50", // Green
+        data: [95, 88, 90, 92, 85, 87],
+        backgroundColor: "#4CAF50", 
         borderRadius: 10,
       },
     ],
@@ -55,6 +58,27 @@ const EmployeeDashboard = ({ employee }) => {
     },
   };
 
+  const hrDetails = async () => {
+    try {
+      const response = await axios_instance.get(apiUrls.HR_DETAILS);
+      setEmployeeDetails(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch salary details:", error);
+      setError("Failed to load employee details.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    hrDetails();
+  }, []);
+
+  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
+  const { firstname, lastname, designation, dob, dateOfJoined } = employeeDetails;
+  let name = firstname+" "+lastname
   return (
     <div className="min-h-screen p-6">
       {/* Header */}
@@ -76,7 +100,7 @@ const EmployeeDashboard = ({ employee }) => {
         </div>
         <div className="bg-white shadow-lg rounded-lg p-6">
           <p className="text-sm font-semibold text-gray-500">Joining Date</p>
-          <h3 className="text-xl font-bold text-gray-800">{joiningDate || "N/A"}</h3>
+          <h3 className="text-xl font-bold text-gray-800">{dateOfJoined || "N/A"}</h3>
         </div>
       </div>
 

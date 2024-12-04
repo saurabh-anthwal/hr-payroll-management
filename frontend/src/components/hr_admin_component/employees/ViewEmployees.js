@@ -3,28 +3,19 @@ import "./ViewEmployees.css";
 import TotalEmployees from "./TotalEmployees";
 import SearchEmployee from "./SearchEmployee";
 import EmployeesTable from "./EmployeesTable";
+import axios_instance from "../../../libs/interseptor";
+import apiUrls from "../../../libs/apiUrls";
 
 function ViewEmployees() {
   const [count, setCount] = useState({});
 
-  const token = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/employee-count/`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`, 
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => setCount(data))
-      .catch((error) => console.error(error));
+  useEffect(async() => {
+    try {
+      const response = await axios_instance.get(apiUrls.EMPLOYEE_COUNT);
+      setCount(response.data);
+    } catch (error) {
+      console.error("Failed to fetch salary details:", error);
+    }
   }, []);
   
   return (
