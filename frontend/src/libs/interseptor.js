@@ -1,18 +1,19 @@
 /* eslint-disable no-case-declarations */
 import axios from "axios";
+import Cookies from "js-cookie";
 import * as utils from "./utils";
 
 let axios_instance = axios.create();
 
-// Helper function to retrieve token from localStorage
+// Helper function to retrieve token from Cookies
 const getUserToken = () => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
-  return storedUserData?.access_token || null;
+  return Cookies.get("access_token") || null; // Access token stored in Cookies
 };
 
-// Helper function to retrieve full user data from localStorage
+// Helper function to retrieve full user data from Cookies
 const getUserData = () => {
-  return JSON.parse(localStorage.getItem("userData"));
+  const userData = Cookies.get("userData");
+  return userData ? JSON.parse(userData) : null;
 };
 
 // Axios request interceptor
@@ -41,7 +42,7 @@ axios_instance.interceptors.response.use(
     switch (error.response?.status) {
       case 401:
         utils.displayMessage("negative", "Unauthorized");
-        clearLocalStorage(); // Clear tokens and other user data
+        clearCookies(); // Clear tokens and other user data
         window.location.href = "/login";
         break;
 
@@ -78,9 +79,11 @@ axios_instance.interceptors.response.use(
   }
 );
 
-// Utility function to clear localStorage
-const clearLocalStorage = () => {
-  localStorage.removeItem("userData");
+// Utility function to clear Cookies
+const clearCookies = () => {
+  Cookies.remove("access_token");
+  Cookies.remove("refresh_token");
+  Cookies.remove("userData");
 };
 
 export default axios_instance;

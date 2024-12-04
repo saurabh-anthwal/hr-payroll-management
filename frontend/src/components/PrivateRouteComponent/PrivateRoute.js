@@ -1,11 +1,14 @@
 import React from "react";
+import Cookies from "js-cookie";
 import { Redirect, Route } from "react-router-dom";
 import Navbar from "../hr_admin_component/navbar/Navbar";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
-  const token = storedUserData?.access_token
+const getAuthToken = () => {
+  return Cookies.get("access_token") || null; 
+};
 
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const token = getAuthToken(); 
   return (
     <Route
       {...rest}

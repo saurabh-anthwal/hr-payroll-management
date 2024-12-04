@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 import ForgotPasswordForm from "../../components/Login/Forget_password/ForgotPasswordForm";
 import OtpForm from "../../components/Login/Forget_password/OtpForm";
@@ -27,11 +28,10 @@ const HomePage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Login successful:", data);
-
-        localStorage.setItem("access", data.access_token);
-        localStorage.setItem("refresh", data.refresh_token);
-        localStorage.setItem("type", data.type);
+        // Store data in cookies
+        Cookies.set("access_token", data.access_token, { expires: 7 }); // Expires in 7 days
+        Cookies.set("refresh_token", data.refresh_token, { expires: 7 });
+        Cookies.set("type", data.type, { expires: 7 });
 
         history.push("/employee-dashboard");
       } else {

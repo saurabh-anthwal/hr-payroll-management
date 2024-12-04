@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 import OtpForm from "../../components/Login/Forget_password/OtpForm";
 import HrLoginForm from "../../components/accounts/login/HrLoginForm";
 import HrForgotPasswordForm from "../../components/accounts/forgotPassword/HrForgotPasswordForm";
-import axios_instance from "../../libs/interseptor";
 import * as URLS from "../../libs/apiUrls"
+import {loginSuccess} from "../../redux/auth/authSlice"
 
 const HrLoginPage = () => {
   const history = useHistory();
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,8 +31,9 @@ const HrLoginPage = () => {
       const response = await publicAxios.post(URLS.HR_LOGIN, params);
 
       if (response.status === 200 && response.data?.user_id) {
-        localStorage.setItem("userData", JSON.stringify(response.data));
-        history.push(`/1/dashboard`);
+          //dispatch api response
+          dispatch(loginSuccess(response.data))     
+          history.push(`/1/dashboard`);
       } else {
         setError("Invalid login credentials. Please try again.");
       }

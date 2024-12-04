@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { logout } from "../../../redux/auth/authSlice";
 
 function Navbar() {
+  const dispatch = useDispatch()
   const history = useHistory();
   const location = useLocation(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -12,7 +15,7 @@ function Navbar() {
   const email = storedUserData?.email
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
+    dispatch(logout())
     history.push("/");
   };
 
