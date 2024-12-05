@@ -65,6 +65,10 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'type', 'otp_verified']
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin

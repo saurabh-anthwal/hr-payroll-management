@@ -3,6 +3,7 @@ const SERVER_URL = process.env.REACT_APP_API_URL;
 module.exports = {
   HR_REGISTER_OTP: `${SERVER_URL}api/accounts/users/send-otp/`,
   HR_REGISTER_OTP_VERIFY: `${SERVER_URL}api/accounts/users/verify-otp/`,
+  USER_FIND:`${SERVER_URL}api/accounts/users/`,
   HR_LOGIN: `${SERVER_URL}api/accounts/login/`,
   HR_FORGET_PASS: `${SERVER_URL}api/accounts/forgot-password/`,
   HR_RESET_PASS: `${SERVER_URL}api/accounts/reset-password/`,

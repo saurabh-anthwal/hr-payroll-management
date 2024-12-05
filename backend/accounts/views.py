@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 from django.core.mail import send_mail
+from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -15,7 +16,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from .models import Admin, Employee, User, HR, Manager
-from .serializers import EmployeeSerializer, AdminSerializer, UserOTPVerifySerializer, UserOTPVerifySerializer, UserOTPSendSerializer, HRSerializer, ManagerSerializer
+from .serializers import EmployeeSerializer, AdminSerializer, UserOTPVerifySerializer, UserOTPVerifySerializer, UserOTPSendSerializer, HRSerializer, ManagerSerializer, UserSerializer
 
 from .permissions import IsHR, IsAdmin
 
@@ -56,6 +57,8 @@ class CountEmployee(viewsets.ViewSet):
         })
 
 class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [IsHR]
 
     @action(detail=False, methods=['post'], url_path='send-otp')
@@ -118,6 +121,11 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'message': 'OTP verified and password set successfully.'}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]

@@ -33,9 +33,6 @@ function EmployeesTableRow({
           <span className="text-red-500">Inactive</span>
         )}
       </td>
-      <td className="px-4 py-2 text-left">
-        d
-      </td>
     </tr>
   );
 }

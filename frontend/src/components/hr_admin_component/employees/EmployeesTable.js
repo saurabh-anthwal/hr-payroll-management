@@ -8,15 +8,18 @@ function EmployeesTable() {
   const [employees, setEmployees] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(async() => {
-    try {
-      const response = await axios_instance.get(apiUrls.ALL_EMPLOYEE_DETAILS);
-      setEmployees(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Failed to fetch salary details:", error);
-      setIsLoading(false);
+  useEffect(()=>{
+    const abc = async() => {
+      try {
+        const response = await axios_instance.get(apiUrls.ALL_EMPLOYEE_DETAILS);
+        setEmployees(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch salary details:", error);
+        setIsLoading(false);
+      }
     }
+    abc()
   }, [token]);
   
 
@@ -24,17 +27,16 @@ function EmployeesTable() {
     <table className="employees-table table table-hover bg-light shadow text-sm ">
   <thead>
     <tr>
-      <th className="py-3 px-2 w-[6%]">E_Id</th>
-      <th className="py-3 px-2 w-[6%]">Employee</th>
-      <th className="py-3 px-2 w-[6%]">Email</th>
-      <th className="py-3 px-2 w-[6%]">Contact</th>
-      <th className="py-3 px-2 w-[6%]">Gender</th>
-      <th className="py-3 px-2 w-[6%]">Hired_D</th>
-      <th className="py-3 px-2 w-[6%]">Joined_D</th>
-      <th className="py-3 px-2 w-[6%]">Address</th>
-      <th className="py-3 px-2 w-[10%]">Profile Pic</th>
-      <th className="py-3 px-2 w-[6%]">Active</th>
-      <th className="py-3 px-2 w-[6%]"></th>
+      <th className="py-2 pl-2">E_Id</th>
+      <th className="py-2 pl-2">Name</th>
+      <th className="py-2 pl-2">Email</th>
+      <th className="py-2 pl-2">Contact</th>
+      <th className="py-2 pl-2">Gender</th>
+      <th className="py-2 pl-2">Hired_D</th>
+      <th className="py-2 pl-2">Joined_D</th>
+      <th className="py-2 pl-2">Address</th>
+      <th className="py-2 pl-2">Profile Pic</th>
+      <th className="py-2 pl-2">Active</th>
     </tr>
   </thead>
   <tbody className="employees-tbody">
