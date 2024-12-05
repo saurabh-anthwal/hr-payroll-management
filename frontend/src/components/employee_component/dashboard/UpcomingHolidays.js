@@ -45,7 +45,8 @@ const UpcomingHolidays = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="min-h-screen bg-white">
+    <div className="p-6">
       <h3 className="text-3xl font-semibold text-gray-800 mb-6 flex items-center space-x-2">
         <FaCalendarAlt className="text-4xl text-indigo-600" />
         <span>Upcoming Holidays</span>
@@ -92,6 +93,7 @@ const UpcomingHolidays = () => {
           </li>
         ))}
       </ul>
+      </div>
     </div>
   );
 };
