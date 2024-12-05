@@ -4,6 +4,7 @@ import { FaUsers, FaTasks, FaClipboardList } from "react-icons/fa";
 import { Chart as ChartJS, CategoryScale, PointElement, LinearScale, BarElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import axios_instance from "../../../libs/interseptor";
 import apiUrls from "../../../libs/apiUrls";
+import Accordion from "../../dashboard/Accordion";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend);
 
@@ -42,17 +43,20 @@ const EmployeeDashboard = () => {
       {
         label: "Task Completed",
         data: [35, 28, 40, 30, 25],
-        backgroundColor: "#34d399", // Green
+        backgroundColor: "#f0b967", // Green
+        borderRadius: 3,
       },
       {
         label: "Presence",
         data: [28, 25, 35, 22, 18],
-        backgroundColor: "#60a5fa", // Blue
+        backgroundColor: "rgb(240 185 103 / 52%)", // Blue
+        borderRadius: 3,
       },
       {
         label: "Completed Meetings",
         data: [20, 15, 18, 25, 20],
-        backgroundColor: "#a78bfa", // Purple
+        backgroundColor: "#faf278", // Purple
+        borderRadius: 3,
       },
     ],
   };
@@ -145,12 +149,82 @@ const EmployeeDashboard = () => {
   }, []);
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  // if (error) return <p className="text-center text-red-500">{error}</p>;
 
   // const { firstname, lastname, designation, dob, dateOfJoined } = hrDetail;
 
   let full_name = "GEETA SHARMA"
   let count_employee = 200
+
+  const options = {
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom",
+        labels: {
+          fontSize: 16,
+          fontStyle: "normal",
+          fontFamily: "Outfit",
+          boxWidth: 6,
+          boxHeight: 6,
+          padding: 10,
+          usePointStyle: true,
+        },
+      },
+    },
+    animation: {
+      duration: 2000,
+    },
+    maintainAspectRatio: true, 
+    responsive: true         
+  }
+
+  const optionsLine = {
+    scales: {
+      x: {
+        beginAtZero: true,
+        type: "linear",
+        position: "left",
+        
+        grid: {
+          borderDash: [20],
+        },
+        
+      },
+      x: {
+        beginAtZero: true,
+        grid: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          fontSize: 16,
+          fontStyle: "normal",
+          fontFamily: "Outfit",
+          boxWidth: 6,
+          boxHeight: 6,
+          padding: 10,
+          usePointStyle: true,
+        },
+      },
+    },
+    animation: {
+      duration: 2000,
+    },
+    maintainAspectRatio: true,
+  };
   
   
   return (
@@ -174,7 +248,7 @@ const EmployeeDashboard = () => {
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Card 1 */}
-        <div className="bg-white p-6 rounded-lg shadow flex items-center">
+        <div className="bg-gradient-to-r from-violet-200 to-pink-200 p-6 rounded-lg shadow flex items-center">
           <FaTasks className="text-blue-500 text-3xl mr-4" />
           <div>
             <h3 className="text-sm font-medium text-gray-500">Jobs Overview</h3>
@@ -182,7 +256,7 @@ const EmployeeDashboard = () => {
           </div>
         </div>
         {/* Card 2 */}
-        <div className="bg-white p-6 rounded-lg shadow flex items-center">
+        <div className="bg-gradient-to-r from-teal-400 to-yellow-200 p-6 rounded-lg shadow flex items-center">
           <FaClipboardList className="text-green-500 text-3xl mr-4" />
           <div>
             <h3 className="text-sm font-medium text-gray-500">Attendance Rate</h3>
@@ -190,7 +264,7 @@ const EmployeeDashboard = () => {
           </div>
         </div>
         {/* Card 3 */}
-        <div className="bg-white p-6 rounded-lg shadow flex items-center">
+        <div className="bg-gradient-to-r from-blue-200 to-cyan-200 p-6 rounded-lg shadow flex items-center">
           <FaUsers className="text-yellow-500 text-3xl mr-4" />
           <div>
             <h3 className="text-sm font-medium text-gray-500">Total Employees</h3>
@@ -200,17 +274,17 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 h-[400px]">
         {/* Income/Expense Line Chart */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Income Statistics</h2>
-          <Line data={incomeExpenseData} options={{ responsive: true }} />
+          <Line data={incomeExpenseData} options={optionsLine} />
         </div>
 
         {/* Performance Bar Chart */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee Performance Ratings</h2>
-          <Bar data={performanceData} options={{ responsive: true, indexAxis: "y" }} />
+          <Bar data={performanceData} options={options} />
         </div>
       </div>
 
@@ -221,17 +295,17 @@ const EmployeeDashboard = () => {
             key={leave.id}
             className="bg-white p-6 rounded-lg shadow w-72"
           >
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-xs bg-green-300 px-3 py-1 rounded-full flex gap-2 items-center">
-                <span className="p-1 rounded-full bg-green-500"></span>
+            <div className="grid grid-cols-2 items-center mb-4">
+              <p className="bg-green-100 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
+                {/* <span className="p-1 rounded-full bg-green-500"></span> */}
                 <span>{leave.type}</span>
               </p>
               <button
-                className={`text-xs px-3 py-1 rounded-full ${leave.status === "Pending"
-                    ? "bg-yellow-300 text-yellow-800"
+                className={`text-sm px-2 py-1 rounded-md font-medium border me-2 ${leave.status === "Pending"
+                    ? "bg-yellow-100 text-yellow-800 border-yellow-100"
                     : leave.status === "Approved"
-                      ? "bg-green-300 text-green-800"
-                      : "bg-red-300 text-red-800"
+                      ? "bg-green-100 text-green-800 border-green-100"
+                      : "bg-red-100 text-red-800 border-red-100"
                   }`}
               >
                 {leave.status}
@@ -249,11 +323,11 @@ const EmployeeDashboard = () => {
                   <p className="text-sm text-gray-500">{leave.employee.leaveDays}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center">
-                <button className="rounded-xl px-8 py-1 border border-green-400 text-green-400 shadow transition">
+              <div className=" grid grid-cols-2 items-center">
+                <button className="bg-green-100 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
                   Approve
                 </button>
-                <button className="rounded-xl px-8 py-1 border border-red-400 text-red-400 shadow transition">
+                <button className="bg-red-100 text-red-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-red-100">
                   Reject
                 </button>
               </div>
@@ -272,6 +346,11 @@ const EmployeeDashboard = () => {
         ))}
       </div>
 
+
+      <div className="bg-white p-6 rounded-lg shadow mb-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
+        <Accordion />
+      </div>
       {/* Employee List */}
       <div className="bg-white p-6 rounded-lg shadow mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>

@@ -20,7 +20,7 @@ function Navbar() {
   };
 
   return (
-      <header className='z-50 bg-white sticky top-0 pt-4'>
+      <header className='z-50 bg-white sticky top-0 pt-4' style={{ borderBottom: '0.1px solid lightgray' }}>
           <div className='flex flex-wrap items-center w-full relative tracking-wide'>
             <div className='flex items-center gap-y-6 max-sm:flex-col z-50 w-full pb-2'>
   
@@ -70,7 +70,7 @@ function Navbar() {
   
                 <div className="w-1 h-10 border-l border-gray-400">
                 </div>
-                <div className="dropdown-menu relative flex shrink-0 group">
+                <div className="dropdown-menu relative flex shrink-0 group mr-4">
                   <div className="flex items-center gap-4 px-4">
                     <p className="text-gray-500 text-sm">Hi, {email}</p>
                     <img src="https://readymadeui.com/team-1.webp" alt="profile-pic"
