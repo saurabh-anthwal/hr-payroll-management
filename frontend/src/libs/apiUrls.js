@@ -11,6 +11,7 @@ module.exports = {
   HR_DETAILS_ADD: `${SERVER_URL}api/accounts/hr/hrs/`,
   ALL_EMPLOYEE_DETAILS: `${SERVER_URL}api/accounts/employee/`, //get
   EMPLOYEE_DELETE: `${SERVER_URL}api/accounts/employee/{id}/`, //delete
+  EMPLOYEE_EDIT: `${SERVER_URL}api/accounts/hr/hrs/{}/`, //put
   EMPLOYEE_DETAILS_ADD: `${SERVER_URL}api/accounts/employee/`,//post
   EMPLOYEE_COUNT: `${SERVER_URL}api/accounts/employee-count/`,
   MONTHLY_SALARY_STATUS: `${SERVER_URL}api/salary/monthly-salary/`,

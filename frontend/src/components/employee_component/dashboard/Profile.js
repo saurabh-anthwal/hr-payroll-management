@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import axios_instance from "../../../libs/interseptor";
 import * as URLS from "../../../libs/apiUrls";
+import * as utils from "../../../libs/utils";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,11 +35,29 @@ const Profile = () => {
     try {
       const response = await axios_instance.get(URLS.HR_DETAILS);
       setEmployee(response.data);
-      console.log(employee);
+      handleSetData(response.data);
     } catch (error) {
       console.error("Failed to fetch profile details:", error);
     }
   };
+
+  const handleSetData = (data) => {
+    setFirstName(data.firstname);
+    setLastName(data.lastname);
+    setPhoneNumber(data.contact);
+    setDepartment(data.department);
+    setDob(data.dob);
+    setDesignation(designation);
+    setGender(data.gender);
+    setEmail(data.email)
+    setAddress(data.address);
+    // setProfileImg
+  }
+
+  const handleCancel = () => {
+    handleSetData(employee);
+    setIsEditing(false)
+  }
 
   useEffect(() => {
     get_profile();
@@ -52,11 +71,32 @@ const Profile = () => {
     );
   }
 
-  const handleSubmit = () => {
-    console.log("email : ", email);
-    console.log("address: ", address)
-    console.log("name ", firstName, lastName)
-    console.log("dob ", dob);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const payload = {
+      "firstname": firstName,
+      "lastname": lastName,
+      "email": email,
+      "contact": phoneNumber,
+      "gender": gender,
+      "dob": dob,
+      "address": address,
+      "department": department,
+      "designation": designation,
+      // "profilePic": "/media/hr/profile-picture.png",
+      "dateOfHired": employee.dateOfHired,
+      "dateOfJoined": employee.dateOfJoined
+    }
+
+    console.log(employee?.id)
+
+    axios_instance.put(utils.format(URLS.EMPLOYEE_EDIT, [employee?.id]), payload)
+      .then((response) => {
+        setEmployee(response.data);
+        handleSetData(response.data);
+      }).catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -101,10 +141,10 @@ const Profile = () => {
           />
         </div> */}
         <div className="ml-6 flex flex-col ">
-          <h4 className="text-2xl font-bold text-gray-500 uppercase">
+          <h4 className="text-2xl font-bold text-gray-500 " >
             {`${firstName} ${lastName}`}
           </h4>
-          <p className="text-lg text-gray-600 font-semibold uppercase">{designation || "N/A"}</p>
+          <p className="text-lg text-gray-600 font-semibold uppercase">{email || "N/A"}</p>
         </div>
       </div>
 
@@ -241,9 +281,9 @@ const Profile = () => {
           </div>
         </div>
 
-        {isEditing && <div className="flex items-end col-span-2 gap-2">
+        {isEditing && <div className="flex justify-end col-span-2 gap-2">
           <button 
-            onClick={handleEditClick}
+            onClick={handleCancel}
             className="rounded-full border py-2 px-4 text-center text-sm transition-all shadow-sm  border-red-500 hover:shadow-lg text-slate-600 hover:text-slate-600 hover:bg-slate-200  disabled:pointer-events-none " 
             type="button"
           >
@@ -260,11 +300,11 @@ const Profile = () => {
       </form>
 
       {/* Footer Actions */}
-      <div className="mt-8 pb-8 text-center">
+      {/* <div className="mt-8 pb-8 text-center">
         <button className="px-6 py-2 bg-black text-white rounded-lg shadow-md ">
           Change Password
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
