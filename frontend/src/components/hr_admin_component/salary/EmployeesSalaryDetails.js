@@ -6,13 +6,16 @@ import Salary from "./Salary";
 import axios_instance from "../../../libs/interseptor";
 import apiUrls from "../../../libs/apiUrls";
 import SalarySearch from "./SalarySearch";
+import AddSalary from "./AddSalary";
+import MonthlySalaryAdd from "./MonthlySalaryAdd";
+import DownloadPayslip from "./DownloadPaysleep";
 
 const EmployeesSalaryDetails = () => {
   return (
     <div className="min-h-screen bg-white">
       <TabSwitch
-        tabs={["Employee Salary", "Monthly Salary"]}
-        components={[<SalaryDetails />, <Salary />]}
+        tabs={["Salary", "Monthly Salary", "New", "Add Monthly Salary", "Salary Sleep"]}
+        components={[<SalaryDetails />, <Salary />, <AddSalary/>, <MonthlySalaryAdd/>, <DownloadPayslip/>]}
       />
     </div>
   )

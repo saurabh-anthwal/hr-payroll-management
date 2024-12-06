@@ -23,7 +23,6 @@ function Router() {
         <PrivateRoute path="/1" component={AppTemplatePage} />
         <PrivateRoute path="/salary" component={Salary}/>
         <PrivateRoute path="/view-employees" component={ViewEmployees}/>
-        <PrivateRoute path="/add-employee" component={AddEmployee}/>
         <PrivateRoute path="/employee-dashboard" component={Dashboard}/>
         {/* 404 Catch-all Route */}
         <Route path="*">

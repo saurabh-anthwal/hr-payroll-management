@@ -5,12 +5,10 @@ import * as utils from "./utils";
 
 let axios_instance = axios.create();
 
-// Helper function to retrieve token from Cookies
 const getUserToken = () => {
-  return Cookies.get("access_token") || null; // Access token stored in Cookies
+  return Cookies.get("access_token") || null; 
 };
 
-// Helper function to retrieve full user data from Cookies
 const getUserData = () => {
   const userData = Cookies.get("userData");
   return userData ? JSON.parse(userData) : null;
@@ -37,13 +35,18 @@ axios_instance.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (!error.response) {
+      console.error("Network error or no response from server");
+      return Promise.reject(error);
+    }
+    
     const userData = getUserData();
 
     switch (error.response?.status) {
       case 401:
         utils.displayMessage("negative", "Unauthorized");
-        clearCookies(); // Clear tokens and other user data
-        window.location.href = "/login";
+        clearCookies()
+        window.location.href = "/";
         break;
 
       case 402:
@@ -79,7 +82,6 @@ axios_instance.interceptors.response.use(
   }
 );
 
-// Utility function to clear Cookies
 const clearCookies = () => {
   Cookies.remove("access_token");
   Cookies.remove("refresh_token");

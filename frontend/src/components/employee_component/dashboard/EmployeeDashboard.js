@@ -1,6 +1,8 @@
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { FaUsers, FaTasks, FaClipboardList } from "react-icons/fa";
+import { IoCheckmarkDone } from "react-icons/io5";
+import { MdNotificationsNone } from "react-icons/md";
 import { Chart as ChartJS, CategoryScale, PointElement, LinearScale, BarElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import axios_instance from "../../../libs/interseptor";
 import apiUrls from "../../../libs/apiUrls";
@@ -13,6 +15,11 @@ const EmployeeDashboard = () => {
   const [employeeDetail, setEmployeeDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isPresent, setIsPresent] = useState(false);
+
+  const toggleAttendance = () => {
+    setIsPresent((prev) => !prev);
+  };
 
   // Chart Data
   const incomeExpenseData = {
@@ -100,18 +107,6 @@ const EmployeeDashboard = () => {
       fromDate: "Mar 5, 2025",
       toDate: "Mar 11, 2025",
     },
-    {
-      id: 4,
-      type: "Maternity Leave",
-      status: "Pending",
-      employee: {
-        name: "Priya Khanna",
-        image: "https://via.placeholder.com/50",
-        leaveDays: "Leave for 30 days",
-      },
-      fromDate: "Mar 10, 2025",
-      toDate: "Apr 9, 2025",
-    },
   ];
 
   const hrDetails = async () => {
@@ -128,12 +123,12 @@ const EmployeeDashboard = () => {
     }
   };
 
-  const employeeDetails = async ()=>{
+  const employeeDetails = async () => {
     setLoading(false);
     setLoading(false);
     try {
       const response = await axios_instance.get(apiUrls.ALL_EMPLOYEE_DETAILS);
-      console.log("response",response)
+      console.log("response", response)
       setEmployeeDetail(response.data);
       setLoading(false);
     } catch (error) {
@@ -183,8 +178,8 @@ const EmployeeDashboard = () => {
     animation: {
       duration: 2000,
     },
-    maintainAspectRatio: true, 
-    responsive: true         
+    maintainAspectRatio: true,
+    responsive: true
   }
 
   const optionsLine = {
@@ -193,11 +188,11 @@ const EmployeeDashboard = () => {
         beginAtZero: true,
         type: "linear",
         position: "left",
-        
+
         grid: {
           borderDash: [20],
         },
-        
+
       },
       x: {
         beginAtZero: true,
@@ -225,29 +220,53 @@ const EmployeeDashboard = () => {
     },
     maintainAspectRatio: true,
   };
-  
-  
+
+
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="mb-8 flex items-center space-x-4">
-        <div className="w-12 h-12 rounded-full overflow-hidden">
-          <img
-            src="https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg"
-            alt="Profile"
-            className="w-full h-full object-cover"
-          />
+      {/* Profile Section */}
+      <header className="mb-8 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 rounded-full overflow-hidden">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg"
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">{full_name}</h1>
+            <p className="text-gray-500 text-sm">Welcome back to Dataclaps 👋</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold text-gray-800">{full_name}</h1>
-          <p className="text-gray-500 text-sm">Welcome back to Dataclaps 👋</p>
+
+        <div className="flex items-center space-x-6">
+          <button
+            onClick={toggleAttendance}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition ${isPresent
+                ? "bg-green-100 text-green-800 border border-green-200"
+                : "bg-gray-100 text-gray-800 border border-gray-200"
+              }`}
+          >
+            {isPresent ? (
+              <>
+                <IoCheckmarkDone className="w-5 h-5 text-green-800" />
+                <span>Present</span>
+              </>
+            ) : (
+              <>
+                <MdNotificationsNone className="w-5 h-5 text-gray-600" />
+                <span>Mark Attendance</span>
+              </>
+            )}
+          </button>
         </div>
       </header>
 
 
-      {/* Overview Cards */}
+      {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Card 1 */}
+
         <div className="bg-gradient-to-r from-violet-200 to-pink-200 p-6 rounded-lg shadow flex items-center">
           <FaTasks className="text-blue-500 text-3xl mr-4" />
           <div>
@@ -255,7 +274,7 @@ const EmployeeDashboard = () => {
             <p className="text-xl font-bold text-gray-800">180 Total Jobs</p>
           </div>
         </div>
-        {/* Card 2 */}
+
         <div className="bg-gradient-to-r from-teal-400 to-yellow-200 p-6 rounded-lg shadow flex items-center">
           <FaClipboardList className="text-green-500 text-3xl mr-4" />
           <div>
@@ -263,7 +282,7 @@ const EmployeeDashboard = () => {
             <p className="text-xl font-bold text-gray-800">90%</p>
           </div>
         </div>
-        {/* Card 3 */}
+
         <div className="bg-gradient-to-r from-blue-200 to-cyan-200 p-6 rounded-lg shadow flex items-center">
           <FaUsers className="text-yellow-500 text-3xl mr-4" />
           <div>
@@ -273,7 +292,6 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Income/Expense Line Chart */}
         <div className="bg-white p-6 rounded-lg shadow">
@@ -288,20 +306,19 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-     {/* Leave request */}
-      <div className="mb-8 p-4 w-full grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Leave request */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-4">
         {leaveData.map((leave) => (
           <div
             key={leave.id}
-            className="bg-white p-6 rounded-lg shadow w-72"
+            className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 w-full"
           >
-            <div className="grid grid-cols-3 items-center mb-4">
-              <p className="bg-green-100 col-span-2 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
-                {/* <span className="p-1 rounded-full bg-green-500"></span> */}
-                <span>{leave.type}</span>
+            <div className="flex items-center justify-between mb-4">
+              <p className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-md">
+                {leave.type}
               </p>
-              <button
-                className={`text-sm px-2 col-span-1 py-1 rounded-md font-medium border me-2 ${leave.status === "Pending"
+              <span
+                className={`text-sm px-2 py-1 rounded-md font-medium border ${leave.status === "Pending"
                     ? "bg-yellow-100 text-yellow-800 border-yellow-100"
                     : leave.status === "Approved"
                       ? "bg-green-100 text-green-800 border-green-100"
@@ -309,37 +326,80 @@ const EmployeeDashboard = () => {
                   }`}
               >
                 {leave.status}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 mb-6">
+              <img
+                src={leave.employee.image}
+                alt={leave.employee.name}
+                className="w-14 h-14 rounded-full object-cover shadow-sm"
+              />
+              <div>
+                <p className="text-gray-800 font-medium">{leave.employee.name}</p>
+                <p className="text-sm text-gray-500">Leave Days: {leave.employee.leaveDays}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-sm text-gray-500">Leave From:</p>
+                <p className="text-gray-800 font-medium">{leave.fromDate}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Leave To:</p>
+                <p className="text-gray-800 font-medium">{leave.toDate}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1 justify-between">
+              <button className="flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-4 py-2 rounded-md border border-green-100 hover:bg-green-200 transition">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Approve
+              </button>
+              <button className="flex items-center gap-2 bg-red-100 text-red-800 text-sm font-medium px-4 py-2 rounded-md border border-red-100 hover:bg-red-200 transition">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                Reject
               </button>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src={leave.employee.image}
-                  alt={leave.employee.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="text-gray-800 font-medium">{leave.employee.name}</p>
-                  <p className="text-sm text-gray-500">{leave.employee.leaveDays}</p>
-                </div>
-              </div>
-              <div className=" grid grid-cols-2 items-center">
-                <button className="bg-green-100 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
-                  Approve
-                </button>
-                <button className="bg-red-100 text-red-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-red-100">
-                  Reject
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Leave From:</p>
-                  <p className="text-gray-800 font-medium">{leave.fromDate}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Leave To:</p>
-                  <p className="text-gray-800 font-medium">{leave.toDate}</p>
-                </div>
+
+            <div className="mt-6">
+              <p className="text-sm text-gray-500 mb-1">Leave Status:</p>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className={`h-2.5 rounded-full ${leave.status === "Pending"
+                      ? "bg-yellow-500 w-1/2"
+                      : leave.status === "Approved"
+                        ? "bg-green-500 w-full"
+                        : "bg-red-500 w-1/3"
+                    }`}
+                ></div>
               </div>
             </div>
           </div>
