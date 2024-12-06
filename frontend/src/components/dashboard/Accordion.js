@@ -60,7 +60,7 @@ const Accordion = () => {
           {val.isOpen ? <FaChevronUp style={{ fontSize: '28px'}}/> : <FaChevronDown style={{ fontSize: '28px'}} />}
         </button>
 
-        {val.isOpen && <div className="mt-4 p-6 rounded-lg bg-green-100">
+        {val.isOpen && <div className="mt-4 p-6 rounded-lg bg-blue-100">
           <p className=" text-gray-800 leading-relaxed text-sm">{val.content}</p>
         </div>}
       </div>

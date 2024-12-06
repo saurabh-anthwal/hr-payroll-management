@@ -274,7 +274,7 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 h-[400px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 md:h-[400px] h-[850px]">
         {/* Income/Expense Line Chart */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Income Statistics</h2>
@@ -289,19 +289,19 @@ const EmployeeDashboard = () => {
       </div>
 
      {/* Leave request */}
-     <div className="mb-8 p-4 w-full flex flex-wrap gap-4">
+      <div className="mb-8 p-4 w-full grid grid-cols-1 md:grid-cols-4 gap-4">
         {leaveData.map((leave) => (
           <div
             key={leave.id}
             className="bg-white p-6 rounded-lg shadow w-72"
           >
-            <div className="grid grid-cols-2 items-center mb-4">
-              <p className="bg-green-100 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
+            <div className="grid grid-cols-3 items-center mb-4">
+              <p className="bg-green-100 col-span-2 text-green-800 text-sm font-medium me-2 px-3 py-1 rounded-md border border-green-100">
                 {/* <span className="p-1 rounded-full bg-green-500"></span> */}
                 <span>{leave.type}</span>
               </p>
               <button
-                className={`text-sm px-2 py-1 rounded-md font-medium border me-2 ${leave.status === "Pending"
+                className={`text-sm px-2 col-span-1 py-1 rounded-md font-medium border me-2 ${leave.status === "Pending"
                     ? "bg-yellow-100 text-yellow-800 border-yellow-100"
                     : leave.status === "Approved"
                       ? "bg-green-100 text-green-800 border-green-100"
@@ -346,71 +346,72 @@ const EmployeeDashboard = () => {
         ))}
       </div>
 
-
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
-        <Accordion />
-      </div>
-      {/* Employee List */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="text-left bg-gray-100">
-              <th className="py-2 pl-1 text-gray-500 font-light text-sm">Employee Name</th>
-              <th className="py-2 pl-1 text-gray-500 font-light text-sm">Department</th>
-              <th className="py-2 pl-1 text-gray-500 font-light text-sm">Job Title</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              {
-                id: "1",
-                profile:
-                  "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                name: "Hazel Nutt",
-                email: "hazelnutt@mail.com",
-                title: "Lead UI/UX Designer",
-                department: "Design",
-              },
-              {
-                id: "2",
-                profile:
-                  "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                name: "Simon Cyrene",
-                email: "simoncyr@mail.com",
-                title: "Sr Python Developer",
-                department: "Development",
-              },
-              {
-                id: "3",
-                profile:
-                  "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                name: "Aida Bugg",
-                email: "aidabug@mail.com",
-                title: "Jr Seo",
-                department: "Seo",
-              },
-            ].map((emp, index) => (
-              <tr key={index} className="hover:bg-gray-50 border-b-[0.2px] text-sm text-gray-500 font-light">
-                <td className="py-2 pl-2 flex items-center gap-2">
-                  <img
-                    src={emp.profile}
-                    alt={emp.name}
-                    className="w-10 h-10 rounded-full object-cover shadow-md"
-                  />
-                  <div>
-                    <p>{emp.name}</p>
-                    <p>{emp.email}</p>
-                  </div>
-                </td>
-                <td className="py-2 pl-2">{emp.title}</td>
-                <td className="py-2 pl-2">{emp.department}</td>
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div className="bg-white col-span-2 p-6 rounded-lg shadow mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
+          <Accordion />
+        </div>
+        {/* Employee List */}
+        <div className="bg-white col-span-4 p-6 rounded-lg shadow mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="text-left bg-gray-100">
+                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Employee Name</th>
+                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Department</th>
+                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Job Title</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {[
+                {
+                  id: "1",
+                  profile:
+                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
+                  name: "Hazel Nutt",
+                  email: "hazelnutt@mail.com",
+                  title: "Lead UI/UX Designer",
+                  department: "Design",
+                },
+                {
+                  id: "2",
+                  profile:
+                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
+                  name: "Simon Cyrene",
+                  email: "simoncyr@mail.com",
+                  title: "Sr Python Developer",
+                  department: "Development",
+                },
+                {
+                  id: "3",
+                  profile:
+                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
+                  name: "Aida Bugg",
+                  email: "aidabug@mail.com",
+                  title: "Jr Seo",
+                  department: "Seo",
+                },
+              ].map((emp, index) => (
+                <tr key={index} className="hover:bg-gray-50 border-b-[0.2px] text-sm text-gray-500 font-light">
+                  <td className="py-2 pl-2 flex items-center gap-2">
+                    <img
+                      src={emp.profile}
+                      alt={emp.name}
+                      className="w-10 h-10 rounded-full object-cover shadow-md"
+                    />
+                    <div>
+                      <p>{emp.name}</p>
+                      <p>{emp.email}</p>
+                    </div>
+                  </td>
+                  <td className="py-2 pl-2">{emp.title}</td>
+                  <td className="py-2 pl-2">{emp.department}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
+        </div>
       </div>
 
 
