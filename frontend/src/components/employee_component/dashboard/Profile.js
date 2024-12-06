@@ -25,7 +25,7 @@ const Profile = () => {
   const [department, setDepartment] = useState("");
   const [dob, setDob] = useState("");
   const [profileImg, setProfileImg] = useState(null);
-  const [designation, setDesignation] = useState("");
+  const [designation, setDesignation] = useState("HR");
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -51,7 +51,7 @@ const Profile = () => {
     setGender(data.gender);
     setEmail(data.email)
     setAddress(data.address);
-    // setProfileImg
+    setProfileImg(data.profilePic);
   }
 
   const handleCancel = () => {

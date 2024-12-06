@@ -24,19 +24,20 @@ function EmployeesTable() {
   
 
   return (
-    <table className="employees-table table table-hover bg-light shadow text-sm ">
-  <thead>
+    <table className="w-full text-sm text-center text-gray-500 border border-gray-200 mt-6">
+  <thead className="text-xs uppercase bg-gray-200 text-gray-700">
     <tr>
-      <th className="py-2 pl-2">E_Id</th>
-      <th className="py-2 pl-2">Name</th>
-      <th className="py-2 pl-2">Email</th>
-      <th className="py-2 pl-2">Contact</th>
-      <th className="py-2 pl-2">Gender</th>
-      <th className="py-2 pl-2">Hired_D</th>
-      <th className="py-2 pl-2">Joined_D</th>
-      <th className="py-2 pl-2">Address</th>
-      <th className="py-2 pl-2">Profile Pic</th>
-      <th className="py-2 pl-2">Active</th>
+      <th className="py-3 px-2 w-[6%]">E_Id</th>
+      <th className="py-3 px-2 w-[8%]">Name</th>
+      <th className="py-3 px-2 w-[12%]">Email</th>
+      <th className="py-3 px-2 w-[10%]">Contact</th>
+      <th className="py-3 px-2 w-[8%]">Gender</th>
+      <th className="py-3 px-2 w-[8%]">Hired_D</th>
+      <th className="py-3 px-2 w-[8%]">Joined_D</th>
+      <th className="py-3 px-2 w-[14%]">Address</th>
+      <th className="py-3 px-2 w-[10%]">Profile Pic</th>
+      <th className="py-3 px-2 w-[8%]">Active</th>
+      <th className="py-3 px-2 w-[4%]"></th>
     </tr>
   </thead>
   <tbody className="employees-tbody">

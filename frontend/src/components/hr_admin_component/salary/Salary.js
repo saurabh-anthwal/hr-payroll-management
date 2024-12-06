@@ -23,9 +23,8 @@ function Salary() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Monthly Salary Status</h1>
+    <div>
+      <div>
         <SalarySearch setSalaryData={setSalaryData} />
         <table className="w-full mt-6 text-sm text-left text-gray-500 border border-gray-200">
           <thead className="text-xs uppercase bg-gray-200 text-gray-700">

@@ -346,71 +346,10 @@ const EmployeeDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div className="">
         <div className="bg-white col-span-2 p-6 rounded-lg shadow mb-8">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
           <Accordion />
-        </div>
-        {/* Employee List */}
-        <div className="bg-white col-span-4 p-6 rounded-lg shadow mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="text-left bg-gray-100">
-                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Employee Name</th>
-                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Department</th>
-                <th className="py-2 pl-1 text-gray-500 font-light text-sm">Job Title</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                {
-                  id: "1",
-                  profile:
-                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                  name: "Hazel Nutt",
-                  email: "hazelnutt@mail.com",
-                  title: "Lead UI/UX Designer",
-                  department: "Design",
-                },
-                {
-                  id: "2",
-                  profile:
-                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                  name: "Simon Cyrene",
-                  email: "simoncyr@mail.com",
-                  title: "Sr Python Developer",
-                  department: "Development",
-                },
-                {
-                  id: "3",
-                  profile:
-                    "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg",
-                  name: "Aida Bugg",
-                  email: "aidabug@mail.com",
-                  title: "Jr Seo",
-                  department: "Seo",
-                },
-              ].map((emp, index) => (
-                <tr key={index} className="hover:bg-gray-50 border-b-[0.2px] text-sm text-gray-500 font-light">
-                  <td className="py-2 pl-2 flex items-center gap-2">
-                    <img
-                      src={emp.profile}
-                      alt={emp.name}
-                      className="w-10 h-10 rounded-full object-cover shadow-md"
-                    />
-                    <div>
-                      <p>{emp.name}</p>
-                      <p>{emp.email}</p>
-                    </div>
-                  </td>
-                  <td className="py-2 pl-2">{emp.title}</td>
-                  <td className="py-2 pl-2">{emp.department}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 import { Switch, Route } from "react-router-dom";
 import AdminPanel from "../components/hr_admin_component/adminPanel/AdminPanel";
-import Salary from "../components/hr_admin_component/salary/Salary";
 import ViewEmployees from "../components/hr_admin_component/employees/ViewEmployees";
 import Dashboard from "../components/employee_component/dashboard/Dashboard";
 import Profile from "../components/employee_component/dashboard/Profile";
@@ -12,7 +11,6 @@ const AppTemplateRouter = () => {
   return (
     <Switch>
       <Route path="/1/admin-panel" component={AdminPanel} />
-      <Route path="/1/monthly-salary" component={Salary} />
       <Route path="/1/salary" component={EmployeesSalaryDetails} />
       <Route path="/1/view-employees" component={ViewEmployees} />
       <Route path="/1/add-employee" component={EmployeeManager} />

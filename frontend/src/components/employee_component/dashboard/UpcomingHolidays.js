@@ -1,101 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { FaCalendarAlt, FaRegCalendarAlt, FaFlag, FaGift, FaTree } from "react-icons/fa";
-import { MdExpandMore, MdExpandLess } from "react-icons/md"; // Import collapse icons
-import axios_instance from "../../../libs/interseptor";
-import apiUrls from "../../../libs/apiUrls";
+import React from "react";
 
-const UpcomingHolidays = () => {
-  const [holidays, setHolidays] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [expandedHoliday, setExpandedHoliday] = useState(null); // Track expanded holiday
+const holidays = [
+  {
+    name: "New Year's Day",
+    date: "2024-01-01",
+    description: "The first day of the year in the Gregorian calendar, celebrated with fireworks, parties, and other festivities. It marks a new beginning, filled with hope and opportunities.",
+    imageUrl: "https://storage.googleapis.com/a1aa/image/5311ea35-a957-404a-b1ae-1df913264619.jpeg",
+    quote: "Cheers to a new year and another chance for us to get it right. – Oprah Winfrey",
+  },
+  {
+    name: "Christmas",
+    date: "2024-12-25",
+    description: "A holiday celebrating the birth of Jesus Christ, traditionally marked by gift-giving, decorations, and festive meals. It's a time for family and love.",
+    imageUrl: "https://storage.googleapis.com/a1aa/image/5b061e2a-48ba-4bf9-8430-1f76eb236e07.jpeg",
+    quote: "Christmas isn't a season. It's a feeling. – Edna Ferber",
+  },
+  {
+    name: "Thanksgiving",
+    date: "2024-11-28",
+    description: "A day of giving thanks for the harvest and the blessings of the past year, typically celebrated with family gatherings and a feast.",
+    imageUrl: "https://storage.googleapis.com/a1aa/image/fd9ee289-c8bd-46f8-81b8-a2e7286c3cf8.jpeg",
+    quote: "Gratitude turns what we have into enough. – Aesop",
+  },
+];
 
-  useEffect(() => {
-    const fetchHolidays = async () => {
-      try {
-        const response = await axios_instance.get(apiUrls.HOLIDAY_LIST);
-        console.log(response.data, "Fetched Holiday Data");
-        setHolidays(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch holidays:", err);
-        setError("Failed to load holidays. Please try again later.");
-        setLoading(false);
-      }
-    };
-
-    fetchHolidays();
-  }, []);
-
-  const handleToggleDetails = (id) => {
-    // Toggle the expanded holiday details
-    if (expandedHoliday === id) {
-      setExpandedHoliday(null); // Collapse if the same holiday is clicked
-    } else {
-      setExpandedHoliday(id); // Expand the clicked holiday
-    }
-  };
-
-  if (loading) {
-    return <p className="text-center text-lg text-indigo-700">Loading holidays...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-lg text-red-500">{error}</p>;
-  }
-
+const HolidayCard = ({ holiday }) => {
   return (
-    <div className="min-h-screen bg-white">
-    <div className="p-6">
-      <h3 className="text-3xl font-semibold text-gray-800 mb-6 flex items-center space-x-2">
-        <FaCalendarAlt className="text-4xl text-indigo-600" />
-        <span>Upcoming Holidays</span>
-      </h3>
-      <ul className="space-y-6">
-        {holidays.map((holiday) => (
-          <li
-            key={holiday.id}
-            className="flex flex-col bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                {/* Icons based on holiday name */}
-                {holiday.name === "New Year's Day" && <FaGift className="text-4xl text-red-500" />}
-                {holiday.name === "Christmas Day" && <FaTree className="text-4xl text-green-500" />}
-                {holiday.name === "Holi" && <FaRegCalendarAlt className="text-4xl text-pink-500" />}
-                {holiday.name === "Independence Day" && <FaFlag className="text-4xl text-blue-500" />}
-                {holiday.name === "Republic Day" && <FaFlag className="text-4xl text-orange-500" />}
-                <div className="cursor-pointer" onClick={() => handleToggleDetails(holiday.id)}>
-                  <span className="text-xl font-bold text-gray-900">{holiday.name}</span>
-                </div>
-              </div>
-              <span className="text-lg text-gray-600 font-medium">{new Date(holiday.date).toLocaleDateString()}</span>
-
-              {/* Toggle icon based on collapse state */}
-              <div
-                className="cursor-pointer"
-                onClick={() => handleToggleDetails(holiday.id)}
-              >
-                {expandedHoliday === holiday.id ? (
-                  <MdExpandLess className="text-2xl text-gray-600" />
-                ) : (
-                  <MdExpandMore className="text-2xl text-gray-600" />
-                )}
-              </div>
-            </div>
-
-            {/* Collapsible Holiday Description moved to bottom */}
-            {expandedHoliday === holiday.id && (
-              <div className="mt-4 text-sm text-gray-600">
-                <p>{holiday.description}</p>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="max-w-sm rounded-lg overflow-hidden shadow-xl bg-white border border-gray-200 group">
+      <img
+        className="w-full h-64 object-cover group-hover:opacity-75 transition-opacity duration-300"
+        src={holiday.imageUrl}
+        alt={holiday.name}
+      />
+      <div className="px-6 py-4">
+        <h2 className="text-2xl font-bold text-gray-900">{holiday.name}</h2>
+        <p className="text-sm text-gray-500 mb-4">{new Date(holiday.date).toLocaleDateString()}</p>
+        <p className="text-gray-700 mb-4">{holiday.description}</p>
+        <blockquote className="italic text-gray-600 border-l-4 border-blue-500 pl-4 mt-4">
+          "{holiday.quote}"
+        </blockquote>
+      </div>
+      <div className="px-6 py-4">
+        <button className="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 rounded-full w-full">
+          Learn More
+        </button>
       </div>
     </div>
   );
 };
 
-export default UpcomingHolidays;
+const HolidayList = () => {
+  return (
+    <div className="container mx-auto py-8 px-4 bg-white">
+      <h2 className="flex justify-center gap-2 text-4xl font-extrabold text-center text-gray-600 mb-10"><img className="w-40" src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png" alt="" /> Holiday</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {holidays.map((holiday) => (
+          <HolidayCard key={holiday.name} holiday={holiday} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default HolidayList;
