@@ -8,6 +8,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
+    def create(self, validated_data):
+        user = validated_data.get('user')
+        if Employee.objects.filter(user=user).exists():
+            raise serializers.ValidationError("An Employee profile for this user already exists.")
+        return super().create(validated_data)
+
 class EmployeeLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)

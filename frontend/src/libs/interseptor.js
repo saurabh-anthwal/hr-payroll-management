@@ -1,24 +1,33 @@
 /* eslint-disable no-case-declarations */
+import {store} from '../redux/store';
+import { logout } from '../redux/auth/authSlice';
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as utils from "./utils";
 
 let axios_instance = axios.create();
 
-const getUserToken = () => {
-  return Cookies.get("access_token") || null; 
-};
-
 const getUserData = () => {
   const userData = Cookies.get("userData");
-  return userData ? JSON.parse(userData) : null;
+  try {
+    return userData ? JSON.parse(userData) : null;
+  } catch (error) {
+    console.error("Failed to parse userData:", error);
+    return null;
+  }
+};
+
+const clearCookies = () => {
+  Cookies.remove("access_token");
+  Cookies.remove("refresh_token");
+  Cookies.remove("userData");
 };
 
 // Axios request interceptor
 axios_instance.interceptors.request.use(
   (configuration) => {
     const config = configuration;
-    const token = getUserToken();
+    const token = Cookies.get("access_token");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -39,11 +48,13 @@ axios_instance.interceptors.response.use(
       console.error("Network error or no response from server");
       return Promise.reject(error);
     }
-    
-    const userData = getUserData();
 
-    switch (error.response?.status) {
+    const status = error.response.status;
+
+    const userData = getUserData();
+    switch (status) {
       case 401:
+        store.dispatch(logout());
         utils.displayMessage("negative", "Unauthorized");
         clearCookies()
         window.location.href = "/";
@@ -82,10 +93,5 @@ axios_instance.interceptors.response.use(
   }
 );
 
-const clearCookies = () => {
-  Cookies.remove("access_token");
-  Cookies.remove("refresh_token");
-  Cookies.remove("userData");
-};
 
 export default axios_instance;

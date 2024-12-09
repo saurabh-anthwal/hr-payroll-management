@@ -8,8 +8,8 @@ const EmployeeManager = () => {
   return (
     <div>
       <TabSwitch
-        tabs={["Register Employee", "Update Employee"]}
-        components={[<AddEmployee />, <UpdateEmployee />]}
+        tabs={["Register New User", "Update Employee",  "Update Manager"]}
+        components={[<AddEmployee />, <UpdateEmployee emp_type="Employee" /> , <UpdateEmployee emp_type="Manager"/>]}
       />
     </div>
   );

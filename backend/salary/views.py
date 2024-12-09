@@ -102,7 +102,7 @@ class MonthlySalaryViewSet(viewsets.ViewSet):
 
         try:
             # Fetch employee using the provided employee_id
-            employee = Employee.objects.get(id=employee_id)
+            employee = Employee.objects.get(user_id=employee_id)
         except Employee.DoesNotExist:
             return Response({'message': 'Employee not found'}, status=status.HTTP_400_BAD_REQUEST)
 

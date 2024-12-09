@@ -73,13 +73,16 @@ class Holiday(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
     description = models.TextField(blank=True, null=True)
-    active = models.BooleanField(default=True)  # To indicate if the holiday is active or not
+    quotes = models.TextField(blank=True, null=True)  # Optional text for quotes
+    image = models.ImageField(upload_to='holiday_images/', blank=True, null=True)  # Optional image
+    active = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'holiday'
-        ordering = ['date']  # To sort holidays by date
+        ordering = ['date']
 
     def __str__(self):
-        return f"{self.name} - {self.date}"        
+        return f"{self.name} - {self.date}"
+  
 
 

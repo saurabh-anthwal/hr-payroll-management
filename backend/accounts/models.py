@@ -50,7 +50,7 @@ class User(AbstractUser):
 
 
 def documents_path(instance, filename):
-    return 'employee/emp_{id}/{filename}'.format(id=instance.emp_id, filename=filename)
+    return 'employee/{id}/{filename}'.format(id=instance.id, filename=filename)
 
 class Admin(models.Model):
     GENDER = [('male', 'Male'), ('female', 'Female'), ('transgender', 'Transgender')]

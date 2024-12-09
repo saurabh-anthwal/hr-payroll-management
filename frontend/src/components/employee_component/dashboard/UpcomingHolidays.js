@@ -1,35 +1,13 @@
-import React from "react";
-
-const holidays = [
-  {
-    name: "New Year's Day",
-    date: "2024-01-01",
-    description: "The first day of the year in the Gregorian calendar, celebrated with fireworks, parties, and other festivities. It marks a new beginning, filled with hope and opportunities.",
-    imageUrl: "https://storage.googleapis.com/a1aa/image/5311ea35-a957-404a-b1ae-1df913264619.jpeg",
-    quote: "Cheers to a new year and another chance for us to get it right. – Oprah Winfrey",
-  },
-  {
-    name: "Christmas",
-    date: "2024-12-25",
-    description: "A holiday celebrating the birth of Jesus Christ, traditionally marked by gift-giving, decorations, and festive meals. It's a time for family and love.",
-    imageUrl: "https://storage.googleapis.com/a1aa/image/5b061e2a-48ba-4bf9-8430-1f76eb236e07.jpeg",
-    quote: "Christmas isn't a season. It's a feeling. – Edna Ferber",
-  },
-  {
-    name: "Thanksgiving",
-    date: "2024-11-28",
-    description: "A day of giving thanks for the harvest and the blessings of the past year, typically celebrated with family gatherings and a feast.",
-    imageUrl: "https://storage.googleapis.com/a1aa/image/fd9ee289-c8bd-46f8-81b8-a2e7286c3cf8.jpeg",
-    quote: "Gratitude turns what we have into enough. – Aesop",
-  },
-];
+import React, { useEffect, useState } from "react";
+import apiUrls from "../../../libs/apiUrls";
+import axios_instance from "../../../libs/interseptor";
 
 const HolidayCard = ({ holiday }) => {
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-xl bg-white border border-gray-200 group">
       <img
         className="w-full h-64 object-cover group-hover:opacity-75 transition-opacity duration-300"
-        src={holiday.imageUrl}
+        src={holiday.image}
         alt={holiday.name}
       />
       <div className="px-6 py-4">
@@ -37,26 +15,189 @@ const HolidayCard = ({ holiday }) => {
         <p className="text-sm text-gray-500 mb-4">{new Date(holiday.date).toLocaleDateString()}</p>
         <p className="text-gray-700 mb-4">{holiday.description}</p>
         <blockquote className="italic text-gray-600 border-l-4 border-blue-500 pl-4 mt-4">
-          "{holiday.quote}"
+          "{holiday.quotes}"
         </blockquote>
-      </div>
-      <div className="px-6 py-4">
-        <button className="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 rounded-full w-full">
-          Learn More
-        </button>
       </div>
     </div>
   );
 };
 
 const HolidayList = () => {
+  const [holidays, setHolidays] = useState([]);
+  const [addNew, setAddNew] = useState(false)
+  const [newHoliday, setNewHoliday] = useState({
+    name: "",
+    date: "",
+    description: "",
+    image: null,
+    quotes: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getHoliday = async () => {
+      try {
+        const response = await axios_instance.get(apiUrls.HOLIDAY_LIST);
+        setHolidays(response.data);
+      } catch (error) {
+        console.error("Failed to fetch holidays:", error);
+      }
+    };
+    getHoliday();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewHoliday({ ...newHoliday, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setNewHoliday({ ...newHoliday, [name]: files[0] });  // Store the file object
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("name", newHoliday.name);
+    formData.append("date", newHoliday.date);
+    formData.append("description", newHoliday.description);
+    formData.append("quotes", newHoliday.quotes);
+    if (newHoliday.image) {
+      formData.append("image", newHoliday.image); // Append the image file
+    }
+
+    try {
+      const response = await axios_instance.post(apiUrls.HOLIDAY_LIST, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",  // Ensure the correct content type
+        },
+      });
+      setHolidays([response.data, ...holidays]);
+      setNewHoliday({ name: "", date: "", description: "", image: null, quotes: "" });
+    } catch (error) {
+      console.error("Failed to create holiday:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto py-8 px-4 bg-white">
-      <h2 className="flex justify-center gap-2 text-4xl font-extrabold text-center text-gray-600 mb-10"><img className="w-40" src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png" alt="" /> Holiday</h2>
+
+      <h2 className="flex justify-center gap-2 text-4xl font-extrabold text-center text-gray-600 mb-10">
+        <img
+          className="w-40"
+          src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
+          alt="Holiday Logo"
+        />
+        Holiday
+      </h2>
+      <div className="flex justify-end py-2">
+        <button
+          className="px-6 py-2 text-white bg-blue-600 rounded-lg font-semibold transition duration-300 transform hover:bg-blue-700 hover:scale-105"
+         onClick={()=>{setAddNew(!addNew)}}> {addNew ? "Cancel" : "Add New Holiday"}
+         </button>
+      </div>
+      {addNew &&
+      <div className="mb-12 bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Add a New Holiday
+        </h2>
+        <form onSubmit={handleFormSubmit} className="space-y-6 max-w-lg mx-auto">
+          <div className="space-y-4">
+            <div className="flex flex-col">
+              <label htmlFor="name" className="text-lg font-semibold text-gray-700">
+                Holiday Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={newHoliday.name}
+                onChange={handleInputChange}
+                placeholder="Enter holiday name"
+                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="date" className="text-lg font-semibold text-gray-700">
+                Holiday Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={newHoliday.date}
+                onChange={handleInputChange}
+                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="description" className="text-lg font-semibold text-gray-700">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={newHoliday.description}
+                onChange={handleInputChange}
+                placeholder="Write a brief description"
+                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="image" className="text-lg font-semibold text-gray-700">
+                Holiday Image
+              </label>
+              <input
+                type="file"
+                name="image"
+                onChange={handleFileChange}
+                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="quotes" className="text-lg font-semibold text-gray-700">
+                Quote (Optional)
+              </label>
+              <input
+                type="text"
+                name="quotes"
+                value={newHoliday.quotes}
+                onChange={handleInputChange}
+                placeholder="Enter a holiday quote"
+                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-3 px-6 rounded-lg bg-blue-500 text-white font-semibold transition-all focus:outline-none hover:bg-blue-700 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+              >
+                {isLoading ? "Adding..." : "Add Holiday"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {holidays.map((holiday) => (
-          <HolidayCard key={holiday.name} holiday={holiday} />
-        ))}
+        {holidays.length > 0 ? (
+          holidays.map((holiday) => <HolidayCard key={holiday.name} holiday={holiday} />)
+        ) : (
+          <p>No holidays available</p>
+        )}
       </div>
     </div>
   );

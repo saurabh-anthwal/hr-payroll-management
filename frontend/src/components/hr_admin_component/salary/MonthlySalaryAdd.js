@@ -167,7 +167,7 @@ function SalaryDetailsComponent() {
       {salaryDetails && (
         <div className="mt-6 bg-gray-100 p-4 rounded-lg">
           <h3 className="text-xl font-semibold mb-4">Salary Summary</h3>
-          <p><strong>Employee ID:</strong> {salaryDetails.employee_id}</p>
+          <p><strong>Employee ID:</strong> {salaryDetails.emp_id}</p>
           <p><strong>Salary Period:</strong> {salaryDetails.from_date} to {salaryDetails.to_date}</p>
           <p><strong>Paid Status:</strong> {salaryDetails.paid_status ? 'Paid' : 'Not Paid'}</p>
           <p><strong>Paid Date:</strong> {salaryDetails.paid_date || 'N/A'}</p>
