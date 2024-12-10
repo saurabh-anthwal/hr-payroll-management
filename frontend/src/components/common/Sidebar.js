@@ -112,7 +112,7 @@ const Sidebar = () => {
                   <span>Holidays</span>
                 </a>
               </li>
-              <li>
+              {userType==='hr' && <li>
                 <a href={`${userType==='hr' ? "/1/view-employees" : "/employ/view-employees" }`}
                   className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
                   style={selectedTab === 'employee' ? { backgroundColor: "#d9f3ea" } : {}}
@@ -124,17 +124,17 @@ const Sidebar = () => {
 
                   <span>Employees</span>
                 </a>
-              </li>
+              </li>}
             </ul>
 
-            <div className="mt-8">
+            {userType==='hr' && <div className="mt-8">
               <div className="bg-[#00b074] p-4 rounded-md shadow-md max-w-[196px]">
                 <p className="text-white text-sm leading-relaxed">Organize your menus using the action button below!</p>
                 <button type="button"
                   className="py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 text-sm border-none outline-none rounded-md mt-4">Add
                   Menu</button>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </nav>
