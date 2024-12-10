@@ -32,7 +32,7 @@ const HrLoginPage = () => {
 
       if (response.status === 200 && response.data?.user_id) {
           //dispatch api response
-          dispatch(loginSuccess(response.data))     
+          dispatch(loginSuccess({...response.data, userType: 'hr' }))     
           history.push(`/1/dashboard`);
       } else {
         setError("Invalid login credentials. Please try again.");

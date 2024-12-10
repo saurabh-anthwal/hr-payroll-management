@@ -6,12 +6,13 @@ import Profile from "../components/employee_component/dashboard/Profile";
 import UpcomingHolidays from "../components/employee_component/dashboard/UpcomingHolidays";
 import EmployeesSalaryDetails from "../components/hr_admin_component/salary/EmployeesSalaryDetails";
 import EmployeeManager from "../components/hr_admin_component/employees/EmployeeManager";
+import EmploySalaryPage from "../pages/salary/EmploySalaryPage";
 
 const EmployTemplateRouter = () => {
   return (
     <Switch>
       <Route path="/employ/admin-panel" component={AdminPanel} />
-      <Route path="/employ/salary" component={EmployeesSalaryDetails} />
+      <Route path="/employ/salary" component={EmploySalaryPage} />
       <Route path="/employ/view-employees" component={ViewEmployees} />
       <Route path="/employ/add-employee" component={EmployeeManager} />
       <Route path="/employ/dashboard" component={Dashboard} />

@@ -8,7 +8,7 @@ import HomePage from "../pages/homepage/HomePage";
 import HrLoginPage from "../pages/accounts/HrLoginPage";
 import HrRegisterPage from "../pages/accounts/HrRegisterPage";
 import AppTemplatePage from "../pages/common/AppTemplatePage";
-import PrivateRoute from "../components/PrivateRouteComponent/PrivateRoute";
+import { EmployPrivateRoute, HrPrivateRoute } from "../components/PrivateRouteComponent/PrivateRoute";
 import PublicRoute from "../components/PublicRouteComponent/PublicRoute";
 import EmployTemplatePage from "../pages/common/EmployTemplatePage";
 
@@ -21,11 +21,11 @@ function Router() {
         <PublicRoute path="/register" component={HrRegisterPage} restricted={true}/>
 
         {/* Protected Routes */}
-        <PrivateRoute path="/1" component={AppTemplatePage} />
-        <PrivateRoute path="/employ" component={EmployTemplatePage} />
-        <PrivateRoute path="/salary" component={Salary}/>
-        <PrivateRoute path="/view-employees" component={ViewEmployees}/>
-        <PrivateRoute path="/employee-dashboard" component={Dashboard}/>
+        <HrPrivateRoute path="/1" component={AppTemplatePage} />
+        <EmployPrivateRoute path="/employ" component={EmployTemplatePage} />
+        <HrPrivateRoute path="/salary" component={Salary}/>
+        <HrPrivateRoute path="/view-employees" component={ViewEmployees}/>
+        <HrPrivateRoute path="/employee-dashboard" component={Dashboard}/>
         {/* 404 Catch-all Route */}
         <Route path="*">
           <div>

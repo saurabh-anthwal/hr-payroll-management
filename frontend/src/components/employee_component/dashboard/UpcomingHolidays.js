@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiUrls from "../../../libs/apiUrls";
 import axios_instance from "../../../libs/interseptor";
+import Cookies from 'js-cookie';
 
 const HolidayCard = ({ holiday }) => {
   return (
@@ -33,6 +34,7 @@ const HolidayList = () => {
     quotes: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const userType = Cookies.get('userType')
 
   useEffect(() => {
     const getHoliday = async () => {
@@ -96,10 +98,10 @@ const HolidayList = () => {
         Holiday
       </h2>
       <div className="flex justify-end py-2">
-        <button
+        {userType==='hr' && <button
           className="px-6 py-2 text-white bg-blue-600 rounded-lg font-semibold transition duration-300 transform hover:bg-blue-700 hover:scale-105"
-         onClick={()=>{setAddNew(!addNew)}}> {addNew ? "Cancel" : "Add New Holiday"}
-         </button>
+          onClick={()=>{setAddNew(!addNew)}}> {addNew ? "Cancel" : "Add New Holiday"}
+        </button>}
       </div>
       {addNew &&
       <div className="mb-12 bg-white p-8 rounded-lg shadow-lg">

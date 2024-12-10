@@ -21,6 +21,7 @@ const authSlice = createSlice({
       Cookies.set('access_token', action.payload.access_token, { expires: 7 });
       Cookies.set('refresh_token', action.payload.refresh_token, { expires: 7 });
       Cookies.set('userData', action.payload, { expires: 7 });
+      Cookies.set('userType', action.payload.userType, { expires: 7 });
     },
     logout: (state) => {
       state.user = null;

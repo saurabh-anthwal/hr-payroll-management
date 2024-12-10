@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
   const [selectedTab, setSelectedTab] = useState('dashboard');
+  const userType = Cookies.get('userType')
 
   useEffect(() => {
     if (localStorage.getItem("tab")) {
@@ -41,7 +43,7 @@ const Sidebar = () => {
         <div id="sidebar-collapse-menu"
           className=" bg-white shadow-lg h-screen fixed top-0 left-0 overflow-auto z-[99] lg:min-w-[250px] lg:w-max max-lg:w-0 max-lg:invisible transition-all duration-500">
           <div className="pt-8 pb-2 px-6 sticky top-0 bg-white min-h-[80px] z-[100]">
-            <a href="/1/dashboard" className="outline-none"><img src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
+            <a href={`${userType==='hr' ? "/1/dashboard" : "/employ/dashboard" }`} className="outline-none"><img src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
               alt="logo" className='w-[170px]' />
             </a>
           </div>
@@ -49,7 +51,7 @@ const Sidebar = () => {
           <div className="py-6 px-6">
             <ul className="space-y-2">
               <li>
-                <a href="/1/dashboard"
+                <a href={`${userType==='hr' ? "/1/dashboard" : "/employ/dashboard" }`}
                   className="menu-item text-green-700 text-sm flex items-center cursor-pointer  hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
                   style={selectedTab === 'dashboard' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('dashboard')}
@@ -67,7 +69,7 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="/1/salary"
+                <a href={`${userType==='hr' ? "/1/salary" : "/employ/salary" }`}
                   className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
                   style={selectedTab === 'salary' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('salary')}
@@ -93,7 +95,7 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="/1/holidays"
+                <a href={`${userType==='hr' ? "/1/holidays" : "/employ/holidays" }`}
                   className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
                   style={selectedTab === 'holidays' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('holidays')}
@@ -111,7 +113,7 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="/1/view-employees"
+                <a href={`${userType==='hr' ? "/1/view-employees" : "/employ/view-employees" }`}
                   className="menu-item text-gray-800 text-sm flex items-center cursor-pointer hover:bg-[#d9f3ea] rounded-md px-3 py-3 transition-all duration-300"
                   style={selectedTab === 'employee' ? { backgroundColor: "#d9f3ea" } : {}}
                   onClick={() => handleSelectedTab('employee')}

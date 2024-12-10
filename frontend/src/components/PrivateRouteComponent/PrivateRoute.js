@@ -7,13 +7,14 @@ const getAuthToken = () => {
   return Cookies.get("access_token") || null; 
 };
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+export const HrPrivateRoute = ({ component: Component, ...rest }) => {
   const token = getAuthToken(); 
+  const userType = Cookies.get("userType");
   return (
     <Route
       {...rest}
       render={(props) =>
-        token ? (
+        token && userType !=="employ" ? (
           <>
             <Navbar />
             <Component {...props} />
@@ -26,4 +27,24 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+
+export const EmployPrivateRoute = ({ component: Component, ...rest }) => {
+  const token = getAuthToken(); 
+  const userType = Cookies.get("userType");
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        token &&  userType==='employ' ? (
+          <>
+            <Navbar />
+            <Component {...props} />
+          </>
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
+};
+

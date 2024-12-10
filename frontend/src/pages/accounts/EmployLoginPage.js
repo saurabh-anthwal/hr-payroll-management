@@ -31,13 +31,12 @@ const EmployLoginPage = () => {
       const response = await publicAxios.post(URLS.HR_LOGIN, params);
         if (response.status === 200 && response.data?.user_id) {
             //dispatch api response
-            dispatch(loginSuccess(response.data))     
-            history.push(`/1/dashboard`);
+            dispatch(loginSuccess({...response.data, userType: "employ"}))     
+            history.push("/employ/dashboard");
         } else {
           setError("Invalid login credentials. Please try again.");
         }
     
-      history.push("/employ/dashboard");
     } catch(err)  {
       if (err.response) {
         if (err.response.status === 500) {
