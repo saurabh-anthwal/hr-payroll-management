@@ -178,6 +178,5 @@ EMAIL_HOST_USER = 'sovianthwal@gmail.com'
 EMAIL_HOST_PASSWORD = 'ehlr xjkk movd zbpg'
 DEFAULT_FROM_EMAIL = 'sovianthwal@gmail.com'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Add your frontend URL
-]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = ['*']

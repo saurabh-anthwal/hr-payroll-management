@@ -4,9 +4,14 @@ import { Redirect, useHistory } from "react-router-dom";
 // import OtpForm from "../../Forget_password/OtpForm";
 import EmployLoginForm from "../../components/accounts/login/EmployLoginForm";
 import EmployForgotPasswordForm from "../../components/accounts/forgotPassword/EmployForgotPasswordForm"
+import { useDispatch } from 'react-redux';
+import {loginSuccess} from "../../redux/auth/authSlice"
+import * as URLS from "../../libs/apiUrls"
+import axios from "axios";
 
 const EmployLoginPage = () => {
   const history = useHistory();
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,26 +21,37 @@ const EmployLoginPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [currentForm, setCurrentForm] = useState("login");
 
+  const publicAxios = axios.create(); // No interceptors for this instance
+
   async function submitHandle(e) {
     e.preventDefault();
-
-    const response = await fetch(`http://127.0.0.1:8000/api/accounts/admin-login/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (response?.ok) {
-      localStorage.setItem("loggedIn", true);
-      localStorage.setItem("accessToken", data.access);
-      localStorage.setItem("refreshToken", data.refresh);
-      localStorage.setItem("userName", data.username);
-      history.push("/home");
-    } else {
-      setError("Invalid credentials.");
+    const params = { email, password };
+    setError("");
+    try {
+      const response = await publicAxios.post(URLS.HR_LOGIN, params);
+        if (response.status === 200 && response.data?.user_id) {
+            //dispatch api response
+            dispatch(loginSuccess(response.data))     
+            history.push(`/1/dashboard`);
+        } else {
+          setError("Invalid login credentials. Please try again.");
+        }
+    
+      history.push("/employ/dashboard");
+    } catch(err)  {
+      if (err.response) {
+        if (err.response.status === 500) {
+          setError("Server error. Please try again later.");
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+      } else if (err.request) {
+        setError("No response from the server. Please check your network.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
+    
   }
 
     // Reset password with OTP
@@ -55,8 +71,7 @@ const EmployLoginPage = () => {
           setPassword("");
           setCurrentForm("login");
         } else {
-          const errorData = await response.json();
-          setError(errorData.message || "Password reset failed");
+          setError("Invalid login credentials. Please try again.");
         }
       } catch (error) {
         setError("Something went wrong. Please try again.");
