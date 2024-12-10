@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import AdminViewSet, EmployeeViewSet, CountEmployee, UserViewSet, LoginView, ForgotPasswordView, ResetPasswordView, HRViewSet, ManagerViewSet
+from .views import AdminViewSet, EmployeeViewSet, CountEmployee, UserViewSet, LoginView, ForgotPasswordView, ResetPasswordView, HRViewSet, ManagerViewSet, AllUsersViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
@@ -10,6 +10,7 @@ router.register('employee', EmployeeViewSet, basename='employee')
 router.register('employee-count', CountEmployee, basename='employeeCount')
 router.register('hrs', HRViewSet, basename='hr')
 router.register('managers', ManagerViewSet, basename='manager')
+router.register('all-type-user', AllUsersViewSet, basename='all-users')
 
 urlpatterns = [
     path('', include(router.urls)),

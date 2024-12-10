@@ -17,5 +17,6 @@ module.exports = {
   EMPLOYEE_COUNT: `${SERVER_URL}api/accounts/employee-count/`,
   MONTHLY_SALARY_STATUS: `${SERVER_URL}api/salary/monthly-salary/`,//get/post
   ALL_EMPLOYEE_SALARY_DETAILS: `${SERVER_URL}api/salary/salary/`, //get/post
-  HOLIDAY_LIST: `${SERVER_URL}api/home/holidays/` //get/post
+  HOLIDAY_LIST: `${SERVER_URL}api/home/holidays/`, //get/post
+  MONTHLY_PAYSLIP: `${SERVER_URL}api/salary/monthly-salary/payslip/`
 }

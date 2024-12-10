@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 from django.core.mail import send_mail
+from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import serializers
 from django.conf import settings
@@ -15,10 +16,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-
 from .models import Admin, Employee, User, HR, Manager
 from .serializers import EmployeeSerializer, AdminSerializer, UserOTPVerifySerializer, UserOTPVerifySerializer, UserOTPSendSerializer, HRSerializer, ManagerSerializer, UserSerializer
-
 from .permissions import IsHR, IsAdmin
 
 class EmployeeViewSet(viewsets.ModelViewSet):
@@ -213,3 +212,19 @@ class ResetPasswordView(APIView):
 
         return Response({"message": "Password has been reset successfully."}, status=200)
 
+
+class AllUsersViewSet(viewsets.ViewSet, ListModelMixin):
+    def list(self, request):
+        employees = Employee.objects.all()
+        admins = Admin.objects.all()
+        hrs = HR.objects.all()
+        managers = Manager.objects.all()
+
+        employee_data = EmployeeSerializer(employees, many=True).data
+        admin_data = AdminSerializer(admins, many=True).data
+        hr_data = HRSerializer(hrs, many=True).data
+        manager_data = ManagerSerializer(managers, many=True).data
+
+        combined_data = employee_data + admin_data + hr_data + manager_data
+
+        return Response(combined_data)

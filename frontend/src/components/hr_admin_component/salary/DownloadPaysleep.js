@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { LiaDownloadSolid } from "react-icons/lia";
+import apiUrls from "../../../libs/apiUrls";
+import axios_instance from "../../../libs/interseptor";
 import SalarySlip from "./SalarySlip";
 
 const DownloadPayslip = () => {
+  const [salaryData, setSalaryData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     month: "",
     employee: "",
-    department: "",
   });
 
   const handleInputChange = (e) => {
@@ -17,113 +21,136 @@ const DownloadPayslip = () => {
     }));
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    console.log("Filters:", filters);
-    // Add your search functionality here
+
+    if (!filters.month || !filters.employee) {
+      setError("Both fields are required.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios_instance.get(
+        `${apiUrls.MONTHLY_PAYSLIP}?month=${filters.month}&email=${filters.employee}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch salary data");
+      }
+
+      const data = response.data;
+
+      const formattedData = {
+        employeeDetails: {
+          name: `${data.employee?.firstname || "N/A"} ${data.employee?.lastname || "N/A"}`,
+          id: `EMP${data.employee?.id || "N/A"}`,
+          designation: data.employee?.designation || "N/A",
+          department: data.employee?.department || "N/A",
+          joiningDate: data.employee?.dateOfJoined || "N/A",
+          bankAccount: "N/A",
+          pan: "N/A",
+        },
+        salaryDetails: {
+          month: filters.month,
+          location: "New York Office",
+          payDate: data.paid_date || "N/A",
+          totalEarnings: data.total_salary || 0,
+          totalDeductions:
+            (data.salary?.pf || 0) +
+            (data.salary?.esic || 0) +
+            (data.salary?.professional_tax || 0),
+          netPay: data.salary?.net_salary || 0,
+        },
+        earnings: [
+          { name: "Basic Salary", amount: data.salary?.basic_da || 0 },
+          { name: "House Rent Allowance (HRA)", amount: data.salary?.hra || 0 },
+          { name: "Conveyance", amount: data.salary?.conveyance || 0 },
+        ],
+        deductions: [
+          { name: "Provident Fund", amount: data.salary?.pf || 0 },
+          { name: "ESIC", amount: data.salary?.esic || 0 },
+          { name: "Professional Tax", amount: data.salary?.professional_tax || 0 },
+        ],
+      };
+
+      setSalaryData(formattedData);
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="">
-      <div className="">
-        {/* Header */}
-        <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-          Search Employee Payslip
-        </h1>
+    <div className="container mx-auto px-4">
+      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
+        Search Employee Payslip
+      </h1>
 
-        {/* Filter Section */}
-        <form
-          onSubmit={handleSearch}
-          className="flex flex-wrap items-center gap-4 mb-6"
-        >
-          {/* Month Field */}
-          <div className="flex-1 min-w-[150px]">
-            <label
-              htmlFor="month"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Month
-            </label>
-            <input
-              type="month"
-              id="month"
-              name="month"
-              value={filters.month}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Employee Field */}
-          <div className="flex-1 min-w-[150px]">
-            <label
-              htmlFor="employee"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Employee Name/ID
-            </label>
-            <input
-              type="text"
-              id="employee"
-              name="employee"
-              placeholder="Employee Name or ID"
-              value={filters.employee}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
-            />
-          </div>
-
-          {/* Department Dropdown */}
-          <div className="flex-1 min-w-[150px]">
-            <label
-              htmlFor="department"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Department
-            </label>
-            <select
-              id="department"
-              name="department"
-              value={filters.department}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
-            >
-              <option value="">All Departments</option>
-              <option value="IT Development">IT Development</option>
-              <option value="Finance">Finance</option>
-              <option value="HR">HR</option>
-              <option value="Marketing">Marketing</option>
-            </select>
-          </div>
-
-          {/* Search Button */}
-          <div className="flex-none mt-4 sm:mt-0">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200"
-            >
-              Search
-            </button>
-          </div>
-        </form>
-
-        {/* Results Section */}
-        <div>
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            {/* <p className="text-sm text-gray-500 text-center">
-              No results found. Use the search above to find payslips.
-            </p> */}
-            <div>
-                <div className="flex justify-end items-center font-semibold">
-                    <LiaDownloadSolid/>
-                    <button>Download PDF</button>
-                </div>
-                <SalarySlip/>
-            </div>
-          </div>
+      <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-4 mb-6">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="month" className="block text-sm font-medium text-gray-700 mb-1">
+            Month
+          </label>
+          <input
+            type="month"
+            id="month"
+            name="month"
+            value={filters.month}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+            required
+          />
         </div>
-      </div>
+
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="employee" className="block text-sm font-medium text-gray-700 mb-1">
+            Employee Email
+          </label>
+          <input
+            type="text"
+            id="employee"
+            name="employee"
+            placeholder="Employee Name or ID"
+            value={filters.employee}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+            required
+          />
+        </div>
+
+        <div className="flex-none mt-4 sm:mt-0">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+
+      {loading && <p className="text-center text-gray-600">Loading...</p>}
+      {error && <p className="text-center text-red-500">Error: {error}</p>}
+
+      {salaryData ? (
+        <div>
+          <div className="flex justify-end items-center font-semibold">
+            <LiaDownloadSolid />
+            <button>Download PDF</button>
+          </div>
+          <SalarySlip salaryData={salaryData} />
+        </div>
+      ) : (
+        !loading &&
+        !error && (
+          <p className="text-sm text-gray-500 text-center">
+            No results found. Use the search above to find payslips.
+          </p>
+        )
+      )}
     </div>
   );
 };

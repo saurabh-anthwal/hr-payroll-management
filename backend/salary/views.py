@@ -3,9 +3,12 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.decorators import action
+from datetime import datetime
+from rest_framework.mixins import ListModelMixin
 from rest_framework.exceptions import NotFound
 from .models import Salary
-from .serializers import SalarySerializer, GetEmpSalaryDetailSerializer
+from .serializers import SalarySerializer, GetEmpSalaryDetailSerializer, MonthlySalarySerializer, MonthlySalaryInputSerializer
 from accounts.models import Employee
 from .models import MonthlySalary, Salary
 from accounts.permissions import IsHR, IsEmployee
@@ -17,115 +20,72 @@ class SalaryViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['employee_id']
 
+    def create(self, request, *args, **kwargs):
+        employee_id = request.data.get("employee")
+        if not employee_id:
+            return Response({"error": "employee_id is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-class MonthlySalaryViewSet(viewsets.ViewSet):
-    permission_classes = [IsHR]
-    def list(self, request):
-        paid_status = request.GET.get('paidStatus', None)
-        full_name = request.GET.get('fullName', None)
-        department = request.GET.get('department', None)
+        if Salary.objects.filter(employee_id=employee_id).exists():
+            return Response({
+                "error": "Salary record for this employee already exists. Use update instead."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        # Using Django ORM instead of raw SQL queries
-        queryset = MonthlySalary.objects.all().select_related('employee')
+        return super().create(request, *args, **kwargs)
 
-        if full_name:
-            queryset = queryset.filter(employee__first_name__icontains=full_name)
-        
-        if department:
-            queryset = queryset.filter(employee__department__icontains=department)
 
-        if paid_status is not None:
-            queryset = queryset.filter(paid_status=paid_status)
+class MonthlySalaryViewSet(viewsets.ModelViewSet):
+    queryset = MonthlySalary.objects.all()
+    serializer_class = MonthlySalarySerializer
+    permission_classes = [IsHR] 
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user', 'paid_status', 'from_date', 'to_date']
 
-        data = []
-        for monthly_salary in queryset:
-            # Assuming you need some details from related models (Employee and Salary)
-            employee = monthly_salary.employee
-            salary = Salary.objects.filter(employee=employee).first()  # Assuming 1 salary per employee
-            data.append({
-                'emp_id': employee.id,
-                'full_name': f"{employee.firstname} {employee.lastname}",
-                'department': employee.department,
-                'salary': salary.monthly_salary if salary else None,
-                'from_date': monthly_salary.from_date,
-                'to_date': monthly_salary.to_date,
-                'paid_status': monthly_salary.paid_status,
-                'paid_date': monthly_salary.paid_date,
-            })
+    def create(self, request, *args, **kwargs):
+            input_serializer = MonthlySalaryInputSerializer(data=request.data)
+            input_serializer.is_valid(raise_exception=True)
+            monthly_salary = input_serializer.save()
+            output_serializer = MonthlySalarySerializer(monthly_salary)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(data, status=status.HTTP_200_OK)
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        try:
-            monthly_salary = MonthlySalary.objects.get(pk=pk)
-            employee = monthly_salary.employee
-            salary = Salary.objects.filter(employee=employee).first()  # Assuming 1 salary per employee
+    @action(detail=False, methods=['get'])
+    def payslip(self, request):
+        email = request.query_params.get('email')
+        month = request.query_params.get('month')
 
-            data = {
-                'emp_id': employee.id,
-                'full_name': f"{employee.first_name} {employee.last_name}",
-                'department': employee.department,
-                'salary': salary.monthly_salary if salary else None,
-                'from_date': monthly_salary.from_date,
-                'to_date': monthly_salary.to_date,
-                'paid_status': monthly_salary.paid_status,
-                'paid_date': monthly_salary.paid_date,
-            }
-
-            return Response(data, status=status.HTTP_200_OK)
-
-        except MonthlySalary.DoesNotExist:
-            return Response({'message': 'not found!'}, status=status.HTTP_404_NOT_FOUND)
-
-    def update(self, request, pk=None):
-        try:
-            monthly_salary = MonthlySalary.objects.get(pk=pk)
-            paid_status = request.data.get('paidStatus')
-            paid_date = request.data.get('paidDate')
-
-            monthly_salary.paid_status = paid_status
-            monthly_salary.paid_date = paid_date
-            monthly_salary.save()
-
-            return Response({'message': 'row updated!'}, status=status.HTTP_200_OK)
-
-        except MonthlySalary.DoesNotExist:
-            return Response({'message': 'not found!'}, status=status.HTTP_404_NOT_FOUND)
-
-    def create(self, request):
-        # Extract data from request body
-        employee_id = request.data.get('employee_id')
-        from_date = request.data.get('from_date')
-        to_date = request.data.get('to_date')
-        paid_status = request.data.get('paid_status', False)
-        paid_date = request.data.get('paid_date', None)
+        if not email or not month:
+            return Response(
+                {"error": "Please provide both 'email' and 'month' query parameters."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
-            # Fetch employee using the provided employee_id
-            employee = Employee.objects.get(user_id=employee_id)
-        except Employee.DoesNotExist:
-            return Response({'message': 'Employee not found'}, status=status.HTTP_400_BAD_REQUEST)
+            month_date = datetime.strptime(month, "%Y-%m")
+        except ValueError:
+            return Response(
+                {"error": "Invalid month format. Please use 'YYYY-MM'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        # Create new MonthlySalary object
-        monthly_salary = MonthlySalary.objects.create(
-            employee=employee,
-            from_date=from_date,
-            to_date=to_date,
-            paid_status=paid_status,
-            paid_date=paid_date
-        )
+        salary = MonthlySalary.objects.filter(
+            user__email=email,
+            from_date__year=month_date.year,
+            from_date__month=month_date.month
+        ).first()
 
-        # Return response with newly created MonthlySalary data
-        return Response({
-            'emp_id': employee.id,
-            # 'full_name': f"{employee.first_name} {employee.last_name}",
-            'department': employee.department,
-            'from_date': monthly_salary.from_date,
-            'to_date': monthly_salary.to_date,
-            'paid_status': monthly_salary.paid_status,
-            'paid_date': monthly_salary.paid_date,
-        }, status=status.HTTP_201_CREATED)
+        if not salary:
+            return Response(
+                {"error": f"No salary record found for email '{email}' in month '{month}'."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
+        serializer = self.get_serializer(salary)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 class GetEmpSalaryDetails(APIView):
     permission_classes = [IsEmployee]
 
@@ -147,3 +107,4 @@ class GetEmpSalaryDetails(APIView):
             return Response({"error": str(e)}, status=404)
         except Exception as e:
             return Response({"error": "An unexpected error occurred"}, status=500)
+
