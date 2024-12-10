@@ -229,13 +229,19 @@ function SalaryDetailsComponent() {
         </div>
       )}
 
-      <div className="mt-6">
+      <div className="flex justify-end space-x-4 mt-6">
+          <button
+            type="button"
+            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+          >
+            Reset
+          </button>
         <button
           onClick={handleFetchSalary}
           disabled={loading}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none"
+          className="px-6 py-2 bg-blue-600 text-white rounded-md"
         >
-          {loading ? 'Loading...' : 'Fetch Salary Details'}
+          {loading ? 'Submiting...' : 'Submit'}
         </button>
       </div>
 

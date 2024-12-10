@@ -42,16 +42,19 @@ const DownloadPayslip = () => {
       }
 
       const data = response.data;
+      const isEmployeePresent = data.employee?.user
+      const isManagerPresent = data.manager?.user
+      const person = isEmployeePresent ? data.employee :isManagerPresent ? data.manager : {};
 
       const formattedData = {
         employeeDetails: {
-          name: `${data.employee?.firstname || "N/A"} ${data.employee?.lastname || "N/A"}`,
-          id: `EMP${data.employee?.id || "N/A"}`,
-          designation: data.employee?.designation || "N/A",
-          department: data.employee?.department || "N/A",
-          joiningDate: data.employee?.dateOfJoined || "N/A",
-          bankAccount: "N/A",
-          pan: "N/A",
+          name: `${person?.firstname || "N/A"} ${person?.lastname || "N/A"}`,
+          id: `EMP${person?.id || "N/A"}`,
+          designation: person?.designation || "N/A",
+          department: person?.department || "N/A",
+          joiningDate: person?.dateOfJoined || "N/A",
+          bankAccount: data?.salary?.bank_details?.account_number || "N/A",
+          pan: data?.salary?.pan_card_number|| "N/A",
         },
         salaryDetails: {
           month: filters.month,

@@ -1,6 +1,20 @@
 from django.db import models
 from accounts.models import Employee, User
 
+class BankDetails(models.Model):
+    account_holder_name = models.CharField(max_length=255)
+    account_number = models.CharField(max_length=20)
+    ifsc_code = models.CharField(max_length=11)
+    bank_name = models.CharField(max_length=255)
+    branch_name = models.CharField(max_length=255, blank=True, null=True)
+    employee = models.OneToOneField(User, on_delete=models.CASCADE, related_name='bank_details')
+
+    class Meta:
+        db_table = 'bank_details'
+
+    def __str__(self):
+        return f"{self.employee.email} - {self.bank_name}"
+
 class Salary(models.Model):
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
     ppa = models.FloatField()
@@ -12,7 +26,8 @@ class Salary(models.Model):
     esic = models.FloatField()
     professional_tax = models.FloatField()
     net_salary = models.FloatField()
-
+    pan_card_number = models.CharField(max_length=10, blank=True, null=True)
+    bank_details = models.OneToOneField(BankDetails, on_delete=models.CASCADE, null=True, blank=True)
     class Meta:
         db_table = 'salary'
 

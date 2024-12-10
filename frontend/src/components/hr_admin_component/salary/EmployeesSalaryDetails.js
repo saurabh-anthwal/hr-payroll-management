@@ -9,13 +9,14 @@ import SalarySearch from "./SalarySearch";
 import AddSalary from "./AddSalary";
 import MonthlySalaryAdd from "./MonthlySalaryAdd";
 import DownloadPayslip from "./DownloadPaysleep";
+import AddBankDetails from "./AddBankDetails";
 
 const EmployeesSalaryDetails = () => {
   return (
     <div className="min-h-screen bg-white">
       <TabSwitch
-        tabs={["Salary", "Monthly Salary", "New", "Add Monthly Salary", "Salary Sleep"]}
-        components={[<SalaryDetails />, <Salary />, <AddSalary/>, <MonthlySalaryAdd/>, <DownloadPayslip/>]}
+        tabs={["Add Bank", "Salary", "Monthly Salary", "New", "Add Monthly Salary", "Salary Sleep"]}
+        components={[<AddBankDetails/> , <SalaryDetails />, <Salary />, <AddSalary/>, <MonthlySalaryAdd/>, <DownloadPayslip/>]}
       />
     </div>
   )

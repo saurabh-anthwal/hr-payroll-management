@@ -48,10 +48,6 @@ class User(AbstractUser):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
-
-def documents_path(instance, filename):
-    return 'employee/{id}/{filename}'.format(id=instance.id, filename=filename)
-
 class Admin(models.Model):
     GENDER = [('male', 'Male'), ('female', 'Female'), ('transgender', 'Transgender')]
     firstname = models.CharField(max_length=50)
@@ -97,7 +93,7 @@ class Employee(models.Model):
     dateOfHired = models.DateField()
     dateOfJoined = models.DateField()
     profilePic = models.ImageField(
-        upload_to=documents_path, default="employee/profile-picture.png")
+        upload_to="profile_pics/", null = True)
     active = models.BooleanField(default=True)
     
     # One-to-One relationship with User model

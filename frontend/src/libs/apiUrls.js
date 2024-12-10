@@ -18,5 +18,6 @@ module.exports = {
   MONTHLY_SALARY_STATUS: `${SERVER_URL}api/salary/monthly-salary/`,//get/post
   ALL_EMPLOYEE_SALARY_DETAILS: `${SERVER_URL}api/salary/salary/`, //get/post
   HOLIDAY_LIST: `${SERVER_URL}api/home/holidays/`, //get/post
-  MONTHLY_PAYSLIP: `${SERVER_URL}api/salary/monthly-salary/payslip/`
+  MONTHLY_PAYSLIP: `${SERVER_URL}api/salary/monthly-salary/payslip/`,
+  ADD_BANK_DETAILS: `${SERVER_URL}api/salary/bank-details/` //get/post
 }

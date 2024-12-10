@@ -43,7 +43,7 @@ function EmployeesTableRow({
         <td className="py-3 px-2">{address}</td>
         <td className="py-3 px-2">
           <img
-            src={"https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg" || profile_pic}
+            src={profile_pic || "https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg"}
             alt="Profile"
             className="h-10"
           />

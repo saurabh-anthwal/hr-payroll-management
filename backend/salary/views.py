@@ -7,11 +7,18 @@ from rest_framework.decorators import action
 from datetime import datetime
 from rest_framework.mixins import ListModelMixin
 from rest_framework.exceptions import NotFound
-from .models import Salary
-from .serializers import SalarySerializer, GetEmpSalaryDetailSerializer, MonthlySalarySerializer, MonthlySalaryInputSerializer
+from .serializers import SalarySerializer, GetEmpSalaryDetailSerializer, MonthlySalarySerializer, MonthlySalaryInputSerializer, BankDetailsSerializer
 from accounts.models import Employee
-from .models import MonthlySalary, Salary
+from .models import MonthlySalary, Salary, BankDetails
 from accounts.permissions import IsHR, IsEmployee
+
+class BankDetailsViewSet(viewsets.ModelViewSet):
+    queryset = BankDetails.objects.all()
+    serializer_class = BankDetailsSerializer
+    permission_classes = [IsHR]
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 class SalaryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsHR]
@@ -30,8 +37,21 @@ class SalaryViewSet(viewsets.ModelViewSet):
                 "error": "Salary record for this employee already exists. Use update instead."
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        return super().create(request, *args, **kwargs)
+        # Check if the bank details provided are valid
+        bank_details_id = request.data.get("bank_details")
+        if bank_details_id:
+            try:
+                bank_details = BankDetails.objects.get(id=bank_details_id)
+                if bank_details.employee.id != int(employee_id):
+                    return Response({
+                        "error": "Bank details do not match the employee."
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except BankDetails.DoesNotExist:
+                return Response({
+                    "error": "Invalid bank_details ID."
+                }, status=status.HTTP_400_BAD_REQUEST)
 
+        return super().create(request, *args, **kwargs)
 
 class MonthlySalaryViewSet(viewsets.ModelViewSet):
     queryset = MonthlySalary.objects.all()

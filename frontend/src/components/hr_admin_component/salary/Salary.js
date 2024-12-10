@@ -43,18 +43,18 @@ function Salary() {
           <tbody>
             {salaryData.length > 0 ? (
               salaryData.map((data, i) => {
-                const person = data.employee || data.manager;
+                const person = data?.employee || data?.manager;
                 return(
                   <SalaryList
                   key={i}
                   personId={data.id}
-                  name={`${person.firstname} ${person.lastname}`}
-                  email={person.email}
-                  department={person.department}
-                  fromDate={data.from_date}
-                  toDate={data.to_date}
-                  status={data.paid_status}
-                  date={data.paid_date}
+                  name={`${person?.firstname} ${person?.lastname}`}
+                  email={person?.email}
+                  department={person?.department}
+                  fromDate={data?.from_date}
+                  toDate={data?.to_date}
+                  status={data?.paid_status}
+                  date={data?.paid_date}
                   getSalary={getSalary}
                 />
               )})
