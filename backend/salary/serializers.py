@@ -18,6 +18,8 @@ class ManagerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SalarySerializer(serializers.ModelSerializer):
+    employee_email = serializers.EmailField(source='employee.email', read_only=True)
+
     class Meta:
         model = Salary
         fields = '__all__'

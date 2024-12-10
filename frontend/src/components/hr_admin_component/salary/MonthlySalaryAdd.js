@@ -4,20 +4,30 @@ import apiUrls from '../../../libs/apiUrls';
 
 function SalaryDetailsComponent() {
   const [userDetails, setUserDetails] = useState([]);
+  const [salaryUserDetails, setSalaryUserDetails] = useState([]);
   const [employeeId, setEmployeeId] = useState('');
+  const [salaryId, setSalaryId] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [paidStatus, setPaidStatus] = useState('false'); // Default to 'Unpaid'
+  const [totalSalary, setTotalSalary] = useState('');
+  const [paidAmount, setPaidAmount] = useState('');
+  const [balanceAmount, setBalanceAmount] = useState('');
+  const [paidStatus, setPaidStatus] = useState('false');
   const [paidDate, setPaidDate] = useState('');
-  const [salaryDetails, setSalaryDetails] = useState(null);
+  const [paymentDueDate, setPaymentDueDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch Salary Details
+  const handlePaidAmountChange = (value) => {
+    setPaidAmount(value);
+    const balance = totalSalary - value;
+    setBalanceAmount(balance > 0 ? balance : 0);
+  };
+
+
   const handleFetchSalary = async () => {
-    // Validate the form
-    if (!employeeId || !fromDate || !toDate || paidStatus === '') {
-      setError('Please fill in all fields');
+    if (!employeeId || !salaryId || !fromDate || !toDate || !totalSalary || paidStatus === '' || !paymentDueDate) {
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -26,19 +36,27 @@ function SalaryDetailsComponent() {
 
     try {
       const payload = {
-        employee_id: employeeId,
+        user: employeeId,
+        salary: salaryId,
         from_date: fromDate,
         to_date: toDate,
+        total_salary: totalSalary,
+        paid_amount: paidAmount,
+        balance_amount: balanceAmount,
         paid_status: paidStatus === 'true',
-        paid_date: paidStatus === 'true' ? paidDate : null, 
+        paid_date: paidStatus === 'true' ? paidDate : null,
+        payment_due_date: paymentDueDate,
       };
+
       const response = await axios_instance.post(apiUrls.MONTHLY_SALARY_STATUS, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      setSalaryDetails(response.data);
+      if(response.status == 201){
+        alert("Monthly Salary Added Successfully!")
+      }
     } catch (error) {
       setError('Failed to fetch salary details');
     } finally {
@@ -46,29 +64,39 @@ function SalaryDetailsComponent() {
     }
   };
 
-  // Fetch verified users for the dropdown
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios_instance.get(apiUrls.USER_FIND, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
         if (response.status === 200) {
           const verifiedUsers = response.data.filter((user) => user.otp_verified === true);
           setUserDetails(verifiedUsers);
         }
       } catch (error) {
-        console.error("Failed to get users:", error);
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    const fetchSalaryUser = async () => {
+      try {
+        const response = await axios_instance.get(apiUrls.ALL_EMPLOYEE_SALARY_DETAILS, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (response.status === 200) {
+          setSalaryUserDetails(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
       }
     };
     fetchUsers();
+    fetchSalaryUser()
   }, []);
 
   return (
-    <div className=" bg-white p-6">
-      {/* Employee Dropdown */}
+    <div className="bg-white p-6">
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           Employee ID <span className="text-red-500">*</span>
@@ -80,14 +108,27 @@ function SalaryDetailsComponent() {
         >
           <option value="" disabled>Select Employee by Email</option>
           {userDetails.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.email}
-            </option>
+            <option key={user.id} value={user.id}>{user.email}</option>
           ))}
         </select>
       </div>
 
-      {/* From Date Input */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Salary ID <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={salaryId}
+          onChange={(e) => setSalaryId(e.target.value)}
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+        >
+          <option value="" disabled>Select Salary Id by Email</option>
+          {salaryUserDetails.map((user) => (
+            <option key={user.id} value={user.id}>{user.employee_email}</option>
+          ))}
+        </select>
+      </div>
+
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           From Date <span className="text-red-500">*</span>
@@ -100,7 +141,6 @@ function SalaryDetailsComponent() {
         />
       </div>
 
-      {/* To Date Input */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           To Date <span className="text-red-500">*</span>
@@ -113,7 +153,54 @@ function SalaryDetailsComponent() {
         />
       </div>
 
-      {/* Paid Status Dropdown */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Total Salary <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          value={totalSalary}
+          onChange={(e) => setTotalSalary(e.target.value)}
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Paid Amount
+        </label>
+        <input
+          type="number"
+          value={paidAmount}
+          onChange={(e) => handlePaidAmountChange(e.target.value)}
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Balance Amount
+        </label>
+        <input
+          type="number"
+          value={balanceAmount}
+          readOnly
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 text-sm shadow-sm focus:outline-none"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Payment Due Date <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          value={paymentDueDate}
+          onChange={(e) => setPaymentDueDate(e.target.value)}
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+        />
+      </div>
+
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           Paid Status <span className="text-red-500">*</span>
@@ -128,7 +215,6 @@ function SalaryDetailsComponent() {
         </select>
       </div>
 
-      {/* Paid Date Input (only visible if Paid Status is 'true') */}
       {paidStatus === 'true' && (
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
@@ -143,36 +229,17 @@ function SalaryDetailsComponent() {
         </div>
       )}
 
-      {/* Error message */}
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
-      {/* Fetch Salary Button */}
-      <div className="flex justify-end space-x-4 mt-6">
-          <button
-            type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
-          >
-            Reset
-          </button>
-      <button
-        onClick={handleFetchSalary}
-        className="px-6 py-2 bg-blue-600 text-white rounded-md"
-        disabled={loading}
-      >
-        {loading ? 'Fetching...' : 'Submit'}
-      </button>
+      <div className="mt-6">
+        <button
+          onClick={handleFetchSalary}
+          disabled={loading}
+          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none"
+        >
+          {loading ? 'Loading...' : 'Fetch Salary Details'}
+        </button>
       </div>
 
-      {/* Display Salary Summary */}
-      {salaryDetails && (
-        <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-          <h3 className="text-xl font-semibold mb-4">Salary Summary</h3>
-          <p><strong>Employee ID:</strong> {salaryDetails.emp_id}</p>
-          <p><strong>Salary Period:</strong> {salaryDetails.from_date} to {salaryDetails.to_date}</p>
-          <p><strong>Paid Status:</strong> {salaryDetails.paid_status ? 'Paid' : 'Not Paid'}</p>
-          <p><strong>Paid Date:</strong> {salaryDetails.paid_date || 'N/A'}</p>
-        </div>
-      )}
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

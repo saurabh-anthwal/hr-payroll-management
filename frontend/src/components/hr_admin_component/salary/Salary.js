@@ -29,33 +29,35 @@ function Salary() {
         <table className="w-full mt-6 text-sm text-left text-gray-500 border border-gray-200">
           <thead className="text-xs uppercase bg-gray-200 text-gray-700">
             <tr>
-              <th className="py-3 px-4">SR No</th>
-              <th className="py-3 px-4">Employee ID</th>
-              <th className="py-3 px-4">Employee Name</th>
-              <th className="py-3 px-4">Department</th>
-              <th className="py-3 px-4">From Date</th>
-              <th className="py-3 px-4">To Date</th>
-              <th className="py-3 px-4">Paid Status</th>
-              <th className="py-3 px-4">Paid Date</th>
-              <th className="py-3 px-4">Actions</th>
+            <th className="py-3 px-4">ID</th>
+            <th className="py-3 px-4">Name</th>
+            <th className="py-3 px-4">Email</th>
+            <th className="py-3 px-4">Department</th>
+            <th className="py-3 px-4">From Date</th>
+            <th className="py-3 px-4">To Date</th>
+            <th className="py-3 px-4">Paid Status</th>
+            <th className="py-3 px-4">Paid Date</th>
+            <th className="py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             {salaryData.length > 0 ? (
-              salaryData.map((data, i) => (
-                <SalaryList
+              salaryData.map((data, i) => {
+                const person = data.employee || data.manager;
+                return(
+                  <SalaryList
                   key={i}
-                  srno={i + 1}
-                  empId={data.emp_id}
-                  empName={data.full_name}
-                  department={data.department}
+                  personId={data.id}
+                  name={`${person.firstname} ${person.lastname}`}
+                  email={person.email}
+                  department={person.department}
                   fromDate={data.from_date}
                   toDate={data.to_date}
                   status={data.paid_status}
                   date={data.paid_date}
                   getSalary={getSalary}
                 />
-              ))
+              )})
             ) : (
               <tr>
                 <td colSpan="9" className="text-center py-4 text-gray-500">
@@ -73,15 +75,15 @@ function Salary() {
 export default Salary;
 
 function SalaryList({
-  srno,
-  empId,
-  empName,
+  personId,
+  name,
+  email,
   department,
   fromDate,
   toDate,
   status,
   date,
-  get_salary,
+  getSalary,
 }) {
   const [paidStatus, setPaidStatus] = useState(status ? "1" : "0");
   const [paidDate, setPaidDate] = useState();
@@ -96,7 +98,7 @@ function SalaryList({
       console.log(response,"fsa")
       if(response.status==200){
         console.log("Salary data updated successfully:", response.data);
-        get_salary()
+        getSalary()
       } else {
         console.error("Unexpected response status:", response.status);
       }
@@ -111,9 +113,9 @@ function SalaryList({
 
   return (
     <tr className="border-b border-gray-200">
-      <td className="py-3 px-4">{srno}</td>
-      <td className="py-3 px-4">{empId}</td>
-      <td className="py-3 px-4">{empName}</td>
+      <td className="py-3 px-4">{personId}</td>
+      <td className="py-3 px-4">{name}</td>
+      <td className="py-3 px-4">{email}</td>
       <td className="py-3 px-4">{department}</td>
       <td className="py-3 px-4">{fromDate}</td>
       <td className="py-3 px-4">{toDate}</td>
