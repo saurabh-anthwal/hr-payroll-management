@@ -10,6 +10,7 @@ import HrRegisterPage from "../pages/accounts/HrRegisterPage";
 import AppTemplatePage from "../pages/common/AppTemplatePage";
 import PrivateRoute from "../components/PrivateRouteComponent/PrivateRoute";
 import PublicRoute from "../components/PublicRouteComponent/PublicRoute";
+import EmployTemplatePage from "../pages/common/EmployTemplatePage";
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
 
         {/* Protected Routes */}
         <PrivateRoute path="/1" component={AppTemplatePage} />
+        <PrivateRoute path="/employ" component={EmployTemplatePage} />
         <PrivateRoute path="/salary" component={Salary}/>
         <PrivateRoute path="/view-employees" component={ViewEmployees}/>
         <PrivateRoute path="/employee-dashboard" component={Dashboard}/>
