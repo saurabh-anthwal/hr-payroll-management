@@ -126,7 +126,7 @@ class HR(models.Model):
     designation = models.CharField(max_length=100)
     dateOfHired = models.DateField()
     dateOfJoined = models.DateField()
-    profilePic = models.ImageField(upload_to='hr_profile_pics/', default="hr/profile-picture.png")
+    profilePic = models.ImageField(upload_to='profile_pics/', null = True)
     active = models.BooleanField(default=True)
     
     # One-to-One relationship with User model
@@ -159,7 +159,7 @@ class Manager(models.Model):
     designation = models.CharField(max_length=100)
     dateOfHired = models.DateField()
     dateOfJoined = models.DateField()
-    profilePic = models.ImageField(upload_to='manager_profile_pics/', default="manager/profile-picture.png")
+    profilePic = models.ImageField(upload_to='profile_pics/', null = True)
     active = models.BooleanField(default=True)
     
     # One-to-One relationship with User model

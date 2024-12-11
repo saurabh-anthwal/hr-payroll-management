@@ -9,7 +9,7 @@ from .utils import news
 from accounts.permissions import IsHR, IsEmployee
 from .models import Leave, Attendance, Insurance, Bonus, Reimbursement, LeaveBalance, Holiday
 from .serializers import LeaveSerializer, AttendanceSerializer, InsuranceSerializer, BonusSerializer, ReimbursementSerializer, HolidaySerializer, EmployeeSerializer, HRSerializer
-from accounts.models import Employee
+from accounts.models import Employee, HR
 
 class NewsViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -159,12 +159,13 @@ class GetLoggedInEmployeeDetail(APIView):
             return Response({"error": "Employee details not found"}, status=404)
 
 class GetLoggedInHRDetail(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
             hr = request.user.hr
-            serializer = HRSerializer(hr)
+            serializer = HRSerializer(hr, context={'request': request})  # Pass request to context
             return Response(serializer.data, status=200)
-        except Employee.DoesNotExist:
-            return Response({"error": "Employee details not found"}, status=404)
+        except HR.DoesNotExist:  # Changed to HR.DoesNotExist (assuming typo in your original code)
+            return Response({"error": "HR details not found"}, status=404)
+

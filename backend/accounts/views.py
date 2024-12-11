@@ -43,6 +43,7 @@ class AdminViewSet(viewsets.ModelViewSet):
 class HRViewSet(viewsets.ModelViewSet):
     queryset = HR.objects.all()
     serializer_class = HRSerializer
+    parser_classes = (JSONParser, MultiPartParser, FormParser) 
 
 class ManagerViewSet(viewsets.ModelViewSet):
     queryset = Manager.objects.all()

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaEdit,
-  FaPhoneAlt,
-  FaBirthdayCake,
-  FaMapMarkerAlt,
-  FaGenderless,
-  FaBriefcase,
-  FaEnvelope,
-} from "react-icons/fa";
+import {FaEdit} from "react-icons/fa";
 import axios_instance from "../../../libs/interseptor";
 import * as URLS from "../../../libs/apiUrls";
 import * as utils from "../../../libs/utils";
@@ -18,7 +10,6 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  // const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
@@ -29,6 +20,13 @@ const Profile = () => {
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setProfileImg(file); // Set the selected file in state
+    }
   };
 
   const get_profile = async () => {
@@ -73,27 +71,29 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const payload = {
-      "firstname": firstName,
-      "lastname": lastName,
-      "email": email,
-      "contact": phoneNumber,
-      "gender": gender,
-      "dob": dob,
-      "address": address,
-      "department": department,
-      "designation": designation,
-      // "profilePic": "/media/hr/profile-picture.png",
-      "dateOfHired": employee.dateOfHired,
-      "dateOfJoined": employee.dateOfJoined
-    }
 
-    console.log(employee?.id)
+  const formData = new FormData();
+  formData.append("firstname", firstName);
+  formData.append("lastname", lastName);
+  formData.append("email", email);
+  formData.append("contact", phoneNumber);
+  formData.append("gender", gender);
+  formData.append("dob", dob);
+  formData.append("address", address);
+  formData.append("department", department);
+  formData.append("designation", designation);
+  formData.append("dateOfHired", employee.dateOfHired);
+  formData.append("dateOfJoined", employee.dateOfJoined);
 
-    axios_instance.put(utils.format(URLS.EMPLOYEE_EDIT, [employee?.id]), payload)
+  if (profileImg) {
+    formData.append("profilePic", profileImg); // Append the image file
+  }
+
+    axios_instance.put(utils.format(URLS.EMPLOYEE_EDIT, [employee?.id]), formData)
       .then((response) => {
         setEmployee(response.data);
         handleSetData(response.data);
+        setIsEditing(false);
       }).catch((err) => {
         console.log(err);
       });
@@ -131,15 +131,9 @@ const Profile = () => {
           name="fileToUpload"
           id="fileToUpload"
           className="hidden"
+          onChange={handleFileChange}
         />
-        
-        {/* <div className="w-28 h-28 overflow-hidden rounded-full">
-          <img
-            src={"https://storage.googleapis.com/a1aa/image/fM4bjeZeUVEdlp65TEuJT7c7VaheI9jMDLnNOejMHijfZ9y9E.jpg" || profilePic}
-            alt="profile"
-            className="w-full h-full object-cover"
-          />
-        </div> */}
+
         <div className="ml-6 flex flex-col ">
           <h4 className="text-2xl font-bold text-gray-500 " >
             {`${firstName} ${lastName}`}
@@ -296,15 +290,7 @@ const Profile = () => {
             Save
           </button>
         </div>}
-
       </form>
-
-      {/* Footer Actions */}
-      {/* <div className="mt-8 pb-8 text-center">
-        <button className="px-6 py-2 bg-black text-white rounded-lg shadow-md ">
-          Change Password
-        </button>
-      </div> */}
     </div>
   );
 };

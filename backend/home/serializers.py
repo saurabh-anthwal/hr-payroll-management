@@ -38,7 +38,16 @@ class EmployeeSerializer(serializers.ModelSerializer):
                   'department', 'designation', 'dateOfHired', 'dateOfJoined', 'profilePic', 'active']
 
 class HRSerializer(serializers.ModelSerializer):
+    profilePic = serializers.SerializerMethodField()
+
     class Meta:
         model = HR
         fields = '__all__'
+
+    def get_profilePic(self, obj):
+        request = self.context.get('request')
+        if obj.profilePic and request:
+            return request.build_absolute_uri(obj.profilePic.url)
+        return None
+
 

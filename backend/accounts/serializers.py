@@ -84,6 +84,7 @@ class HRSerializer(serializers.ModelSerializer):
     class Meta:
         model = HR
         fields = '__all__'
+
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manager
