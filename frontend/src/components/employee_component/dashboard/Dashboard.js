@@ -1,6 +1,7 @@
 import React from "react";
-import EmployeeDashboard from "./EmployeeDashboard";
+import HrDashboard from "./HrDashboard";
 import Cookies from 'js-cookie';
+import EmployDashboard from "../../dashboard/EmployDashboard";
 
 const Dashboard = ({ employee = {} }) => {
   const userType = Cookies.get('userType')
@@ -13,8 +14,8 @@ const Dashboard = ({ employee = {} }) => {
       {/* Main Content */}
       <section className="flex-1 bg-white p-6">
         {userType==='hr' 
-          ?<EmployeeDashboard employee={employee} />
-          : <div>dashboard</div>
+          ? <HrDashboard employee={employee} />
+          : <EmployDashboard />
         } 
       </section>
     </main>

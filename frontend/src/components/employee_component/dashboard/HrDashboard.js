@@ -7,10 +7,11 @@ import { Chart as ChartJS, CategoryScale, PointElement, LinearScale, BarElement,
 import axios_instance from "../../../libs/interseptor";
 import apiUrls from "../../../libs/apiUrls";
 import Accordion from "../../dashboard/Accordion";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend);
 
-const EmployeeDashboard = () => {
+const HrDashboard = () => {
   const [hrDetail, setHrDetail] = useState(null);
   const [employeeDetail, setEmployeeDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -221,7 +222,6 @@ const EmployeeDashboard = () => {
     maintainAspectRatio: true,
   };
 
-
   return (
     <div className="min-h-screen">
       {/* Profile Section */}
@@ -406,16 +406,9 @@ const EmployeeDashboard = () => {
         ))}
       </div>
 
-      <div className="">
-        <div className="bg-white col-span-2 p-6 rounded-lg shadow mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee</h2>
-          <Accordion />
-        </div>
-      </div>
-
-
+      <Accordion />
     </div>
   );
 };
 
-export default EmployeeDashboard;
+export default HrDashboard;

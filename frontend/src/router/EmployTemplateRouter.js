@@ -7,6 +7,7 @@ import UpcomingHolidays from "../components/employee_component/dashboard/Upcomin
 import EmployeesSalaryDetails from "../components/hr_admin_component/salary/EmployeesSalaryDetails";
 import EmployeeManager from "../components/hr_admin_component/employees/EmployeeManager";
 import EmploySalaryPage from "../pages/salary/EmploySalaryPage";
+import EmployLeavePage from "../pages/leave/EmployLeavePage";
 
 const EmployTemplateRouter = () => {
   return (
@@ -18,6 +19,7 @@ const EmployTemplateRouter = () => {
       <Route path="/employ/dashboard" component={Dashboard} />
       <Route path="/employ/profile" component={Profile} />
       <Route path="/employ/holidays" component={UpcomingHolidays} />
+      <Route path="/employ/leave" component={EmployLeavePage} />
     </Switch>
   );
 }
