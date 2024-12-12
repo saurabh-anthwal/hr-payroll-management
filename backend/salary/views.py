@@ -1,6 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
@@ -19,6 +21,23 @@ class BankDetailsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+class GetBankDetailsViewSet(ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def user_bank_details(self, request):
+        try:
+            bank_details = BankDetails.objects.get(employee=request.user)
+        except BankDetails.DoesNotExist:
+            return Response(
+                {"error": "No bank details found for the logged-in user."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = BankDetailsSerializer(bank_details)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class SalaryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsHR]
@@ -72,6 +91,39 @@ class MonthlySalaryViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def user_salary(self, request):
+        month = request.query_params.get('month')
+        if not month:
+            return Response(
+                {"error": "Please provide in 'month' query parameters."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            month_date = datetime.strptime(month, "%Y-%m")
+        except ValueError:
+            return Response(
+                {"error": "Invalid month format. Please use 'YYYY-MM'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        salary = MonthlySalary.objects.filter(
+            user=request.user,
+            from_date__year=month_date.year,
+            from_date__month=month_date.month
+        ).first()
+
+        if not salary:
+            return Response(
+                {"error": f"No salary record found for month '{month}'."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.get_serializer(salary)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     @action(detail=False, methods=['get'])
     def payslip(self, request):
         email = request.query_params.get('email')
@@ -111,11 +163,8 @@ class GetEmpSalaryDetails(APIView):
 
     def get(self, request):
         try:
-            # Get the employee object related to the logged-in user
             employee = request.user.employee
-            
-            # Fetch the salary details for this employee
-            salary = Salary.objects.filter(employee=employee).first()
+            salary = Salary.objects.filter(employee=request.user).first()
             
             if not salary:
                 raise NotFound("Salary details not found for this employee")
