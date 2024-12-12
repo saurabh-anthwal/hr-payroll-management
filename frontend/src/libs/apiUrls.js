@@ -23,4 +23,5 @@ module.exports = {
   LOGIN_EMP_SALARY: `${SERVER_URL}api/salary/employee/salary-details/`,
   LOGIN_EMP_BANK_DETAILS: `${SERVER_URL}api/salary/get-bank-details/user_bank_details/`,
   LOGIN_EMP_ALL_SALARY_PAYSLIP: `${SERVER_URL}api/salary/monthly-salary/user_salary/`,
+  LOGIN_EMPLOYEE_DASHBOARD: `${SERVER_URL}api/home/employee/details/`,
 }
