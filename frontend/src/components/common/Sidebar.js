@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 const Sidebar = () => {
   const [selectedTab, setSelectedTab] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar toggle state
   const userType = Cookies.get('userType')
 
   useEffect(() => {
@@ -11,26 +12,22 @@ const Sidebar = () => {
     }
   }, []);
 
-  // const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const dimension = window.innerWidth;
+    console.log(dimension);
+    if(dimension < 768) {
+      setIsSidebarOpen(false);
+    } else {
+      setIsSidebarOpen(true);
+    }
 
-  // const toggleSubMenu = (event) => {
-  //   event.preventDefault(); // Prevent default anchor tag behavior
-  //   setIsOpen(!isOpen);
-  // };
+  }, [window.innerWidth]); // eslint-disable-line
 
-  // const sidebarRef = useRef(null);
+  console.log(window.innerWidth)
 
-  // const openSidebar = () => {
-  //   sidebarRef.current.style.width = '250px';
-  //   sidebarRef.current.style.visibility = 'visible';
-  //   sidebarRef.current.style.opacity = 1;
-  // };
-
-  // const closeSidebar = () => {
-  //   sidebarRef.current.style.width = '32px';
-  //   sidebarRef.current.style.visibility = 'hidden';
-  //   sidebarRef.current.style.opacity = 0;
-  // };
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   const handleSelectedTab = (tab) => {
     setSelectedTab(tab);
@@ -41,7 +38,9 @@ const Sidebar = () => {
     <div>
       <nav id="sidebar" className="lg:min-w-[250px] w-max max-lg:min-w-8">
         <div id="sidebar-collapse-menu"
-          className=" bg-white shadow-lg h-screen fixed top-0 left-0 overflow-auto z-[99] lg:min-w-[250px] lg:w-max max-lg:w-0 max-lg:invisible transition-all duration-500">
+          className={`bg-white shadow-lg h-screen fixed top-0 left-0 overflow-auto z-[99] transition-all duration-500 ${
+            isSidebarOpen ? "w-[250px] visible opacity-100" : "w-[32px] invisible opacity-0"
+          }`}>          
           <div className="pt-8 pb-2 px-6 sticky top-0 bg-white min-h-[80px] z-[100]">
             <a href={`${userType==='hr' ? "/1/dashboard" : "/employ/dashboard" }`} className="outline-none"><img src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
               alt="logo" className='w-[170px]' />
@@ -155,6 +154,7 @@ const Sidebar = () => {
       <button 
         id="toggle-sidebar"
         // onClick={openSidebar}
+        onClick={toggleSidebar}
         className='lg:hidden w-8 h-8 z-[100] fixed top-[36px] left-[10px] cursor-pointer bg-[#007bff] flex items-center justify-center rounded-full outline-none transition-all duration-500'
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" className="w-3 h-3" viewBox="0 0 55.752 55.752">

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { logout } from "../../../redux/auth/authSlice";
+import Cookies from 'js-cookie';
 
 function Navbar() {
   const dispatch = useDispatch()
@@ -11,7 +12,7 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userName = localStorage.getItem("userName") || "User";
 
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
+  const storedUserData = JSON.parse(Cookies.get("userData"));
   const email = storedUserData?.email
 
   const handleLogout = () => {

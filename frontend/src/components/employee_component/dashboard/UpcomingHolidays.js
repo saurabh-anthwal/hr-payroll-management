@@ -87,16 +87,16 @@ const HolidayList = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 bg-white">
+    <div className="container mx-auto py-8 px-4 bg-white text-gray-500">
 
-      <h2 className="flex justify-center gap-2 text-4xl font-extrabold text-center text-gray-600 mb-10">
+      <h3 className="flex justify-center gap-2 text-3xl font-extrabold text-center text-gray-500 mb-10">
         <img
           className="w-40"
           src="https://dataclaps.com/wp-content/uploads/2020/09/Screenshot-2023-03-18-at-2.36.25-AM.png"
           alt="Holiday Logo"
         />
-        Holiday
-      </h2>
+        &nbsp;Holidays
+      </h3>
       <div className="flex justify-end py-2">
         {userType==='hr' && <button
           className="px-6 py-2 text-white bg-blue-600 rounded-lg font-semibold transition duration-300 transform hover:bg-blue-700 hover:scale-105"

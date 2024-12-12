@@ -67,7 +67,7 @@ class CountEmployee(viewsets.ViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsHR]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['post'], url_path='send-otp')
     def send_otp(self, request):
