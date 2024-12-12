@@ -3,7 +3,7 @@ import { Redirect, Route } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const PublicRoute = ({ component: Component, restricted = false, ...rest }) => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
+  // const storedUserData = JSON.parse(localStorage.getItem("userData"));
   const token = Cookies.get("access_token");
   const userType = Cookies.get("userType");
 

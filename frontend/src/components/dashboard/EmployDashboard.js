@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "./Accordion";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import EmployPersonalDetail from "./EmployPersonalDetail";
@@ -6,6 +6,10 @@ import { FaUsers, FaTasks, FaClipboardList } from "react-icons/fa";
 
 const EmployDashboard = () => {
   const [fullName, setFullName] = useState("Vijay");
+  useEffect(() => {
+    localStorage.setItem('tab', 'dashboard');
+  }, []);
+
   return <div className="min-h-screen">
     <header className="mb-8 flex items-center justify-between">
       <div className="flex items-center space-x-4">
