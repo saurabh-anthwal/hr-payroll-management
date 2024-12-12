@@ -109,7 +109,7 @@ const AddEmployee = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+              className="customTextInput"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -123,7 +123,7 @@ const AddEmployee = () => {
               value={formData.username}
               onChange={handleChange}
               placeholder="Enter your username"
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+              className="customTextInput"
             />
             {errors.username && (
               <p className="text-red-500 text-sm mt-1">{errors.username}</p>
@@ -142,7 +142,7 @@ const AddEmployee = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+              className="customTextInput"
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
@@ -156,7 +156,7 @@ const AddEmployee = () => {
             <select
               name="type"
               id="type"
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+              className="selectInput"
             >
               <option value="ADMIN">ADMIN</option>
               <option value="EMPLOYEE">EMPLOYEE</option>
@@ -168,14 +168,14 @@ const AddEmployee = () => {
           <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
           >
             Reset
           </button>
           <button
             onClick={handleSendOtp}
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+            className="formSubmitBtn"
           >
             {loading ? "Sending OTP..." : "Send OTP"}
           </button>
@@ -201,14 +201,14 @@ const AddEmployee = () => {
           <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
           >
             Reset
           </button>
           <button
             onClick={handleVerifyOtp}
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+            className="formSubmitBtn"
           >
             {loading ? "Verifying OTP..." : "Verify OTP"}
           </button>

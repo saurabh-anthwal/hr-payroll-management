@@ -99,7 +99,7 @@ const HolidayList = () => {
       </h3>
       <div className="flex justify-end py-2">
         {userType==='hr' && <button
-          className="px-6 py-2 text-white bg-blue-600 rounded-lg font-semibold transition duration-300 transform hover:bg-blue-700 hover:scale-105"
+          className="formCancelBtn"
           onClick={()=>{setAddNew(!addNew)}}> {addNew ? "Cancel" : "Add New Holiday"}
         </button>}
       </div>
@@ -120,7 +120,7 @@ const HolidayList = () => {
                 value={newHoliday.name}
                 onChange={handleInputChange}
                 placeholder="Enter holiday name"
-                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="customTextInput"
                 required
               />
             </div>
@@ -134,7 +134,7 @@ const HolidayList = () => {
                 name="date"
                 value={newHoliday.date}
                 onChange={handleInputChange}
-                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="customTextInput"
                 required
               />
             </div>
@@ -148,7 +148,7 @@ const HolidayList = () => {
                 value={newHoliday.description}
                 onChange={handleInputChange}
                 placeholder="Write a brief description"
-                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="customTextAreaInput"
                 required
               />
             </div>
@@ -176,7 +176,7 @@ const HolidayList = () => {
                 value={newHoliday.quotes}
                 onChange={handleInputChange}
                 placeholder="Enter a holiday quote"
-                className="border border-gray-300 p-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="customTextInput"
               />
             </div>
 
@@ -184,7 +184,7 @@ const HolidayList = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 px-6 rounded-lg bg-blue-500 text-white font-semibold transition-all focus:outline-none hover:bg-blue-700 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                className={`formSubmitBtn ${isLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
                 {isLoading ? "Adding..." : "Add Holiday"}

@@ -6,7 +6,7 @@ import axios_instance from "../../../libs/interseptor";
 function AddSalary() {
   const history = useHistory();
   const [userDetails, setUserDetails] = useState([]);
-  const [bankDetails, setBankDetails] = useState([]);  // to store the bank details options
+  const [bankDetails, setBankDetails] = useState([]); 
   const [input, setInput] = useState({
     employee: "",
     ppa: 0,
@@ -18,8 +18,8 @@ function AddSalary() {
     esic: 0,
     professional_tax: 0,
     net_salary: 0,
-    pan_card_number: "",  // Added pan_card_number field
-    bank_details: "",      // Added bank_details field (ID of selected bank details)
+    pan_card_number: "",  
+    bank_details: "",      
   });
 
   const inputHandle = (e) => {
@@ -84,7 +84,7 @@ function AddSalary() {
           name="employee"
           value={input.employee}
           onChange={inputHandle}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput mt-1"
         >
           <option value="" disabled>
             Select Employee by Email
@@ -136,7 +136,7 @@ function AddSalary() {
               name="bank_details"
               value={input.bank_details}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="selectInput"
             >
               <option value="" disabled>
                 Select Bank Details
@@ -154,13 +154,13 @@ function AddSalary() {
         <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
           >
             Reset
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+            className="formSubmitBtn"
           >
             Submit
           </button>
@@ -182,7 +182,7 @@ const InputField = ({ label, name, value, onChange, placeholder }) => (
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+      className="customTextInput"
     />
   </div>
 );

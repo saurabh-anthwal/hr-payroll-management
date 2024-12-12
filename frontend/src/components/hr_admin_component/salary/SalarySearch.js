@@ -9,31 +9,6 @@ function SalarySearch({ setSalaryData }) {
     fullName: "",
     department: "",
   });
-
-  // const submitHandle = async (e) => {
-  //   e.preventDefault();
-  
-  //   const token = localStorage.getItem("accessToken");
-  //   const queryParams = new URLSearchParams(input).toString();
-  //   const url = `http://127.0.0.1:8000/api/monthly-salary/${
-  //     queryParams ? `?${queryParams}` : ""
-  //   }`;
-  
-  //   try {
-  //     const response = await fetch(url, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  //     const data = await response.json();
-  //     setSalaryData(data);
-  //   } catch (error) {
-  //     console.error("Failed to fetch salary data:", error);
-  //   }
-  // };
   
   const submitHandle = async (e) => {
     e.preventDefault();
@@ -66,6 +41,7 @@ function SalarySearch({ setSalaryData }) {
           id="fullName"
           placeholder="Search Employee"
           value={input.fullName}
+          className="customTextInput"
           onChange={(e) => setInput({ ...input, fullName: e.target.value })}
         />
       </div>
@@ -77,6 +53,7 @@ function SalarySearch({ setSalaryData }) {
           id="department"
           placeholder="Enter Department"
           value={input.department}
+          className="customTextInput"
           onChange={(e) => setInput({ ...input, department: e.target.value })}
         />
       </div>
@@ -86,6 +63,7 @@ function SalarySearch({ setSalaryData }) {
         <select
           id="paidStatus"
           value={input.paidStatus}
+          className="selectInput"
           onChange={(e) => setInput({ ...input, paidStatus: e.target.value })}
         >
           <option value="">All</option>

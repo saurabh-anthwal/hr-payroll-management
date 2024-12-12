@@ -104,7 +104,7 @@ const DownloadPayslip = () => {
             name="month"
             value={filters.month}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+            className="customTextInput"
             required
           />
         </div>
@@ -120,7 +120,7 @@ const DownloadPayslip = () => {
             placeholder="Employee Name or ID"
             value={filters.employee}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+            className="customTextInput"
             required
           />
         </div>
@@ -128,7 +128,7 @@ const DownloadPayslip = () => {
         <div className="flex-none mt-4 sm:mt-0">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200"
+            className="formSubmitBtn"
           >
             Search
           </button>

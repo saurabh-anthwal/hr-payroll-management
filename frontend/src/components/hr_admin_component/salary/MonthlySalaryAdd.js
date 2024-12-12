@@ -104,7 +104,7 @@ function SalaryDetailsComponent() {
         <select
           value={employeeId}
           onChange={(e) => setEmployeeId(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput"
         >
           <option value="" disabled>Select Employee by Email</option>
           {userDetails.map((user) => (
@@ -120,7 +120,7 @@ function SalaryDetailsComponent() {
         <select
           value={salaryId}
           onChange={(e) => setSalaryId(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput"
         >
           <option value="" disabled>Select Salary Id by Email</option>
           {salaryUserDetails.map((user) => (
@@ -137,7 +137,7 @@ function SalaryDetailsComponent() {
           type="date"
           value={fromDate}
           onChange={(e) => setFromDate(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -149,7 +149,7 @@ function SalaryDetailsComponent() {
           type="date"
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -161,7 +161,7 @@ function SalaryDetailsComponent() {
           type="number"
           value={totalSalary}
           onChange={(e) => setTotalSalary(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -173,7 +173,7 @@ function SalaryDetailsComponent() {
           type="number"
           value={paidAmount}
           onChange={(e) => handlePaidAmountChange(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -185,7 +185,7 @@ function SalaryDetailsComponent() {
           type="number"
           value={balanceAmount}
           readOnly
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -197,7 +197,7 @@ function SalaryDetailsComponent() {
           type="date"
           value={paymentDueDate}
           onChange={(e) => setPaymentDueDate(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="customTextInput"
         />
       </div>
 
@@ -208,7 +208,7 @@ function SalaryDetailsComponent() {
         <select
           value={paidStatus}
           onChange={(e) => setPaidStatus(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput"
         >
           <option value="false">Unpaid</option>
           <option value="true">Paid</option>
@@ -232,14 +232,14 @@ function SalaryDetailsComponent() {
       <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
           >
             Reset
           </button>
         <button
           onClick={handleFetchSalary}
           disabled={loading}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md"
+          className="formSubmitBtn"
         >
           {loading ? 'Submiting...' : 'Submit'}
         </button>

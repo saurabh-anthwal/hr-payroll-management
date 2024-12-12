@@ -74,7 +74,7 @@ const LeaveSubmission = () => {
                   id="leaveType"
                   value={leaveType}
                   onChange={(e) => setLeaveType(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg outline-blue-400 focus:ring-blue-400 focus:border-blue-500 block w-full p-2.5"
+                  className="selectInput"
                   required
                 >
                   <option value="" disabled>Choose a leave type</option>
@@ -92,7 +92,7 @@ const LeaveSubmission = () => {
                   id="duration"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg outline-blue-400 focus:ring-blue-400 focus:border-blue-500 block w-full p-2.5"
+                  className="selectInput"
                   required
                 >
                   <option value="" disabled>Choose a duration</option>
@@ -111,7 +111,7 @@ const LeaveSubmission = () => {
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   required
-                  className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+                  className="customTextInput"
                 />
               </div>
             </div>
@@ -125,7 +125,7 @@ const LeaveSubmission = () => {
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   required
-                  className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+                  className="customTextInput"
                 />
               </div>
             </div>
@@ -139,7 +139,7 @@ const LeaveSubmission = () => {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Enter your reason"
-                  className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+                  className="customTextAreaInput"
                 />
               </div>
             </div>
@@ -149,13 +149,13 @@ const LeaveSubmission = () => {
             <button
               type="button"
               onClick={handleCancel}
-              className="rounded-full border py-2 px-4 text-center text-sm transition-all shadow-sm border-red-500 hover:shadow-lg text-slate-600 hover:text-slate-600 hover:bg-slate-200"
+              className="formCancelBtn"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-full border bg-lime-500 py-2 px-4 text-center text-sm transition-all text-white border-green-400 shadow-sm hover:shadow-lg hover:bg-green-500"
+              className="formSubmitBtn"
             >
               Apply
             </button>

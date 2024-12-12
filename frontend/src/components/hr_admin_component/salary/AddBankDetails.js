@@ -129,7 +129,7 @@ const AddBankDetails = () => {
             name="account_holder_name"
             value={formData.account_holder_name}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+            className="customTextInput"
           />
           {errors.account_holder_name && (
             <p className="text-red-600 text-sm mt-1">{errors.account_holder_name}</p>
@@ -146,7 +146,7 @@ const AddBankDetails = () => {
             name="account_number"
             value={formData.account_number}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+            className="customTextInput"
           />
           {errors.account_number && (
             <p className="text-red-600 text-sm mt-1">{errors.account_number}</p>
@@ -165,7 +165,7 @@ const AddBankDetails = () => {
             name="ifsc_code"
             value={formData.ifsc_code}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+            className="customTextInput"
           />
           {errors.ifsc_code && (
             <p className="text-red-600 text-sm mt-1">{errors.ifsc_code}</p>
@@ -182,7 +182,7 @@ const AddBankDetails = () => {
             name="bank_name"
             value={formData.bank_name}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+            className="customTextInput"
           />
           {errors.bank_name && (
             <p className="text-red-600 text-sm mt-1">{errors.bank_name}</p>
@@ -201,7 +201,7 @@ const AddBankDetails = () => {
             name="branch_name"
             value={formData.branch_name}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none "
+            className="customTextInput"
           />
         </div>
 
@@ -214,7 +214,7 @@ const AddBankDetails = () => {
           name="employee"
           value={formData.employee}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput"
         >
           <option value="" disabled>
             Select Employee by Email
@@ -233,13 +233,13 @@ const AddBankDetails = () => {
         <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
           >
             Reset
           </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 text-white rounded-md"
+          className="formSubmitBtn"
         >
           Submit
         </button>

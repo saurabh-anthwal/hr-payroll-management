@@ -3,7 +3,7 @@ import apiUrls from "../../../libs/apiUrls";
 import axios_instance from "../../../libs/interseptor";
 import { useHistory } from "react-router-dom";
 
-function UpdateEmployee({ emp_type }) {
+function UpdateEmployee({ emp_type, title}) {
   const history = useHistory();
   const [userDetails, setUserDetails] = useState([]);
   const [input, setInput] = useState({
@@ -102,7 +102,7 @@ function UpdateEmployee({ emp_type }) {
 
   return (
     <div className="mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Employee Registration Form</h2>
+      <h2 className="text-xl font-bold text-gray-800 mb-4">{title}</h2>
       <form className="space-y-6">
         <label className="block text-sm font-medium text-gray-700">
           Emp Id <span className="text-red-500">*</span>
@@ -111,7 +111,7 @@ function UpdateEmployee({ emp_type }) {
           name="user"
           value={input.user}
           onChange={inputHandle}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+          className="selectInput"
         >
           <option value="" disabled>
             Select Employee by Email
@@ -132,7 +132,7 @@ function UpdateEmployee({ emp_type }) {
               name="firstname"
               value={input.firstname}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
           <div>
@@ -144,7 +144,7 @@ function UpdateEmployee({ emp_type }) {
               name="lastname"
               value={input.lastname}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
         </div>
@@ -158,7 +158,7 @@ function UpdateEmployee({ emp_type }) {
               name="email"
               value={input.email}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
           <div>
@@ -170,7 +170,7 @@ function UpdateEmployee({ emp_type }) {
               name="contact"
               value={input.contact}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
         </div>
@@ -221,7 +221,7 @@ function UpdateEmployee({ emp_type }) {
               name="dob"
               value={input.dob}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
         </div>
@@ -235,7 +235,7 @@ function UpdateEmployee({ emp_type }) {
               name="department"
               value={input.department}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
           <div>
@@ -247,7 +247,7 @@ function UpdateEmployee({ emp_type }) {
               name="designation"
               value={input.designation}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
         </div>
@@ -261,7 +261,7 @@ function UpdateEmployee({ emp_type }) {
               name="dateOfHired"
               value={input.dateOfHired}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
           <div>
@@ -273,7 +273,7 @@ function UpdateEmployee({ emp_type }) {
               name="dateOfJoined"
               value={input.dateOfJoined}
               onChange={inputHandle}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+              className="customTextInput"
             />
           </div>
         </div>
@@ -285,7 +285,7 @@ function UpdateEmployee({ emp_type }) {
             name="address"
             value={input.address}
             onChange={inputHandle}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm shadow-sm focus:outline-none"
+            className="customTextAreaInput"
           />
         </div>
         <div>
@@ -302,7 +302,7 @@ function UpdateEmployee({ emp_type }) {
         <div className="flex justify-end space-x-4 mt-6">
           <button
             type="button"
-            className="px-6 py-2 bg-gray-400 text-white rounded-md"
+            className="formCancelBtn"
             onClick={resetHandle}
           >
             Reset
@@ -311,7 +311,7 @@ function UpdateEmployee({ emp_type }) {
           <button
             type="submit"
             onClick={submitHandle}
-            className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500"
+            className="formSubmitBtn"
           >
             Submit
           </button>

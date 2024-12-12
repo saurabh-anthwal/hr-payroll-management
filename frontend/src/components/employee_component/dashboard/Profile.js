@@ -154,7 +154,7 @@ const Profile = () => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter first name"
               readOnly ={!isEditing}
             />
@@ -170,7 +170,7 @@ const Profile = () => {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter last name"
               readOnly ={!isEditing}
             />
@@ -186,7 +186,7 @@ const Profile = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter your email"
               readOnly ={!isEditing}
             />
@@ -202,7 +202,7 @@ const Profile = () => {
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-5    00"
+              className="customTextInput"
               placeholder="Enter Phone Number"
               readOnly ={!isEditing}
             />
@@ -215,7 +215,7 @@ const Profile = () => {
             <select 
               id="gender"
               value={gender} 
-              class="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg outline-blue-400 focus:ring-blue-400 focus:border-blue-500 block w-full p-2.5  "
+              class="selectInput"
               onChange={(e) => setGender(e.target.value)}
               readOnly ={!isEditing}
             >
@@ -236,7 +236,7 @@ const Profile = () => {
               value={dob}
               onChange={(e) => setDob(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter date of birth "
               readOnly ={!isEditing}
             />
@@ -252,7 +252,7 @@ const Profile = () => {
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter Department"
               readOnly ={!isEditing}
             />
@@ -268,7 +268,7 @@ const Profile = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               required
-              className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-lg outline-blue-400"
+              className="customTextInput"
               placeholder="Enter Address"
               readOnly ={!isEditing}
             />
@@ -278,14 +278,14 @@ const Profile = () => {
         {isEditing && <div className="flex justify-end col-span-2 gap-2">
           <button 
             onClick={handleCancel}
-            className="rounded-full border py-2 px-4 text-center text-sm transition-all shadow-sm  border-red-500 hover:shadow-lg text-slate-600 hover:text-slate-600 hover:bg-slate-200  disabled:pointer-events-none " 
+            className="formCancelBtn" 
             type="button"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="rounded-full border bg-lime-500 py-2 px-4 text-center text-sm transition-all text-white border-green-400 shadow-sm hover:shadow-lg hover:bg-green-500  disabled:pointer-events-none " 
+            className="formSubmitBtn" 
           >
             Save
           </button>

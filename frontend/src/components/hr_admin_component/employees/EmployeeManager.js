@@ -9,7 +9,7 @@ const EmployeeManager = () => {
     <div>
       <TabSwitch
         tabs={["Register New User", "Update Employee",  "Update Manager"]}
-        components={[<AddEmployee />, <UpdateEmployee emp_type="Employee" /> , <UpdateEmployee emp_type="Manager"/>]}
+        components={[<AddEmployee />, <UpdateEmployee emp_type="Employee" title="Employee Registration Form"/> , <UpdateEmployee emp_type="Manager" title="Manager Registration Form"/>]}
       />
     </div>
   );
